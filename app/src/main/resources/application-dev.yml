@@ -1,0 +1,22 @@
+spring:
+  jpa:
+    database: MYSQL
+    open-in-view: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  servlet:
+    multipart:
+      #是否开启文件上传支持，默认是true
+      enabled: true
+      #文件写入磁盘的阈值，默认是0
+      file-size-threshold: 0
+      #上传文件的临时保存位置
+      location: D:/file-server
+      #单个文件的最大值，默认是10MB
+      max-file-size: 10MB
+      #多个文件上传时的总大小 值，默认是50MB
+      max-request-size: 50MB
+      #是否延迟解析，默认是false
+      resolve-lazily: false

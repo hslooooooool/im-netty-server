@@ -1,0 +1,27 @@
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 30
+    min-spare-threads: 10
+  # NOTICE 配置端口
+  port: 8085
+  connection-timeout: 60000
+
+spring:
+  # NOTICE 配置环境 dev|pro
+  profiles:
+    active: dev
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  aop:
+    auto: true
+    proxy-target-class: false
+  http:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+
+
+
