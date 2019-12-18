@@ -65,13 +65,13 @@ class SendBody : IProtobufAble {
         buffer.append("\n#SendBody#")
         buffer.append("\nkey:$key")
         buffer.append("\ntimestamp:").append(timestamp)
+        buffer.append("\ndata{")
         if (!data.isEmpty) {
-            buffer.append("\ndata{").append("\n")
             for (key in keySet) {
                 buffer.append("\t\t\n$key").append(":").append(this[key])
             }
-            buffer.append("\n}")
         }
+        buffer.append("\n}")
         return buffer.toString()
     }
 

@@ -72,13 +72,13 @@ class ReplyBody : IProtobufAble {
         buffer.append("\nkey:$key")
         buffer.append("\ntimestamp:$timestamp")
         buffer.append("\ncode:$code")
+        buffer.append("\ndata{")
         if (!data.isEmpty) {
-            buffer.append("\ndata{")
             for (key in keySet) {
                 buffer.append("\t\t\n$key").append(":").append(this[key])
             }
-            buffer.append("\n}")
         }
+        buffer.append("\n}")
         return buffer.toString()
     }
 }
