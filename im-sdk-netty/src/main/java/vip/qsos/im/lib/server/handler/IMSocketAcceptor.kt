@@ -16,7 +16,7 @@ import vip.qsos.im.lib.server.constant.IMConstant
 import vip.qsos.im.lib.server.filter.ServerMessageDecoder
 import vip.qsos.im.lib.server.filter.ServerMessageEncoder
 import vip.qsos.im.lib.server.model.HeartbeatRequest
-import vip.qsos.im.lib.server.model.IMSession
+import vip.qsos.im.lib.server.model.Session
 import vip.qsos.im.lib.server.model.SendBody
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -92,7 +92,7 @@ class IMSocketAcceptor : SimpleChannelInboundHandler<SendBody>() {
 
     /**有消息下达*/
     override fun channelRead0(ctx: ChannelHandlerContext, body: SendBody) {
-        val session = IMSession(ctx.channel())
+        val session = Session(ctx.channel())
         val handler = innerHandlerMap[body.key]
         if (handler != null) {
             handler.process(session, body)
@@ -104,7 +104,7 @@ class IMSocketAcceptor : SimpleChannelInboundHandler<SendBody>() {
     /**检测到通道关闭*/
     override fun channelInactive(ctx: ChannelHandlerContext) {
         channelGroup.remove(ctx.channel().id().asShortText())
-        val session = IMSession(ctx.channel())
+        val session = Session(ctx.channel())
         val body = SendBody()
         body.key = IMConstant.CLIENT_CONNECT_CLOSED
         outerRequestHandler?.process(session, body)

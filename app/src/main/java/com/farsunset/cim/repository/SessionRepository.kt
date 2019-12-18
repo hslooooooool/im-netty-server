@@ -1,7 +1,7 @@
 package com.farsunset.cim.repository
 
 import org.springframework.stereotype.Repository
-import vip.qsos.im.lib.server.model.IMSession
+import vip.qsos.im.lib.server.model.Session
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -10,15 +10,15 @@ import java.util.concurrent.ConcurrentHashMap
  */
 @Repository
 class SessionRepository {
-    private val map = ConcurrentHashMap<String?, IMSession>()
+    private val map = ConcurrentHashMap<String?, Session>()
 
-    fun save(session: IMSession) {
+    fun save(session: Session) {
         session.getAccount()?.let {
             map[it] = session
         } ?: throw  NullPointerException("会话ID不存在")
     }
 
-    operator fun get(account: String?): IMSession? {
+    operator fun get(account: String?): Session? {
         return map[account]
     }
 
@@ -26,7 +26,7 @@ class SessionRepository {
         map.remove(account)
     }
 
-    fun findAll(): List<IMSession> {
+    fun findAll(): List<Session> {
         return map.values.toList()
     }
 }

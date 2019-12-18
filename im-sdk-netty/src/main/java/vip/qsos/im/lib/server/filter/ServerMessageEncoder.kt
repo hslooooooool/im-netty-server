@@ -6,7 +6,7 @@ import io.netty.handler.codec.MessageToByteEncoder
 import io.netty.util.AttributeKey
 import org.slf4j.LoggerFactory
 import vip.qsos.im.lib.server.constant.IMConstant
-import vip.qsos.im.lib.server.model.IMSession
+import vip.qsos.im.lib.server.model.Session
 import vip.qsos.im.lib.server.model.IProtobufAble
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.WebSocketResponse
@@ -21,15 +21,15 @@ class ServerMessageEncoder : MessageToByteEncoder<Any>() {
 
     @Throws(Exception::class)
     override fun encode(ctx: ChannelHandlerContext, any: Any, out: ByteBuf) {
-        val protocol = ctx.channel().attr(AttributeKey.valueOf<Any>(IMSession.PROTOCOL)).get()
+        val protocol = ctx.channel().attr(AttributeKey.valueOf<Any>(Session.PROTOCOL)).get()
         when {
             /** Websocket 握手数据*/
-            IMSession.WEBSOCKET == protocol && any is WebSocketResponse -> {
+            Session.WEBSOCKET == protocol && any is WebSocketResponse -> {
                 logger.debug("Websocket 握手数据")
                 out.writeBytes(any.toString().toByteArray())
             }
             /** Websocket 业务数据*/
-            IMSession.WEBSOCKET == protocol && any is IProtobufAble -> {
+            Session.WEBSOCKET == protocol && any is IProtobufAble -> {
                 logger.debug("Websocket 业务数据")
                 val body = any.byteArray
                 val header = createHeader(any.type, body.size)
@@ -40,7 +40,7 @@ class ServerMessageEncoder : MessageToByteEncoder<Any>() {
                 out.writeBytes(binaryFrame)
             }
             /**非 websocket 的数据传输使用 Protobuf 编码数据格式*/
-            IMSession.NATIVE_APP == protocol && any is IProtobufAble -> {
+            Session.NATIVE_APP == protocol && any is IProtobufAble -> {
                 logger.debug("Protobuf 编码数据")
                 val body = any.byteArray
                 val header = createHeader(any.type, body.size)

@@ -29,6 +29,10 @@ interface IMConstant {
             const val SEND_BODY: Byte = 3
             /**服务端消息回执*/
             const val REPLY_BODY: Byte = 4
+            /**会话*/
+            const val SESSION: Byte = 5
+            /**Websocket*/
+            const val WEBSOCKET: Byte = 6
         }
     }
 

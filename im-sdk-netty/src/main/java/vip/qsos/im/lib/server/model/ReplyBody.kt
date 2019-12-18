@@ -2,14 +2,13 @@ package vip.qsos.im.lib.server.model
 
 import vip.qsos.im.lib.model.proto.ReplyBodyProto
 import vip.qsos.im.lib.server.constant.IMConstant
-import java.io.Serializable
 import java.util.*
 
 /**
  * @author : 华清松
  * 服务器应答对象，客户端主动请求服务器后收到的回执消息
  */
-class ReplyBody : Serializable, IProtobufAble {
+class ReplyBody : IProtobufAble {
 
     companion object {
         private const val serialVersionUID = 1L

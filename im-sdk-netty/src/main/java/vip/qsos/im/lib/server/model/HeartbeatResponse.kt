@@ -1,12 +1,12 @@
 package vip.qsos.im.lib.server.model
 
-import java.io.Serializable
+import vip.qsos.im.lib.server.constant.IMConstant
 
 /**
  * @author : 华清松
  * 客户端心跳响应实体
  */
-class HeartbeatResponse private constructor() : Serializable {
+class HeartbeatResponse private constructor() : IProtobufAble {
 
     companion object {
         private const val serialVersionUID = 1L
@@ -14,6 +14,10 @@ class HeartbeatResponse private constructor() : Serializable {
         const val CLIENT_HEARTBEAT_RESPONSE = "CR"
         val instance = HeartbeatResponse()
     }
+
+    override val byteArray: ByteArray = CLIENT_HEARTBEAT_RESPONSE.toByteArray()
+
+    override val type: Byte = IMConstant.ProtobufType.HEART_CR
 
     override fun toString(): String {
         return TAG

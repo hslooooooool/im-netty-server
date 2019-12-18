@@ -4,7 +4,7 @@ import com.farsunset.cim.service.IMSessionService
 import org.springframework.stereotype.Component
 import vip.qsos.im.lib.server.constant.IMConstant
 import vip.qsos.im.lib.server.handler.IMRequestHandler
-import vip.qsos.im.lib.server.model.IMSession
+import vip.qsos.im.lib.server.model.Session
 import vip.qsos.im.lib.server.model.SendBody
 import javax.annotation.Resource
 
@@ -17,7 +17,7 @@ class SessionClosedHandler : IMRequestHandler {
     @Resource
     private val imSessionService: IMSessionService? = null
 
-    override fun process(session: IMSession?, message: SendBody?) {
+    override fun process(session: Session?, message: SendBody?) {
         val quietly = session!!.getAttribute(IMConstant.KEY_QUIETLY_CLOSE)
         if (quietly == true) {
             return
@@ -27,7 +27,7 @@ class SessionClosedHandler : IMRequestHandler {
         if (oldSession == null || oldSession.isApnsOpen) {
             return
         }
-        oldSession.state = IMSession.STATE_DISABLED
+        oldSession.state = Session.STATE_DISABLED
         oldSession.nid = null
         imSessionService.save(oldSession)
     }

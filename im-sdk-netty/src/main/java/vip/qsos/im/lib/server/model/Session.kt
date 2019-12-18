@@ -6,18 +6,65 @@ import io.netty.handler.codec.EncoderException
 import io.netty.util.AttributeKey
 import vip.qsos.im.lib.model.proto.SessionProto
 import vip.qsos.im.lib.server.constant.IMConstant
-import java.io.Serializable
 import java.net.SocketAddress
 
 /**
  * @author : 华清松
  * 消息会话包装类。集群时，将此对象存入表中
  */
-class IMSession : Serializable {
-    /**当前连接通道*/
-    @Transient
-    var session: Channel? = null
+class Session : IProtobufAble {
 
+    companion object {
+        private const val serialVersionUID = 1L
+        const val PROTOCOL = "protocol"
+        /**消息客户端类型 */
+        const val WEBSOCKET = "websocket"
+        const val NATIVE_APP = "nativeapp"
+        const val HOST = "HOST"
+
+        /**客户端连接状态 */
+        const val STATE_ENABLED = 0
+        const val STATE_DISABLED = 1
+
+        /**苹果推送服务开关 */
+        const val APNS_ON = 1
+        const val APNS_OFF = 0
+
+        /**连接客户端类型 */
+        const val CHANNEL_IOS = "ios"
+        const val CHANNEL_ANDROID = "android"
+        const val CHANNEL_WINDOWS = "windows"
+        const val CHANNEL_WP = "wp"
+        const val CHANNEL_BROWSER = "browser"
+
+        @Throws(InvalidProtocolBufferException::class)
+        fun decode(protobufBody: ByteArray?): Session? {
+            if (protobufBody == null) {
+                return null
+            }
+            val proto = SessionProto.Model.parseFrom(protobufBody)
+            val session = Session()
+            session.id = proto.id
+            session.apns = proto.apns
+            session.bindTime = proto.bindTime
+            session.channel = proto.channel
+            session.clientVersion = proto.clientVersion
+            session.deviceId = proto.deviceId
+            session.deviceModel = proto.deviceModel
+            session.host = proto.host
+            session.latitude = proto.latitude
+            session.longitude = proto.longitude
+            session.location = proto.location
+            session.nid = proto.nid
+            session.systemVersion = proto.systemVersion
+            session.state = proto.state
+            session.setAccount(proto.account)
+            return session
+        }
+    }
+
+    /**当前连接通道*/
+    var session: Channel? = null
     /**数据库主键ID*/
     var id: Long? = null
     /**session绑定的用户账号*/
@@ -119,12 +166,14 @@ class IMSession : Serializable {
     }
 
     override fun equals(other: Any?): Boolean {
-        return if (other is IMSession) {
+        return if (other is Session) {
             (other.deviceId == deviceId && other.nid == nid && other.host == host)
         } else false
     }
 
-    val protobufBody: ByteArray
+    override val type: Byte = IMConstant.ProtobufType.SESSION
+
+    override val byteArray: ByteArray
         get() {
             val builder = SessionProto.Model.newBuilder()
             id?.let { builder.id = it }
@@ -144,68 +193,4 @@ class IMSession : Serializable {
             builder.apns = apns
             return builder.build().toByteArray()
         }
-
-    companion object {
-        @Transient
-        private val serialVersionUID = 1L
-        @JvmField
-        @Transient
-        var PROTOCOL = "protocol"
-        /**消息客户端类型 */
-        @JvmField
-        @Transient
-        var WEBSOCKET = "websocket"
-        @JvmField
-        @Transient
-        var NATIVE_APP = "nativeapp"
-        @Transient
-        var HOST = "HOST"
-        /**客户端连接状态 */
-        @Transient
-        val STATE_ENABLED = 0
-        @Transient
-        val STATE_DISABLED = 1
-        /**苹果推送服务开关 */
-        @Transient
-        val APNS_ON = 1
-        @Transient
-        val APNS_OFF = 0
-        /**连接客户端类型 */
-        @Transient
-        var CHANNEL_IOS = "ios"
-        @Transient
-        var CHANNEL_ANDROID = "android"
-        @Transient
-        var CHANNEL_WINDOWS = "windows"
-        @Transient
-        var CHANNEL_WP = "wp"
-        @JvmField
-        @Transient
-        var CHANNEL_BROWSER = "browser"
-
-        @Throws(InvalidProtocolBufferException::class)
-        fun decode(protobufBody: ByteArray?): IMSession? {
-            if (protobufBody == null) {
-                return null
-            }
-            val proto = SessionProto.Model.parseFrom(protobufBody)
-            val session = IMSession()
-            session.id = proto.id
-            session.apns = proto.apns
-            session.bindTime = proto.bindTime
-            session.channel = proto.channel
-            session.clientVersion = proto.clientVersion
-            session.deviceId = proto.deviceId
-            session.deviceModel = proto.deviceModel
-            session.host = proto.host
-            session.latitude = proto.latitude
-            session.longitude = proto.longitude
-            session.location = proto.location
-            session.nid = proto.nid
-            session.systemVersion = proto.systemVersion
-            session.state = proto.state
-            session.setAccount(proto.account)
-            return session
-        }
-    }
 }

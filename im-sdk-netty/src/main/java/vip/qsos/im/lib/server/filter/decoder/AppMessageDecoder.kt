@@ -6,7 +6,7 @@ import io.netty.handler.codec.ByteToMessageDecoder
 import io.netty.util.AttributeKey
 import vip.qsos.im.lib.model.proto.SendBodyProto
 import vip.qsos.im.lib.server.constant.IMConstant
-import vip.qsos.im.lib.server.model.IMSession
+import vip.qsos.im.lib.server.model.Session
 import vip.qsos.im.lib.server.model.SendBody
 
 /**
@@ -39,7 +39,7 @@ class AppMessageDecoder : ByteToMessageDecoder() {
         val dataBytes = ByteArray(length)
         buffer.readBytes(dataBytes)
         mappingMessageObject(dataBytes, type)?.let {
-            arg0.channel().attr(AttributeKey.valueOf<Any>(IMSession.PROTOCOL)).set(IMSession.NATIVE_APP)
+            arg0.channel().attr(AttributeKey.valueOf<Any>(Session.PROTOCOL)).set(Session.NATIVE_APP)
             queue.add(it)
         }
     }

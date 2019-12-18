@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import vip.qsos.im.lib.server.constant.IMConstant
 import vip.qsos.im.lib.server.handler.IMRequestHandler
-import vip.qsos.im.lib.server.model.IMSession
+import vip.qsos.im.lib.server.model.Session
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.lib.server.model.ReplyBody
 import vip.qsos.im.lib.server.model.SendBody
@@ -30,7 +30,7 @@ class BindHandler : IMRequestHandler {
     @Resource
     private val defaultMessagePusher: IMMessagePusher? = null
 
-    override fun process(session: IMSession?, message: SendBody?) {
+    override fun process(session: Session?, message: SendBody?) {
         val reply = ReplyBody()
         reply.key = message!!.key
         reply.code = IMConstant.ReturnCode.CODE_200
@@ -67,11 +67,11 @@ class BindHandler : IMRequestHandler {
         session!!.write(reply)
     }
 
-    private fun fromOtherDevice(oldSession: IMSession?, newSession: IMSession): Boolean {
+    private fun fromOtherDevice(oldSession: Session?, newSession: Session): Boolean {
         return oldSession!!.deviceId != newSession.deviceId
     }
 
-    private fun sendForceOfflineMessage(oldSession: IMSession, account: String?, deviceModel: String?) {
+    private fun sendForceOfflineMessage(oldSession: Session, account: String?, deviceModel: String?) {
         val msg = Message()
         msg.action = AppConstant.IMMessageAction.ACTION_999
         msg.receiver = account
@@ -83,7 +83,7 @@ class BindHandler : IMRequestHandler {
     }
 
     /**不同设备同一账号登录时关闭旧的连接*/
-    private fun closeQuietly(oldSession: IMSession) {
+    private fun closeQuietly(oldSession: Session) {
         if (oldSession.isConnected && host == oldSession.host) {
             oldSession.setAttribute(IMConstant.KEY_QUIETLY_CLOSE, true)
             oldSession.closeOnFlush()

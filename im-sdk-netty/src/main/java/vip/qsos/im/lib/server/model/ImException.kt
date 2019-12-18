@@ -2,8 +2,7 @@ package vip.qsos.im.lib.server.model
 
 /**
  * @author : 华清松
- * @date : 2019-05-17
- * @description : 全局异常
+ * 消息服务异常
  */
 class ImException : RuntimeException {
 

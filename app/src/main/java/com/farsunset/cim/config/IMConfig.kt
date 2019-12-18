@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Configuration
 import vip.qsos.im.lib.server.constant.IMConstant
 import vip.qsos.im.lib.server.handler.IMRequestHandler
 import vip.qsos.im.lib.server.handler.IMSocketAcceptor
-import vip.qsos.im.lib.server.model.IMSession
 import vip.qsos.im.lib.server.model.SendBody
+import vip.qsos.im.lib.server.model.Session
 import java.util.*
 import javax.annotation.PostConstruct
 import javax.annotation.Resource
@@ -39,7 +39,7 @@ open class IMConfig : IMRequestHandler, ApplicationListener<ApplicationStartedEv
         return nioSocketAcceptor
     }
 
-    override fun process(session: IMSession?, message: SendBody?) {
+    override fun process(session: Session?, message: SendBody?) {
         findHandlerByKey(message!!.key)?.process(session, message)
     }
 

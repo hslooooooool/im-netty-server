@@ -4,7 +4,7 @@ import com.farsunset.cim.repository.SessionRepository
 import com.farsunset.cim.service.IMSessionService
 import org.springframework.stereotype.Service
 import vip.qsos.im.lib.server.handler.IMSocketAcceptor
-import vip.qsos.im.lib.server.model.IMSession
+import vip.qsos.im.lib.server.model.Session
 import javax.annotation.Resource
 
 @Service
@@ -14,11 +14,11 @@ class IMSessionServiceImpl : IMSessionService {
     @Resource
     private val sessionRepository: SessionRepository? = null
 
-    override fun save(session: IMSession?) {
+    override fun save(session: Session?) {
         sessionRepository!!.save(session!!)
     }
 
-    override fun find(account: String?): IMSession? {
+    override fun find(account: String?): Session? {
         val session = sessionRepository!![account]
         if (session != null) {
             session.session = nioSocketAcceptor!!.getManagedSession(session.nid)
@@ -30,7 +30,7 @@ class IMSessionServiceImpl : IMSessionService {
         sessionRepository!!.remove(account)
     }
 
-    override fun list(): List<IMSession?>? {
+    override fun list(): List<Session?>? {
         return sessionRepository!!.findAll()
     }
 }

@@ -1,6 +1,6 @@
 package vip.qsos.im.lib.server.handler
 
-import vip.qsos.im.lib.server.model.IMSession
+import vip.qsos.im.lib.server.model.Session
 import vip.qsos.im.lib.server.model.SendBody
 import vip.qsos.im.lib.server.model.WebSocketResponse
 import java.security.MessageDigest
@@ -16,8 +16,8 @@ class WebsocketHandler : IMRequestHandler {
         private const val GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
     }
 
-    override fun process(session: IMSession?, message: SendBody?) {
-        session!!.channel = IMSession.CHANNEL_BROWSER
+    override fun process(session: Session?, message: SendBody?) {
+        session!!.channel = Session.CHANNEL_BROWSER
         var secKey = message!!["key"] + GUID
         try {
             val md = MessageDigest.getInstance("SHA-1")
