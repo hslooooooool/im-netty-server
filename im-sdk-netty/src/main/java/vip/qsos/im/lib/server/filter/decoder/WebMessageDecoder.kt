@@ -57,13 +57,15 @@ class WebMessageDecoder : ByteToMessageDecoder() {
                         // 有掩码，获取掩码
                         val mask = ByteArray(4)
                         buffer.readBytes(mask)
-                        val data = ByteArray(realLength)
-                        buffer.readBytes(data)
-                        for (i in 0 until realLength) {
-                            // 数据进行异或运算
-                            data[i] = (data[i] xor mask[i % 4])
+                        if (buffer.readableBytes() > 0) {
+                            val data = ByteArray(realLength)
+                            buffer.readBytes(data)
+                            for (i in 0 until realLength) {
+                                // 数据进行异或运算
+                                data[i] = (data[i] xor mask[i % 4])
+                            }
+                            handleMessage(data, queue)
                         }
-                        handleMessage(data, queue)
                     }
                 }
                 /**关闭连接消息*/

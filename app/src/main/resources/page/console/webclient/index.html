@@ -16,15 +16,15 @@
 </head>
 
 
-<script> 
+<script>
 
    /***********************************推送配置开始**************************/
-   
+
    /**  当socket连接成功回调 **/
    function onConnectionSuccessed(){
 	   CIMPushManager.bindAccount($('#account').val());
    }
-   
+
    /** 当收到请求回复时候回调  **/
    function onReplyReceived(reply)
    {
@@ -32,21 +32,21 @@
      if(reply.key=='client_bind' && reply.code==200)
      {
         hideProcess();
-        
+
         $('#LoginDialog').fadeOut();
 
-        
+
         $('#MessageDialog').fadeIn();
         $('#MessageDialog').addClass("in");
         $("#current_account").text($('#account').val());
-        
+
      }
    }
-   
+
    /** 当收到消息时候回调  **/
-   
+
    function onMessageReceived(message)
-   { 
+   {
 	   console.log(message);
 	   if(message.action == ACTION_999){
 	       $('#MessageDialog').fadeOut();
@@ -54,22 +54,22 @@
 	       $('#LoginDialog').addClass("in");
 		   return ;
 	   }
-	   
+
 	   showNotification(message.content);
-	   
+
        $("#messageList").append("<h6 style='text-align: center;'>时间:"+new Date(message.timestamp).toLocaleString()+"</h6>");
        $("#messageList").append("<div class='alert alert-info' >"+message.content+"</div>");
    }
-   
-   
+
+
    /***********************************推送配置结束**************************/
 
-   
-    
+
+
    /***********************************业务配置开始**************************/
-    
+
     function doLogin(){
-    	
+
 		    if($.trim($('#account').val()) =='' ){
 		       return;
 		    }
@@ -77,17 +77,17 @@
 		    /**登录成功后创建连接****/
 		    CIMPushManager.connection();
 	}
-   
-   
-   
+
+
+
     $(document).ready(function(){
     	$('#LoginDialog').fadeIn();
         $('#LoginDialog').addClass("in");
-        
+
         initNotification();
     });
-    
-    
+
+
     function initNotification(){
     	//判断浏览器是否支持桌面通知
     	if (window.Notification) {
@@ -98,24 +98,24 @@
     	    }
     	}
     }
-    
+
     function showNotification(msg){
     	var notify = new Notification("系统消息", {
     	        body: msg,
     	        icon: '/image/icon.png',
     	        tag: 1
     	});
-    	
+
     	notify.onshow = function() {
     	        setTimeout(function() {
     	        	notify.close();
     	        }, 3000);
     	}
     }
-    
+
    /***********************************业务配置结束**************************/
 </script>
- 
+
 
 <body style="width: 600px;">
 
@@ -128,13 +128,13 @@
 	        <img src="/image/icon.png" style="height: 72px;width: 72px;margin-top:40px;"/>
 	        <div style="margin-top: 20px; color: #ffffff;font-size: 16px;">请输入一个帐号用于登录，随后接收推送消息</div>
  		    </div>
-		   
+
 	        	<div class="input-group" style="margin-top: 30px;margin-left:10px;margin-right:10px;margin-bottom:30px;">
 	        	  <span class="input-group-addon"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
 				  <input type="text" class="form-control" id="account" maxlength="32" placeholder="帐号（数字或者英文字母）"
 					style="display: inline; width: 100%; height: 50px;" />
-				</div>	 
-			 
+				</div>
+
 		    </div>
 			<div class="modal-footer" style="text-align: center;">
 				<a type="button" class="btn btn-success btn-lg" onclick="doLogin()"
