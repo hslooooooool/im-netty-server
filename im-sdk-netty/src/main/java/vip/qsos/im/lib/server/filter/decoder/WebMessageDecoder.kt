@@ -20,6 +20,7 @@ class WebMessageDecoder : ByteToMessageDecoder() {
         buffer.markReaderIndex()
         /**判断 fin 标志位是否是1 如果是0 则等待消息接收完成*/
         val tag = buffer.readByte()
+        println("收到指令：$buffer")
         /**有符号byte 第一位为1则为负数 第一位为0则为正数，以此 判断 fin 字段是 0 还是 1*/
         if (tag > 0) {
             /**等待消息接收完成，解除 mark*/
@@ -29,53 +30,53 @@ class WebMessageDecoder : ByteToMessageDecoder() {
 
             /**获取帧操作码。在 protobuf 中，仅支持二进制帧 OPCODE_BINARY，以及客户端关闭连接帧通知 OPCODE_CLOSE*/
             val frameOpcode: Int = tag.toInt() and TAG_MASK.toInt()
-            when (frameOpcode) {
+            if (OPCODE_BINARY.toInt() == frameOpcode) {
                 /**二进制消息*/
-                OPCODE_BINARY.toInt() -> {
-                    val head = buffer.readByte().toInt()
-                    val dataLength = (head and PAY_LOAD_LEN.toInt()).toByte()
-                    val realLength: Int
-                    /**
-                     * 数据承载能力，7位或者7+16位或者7+64位，表示数据帧中数据大小，有以下情况。
-                     * 如果值为0-125，那么该值就是payload data的真实长度。
-                     * 如果值为126，那么该7位后面紧跟着的2个字节就是payload data的真实长度。
-                     * 如果值为127，那么该7位后面紧跟着的8个字节就是payload data的真实长度。
-                     */
-                    realLength = when (dataLength) {
-                        HAS_EXTEND_DATA -> {
-                            buffer.readShort().toInt()
-                        }
-                        HAS_EXTEND_DATA_CONTINUE -> {
-                            buffer.readLong().toInt()
-                        }
-                        else -> {
-                            dataLength.toInt()
-                        }
+                val head = buffer.readByte().toInt()
+                val dataLength = (head and PAY_LOAD_LEN.toInt()).toByte()
+                val realLength: Int
+                /**
+                 * 数据承载能力，7位或者7+16位或者7+64位，表示数据帧中数据大小，有以下情况。
+                 * 如果值为0-125，那么该值就是payload data的真实长度。
+                 * 如果值为126，那么该7位后面紧跟着的2个字节就是payload data的真实长度。
+                 * 如果值为127，那么该7位后面紧跟着的8个字节就是payload data的真实长度。
+                 */
+                realLength = when (dataLength) {
+                    HAS_EXTEND_DATA -> {
+                        buffer.readShort().toInt()
                     }
-                    val masked = head shr 7 and MASK.toInt() == 1
-                    if (masked) {
-                        // 有掩码，获取掩码
-                        val mask = ByteArray(4)
-                        buffer.readBytes(mask)
-                        if (buffer.readableBytes() > 0) {
-                            val data = ByteArray(realLength)
-                            buffer.readBytes(data)
-                            for (i in 0 until realLength) {
-                                // 数据进行异或运算
-                                data[i] = (data[i] xor mask[i % 4])
-                            }
-                            handleMessage(data, queue)
-                        }
+                    HAS_EXTEND_DATA_CONTINUE -> {
+                        buffer.readLong().toInt()
+                    }
+                    else -> {
+                        dataLength.toInt()
                     }
                 }
+                val masked = head shr 7 and MASK.toInt() == 1
+                if (masked) {
+                    // 有掩码，获取掩码
+                    val mask = ByteArray(4)
+                    buffer.readBytes(mask)
+                    if (buffer.readableBytes() > 0) {
+                        val data = ByteArray(realLength)
+                        buffer.readBytes(data)
+                        for (i in 0 until realLength) {
+                            // 数据进行异或运算
+                            data[i] = (data[i] xor mask[i % 4])
+                        }
+                        handleMessage(data, queue)
+                    }else{
+                        println("收到指令：$buffer")
+                    }
+                }else{
+                    println("收到指令：$buffer")
+                }
+            } else if (OPCODE_CLOSE.toInt() == frameOpcode) {
                 /**关闭连接消息*/
-                OPCODE_CLOSE.toInt() -> {
-                    handleSocketClosed(arg0, buffer)
-                }
+                handleSocketClosed(arg0, buffer)
+            } else {
                 /**忽略其他类型的消息，清除此次读取数据*/
-                else -> {
-                    buffer.readBytes(ByteArray(buffer.readableBytes()))
-                }
+                buffer.readBytes(ByteArray(buffer.readableBytes()))
             }
         }
     }

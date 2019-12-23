@@ -6,6 +6,7 @@ import io.netty.channel.ChannelHandler.Sharable
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder
 import io.netty.handler.logging.LogLevel
 import io.netty.handler.logging.LoggingHandler
 import io.netty.handler.timeout.IdleState
@@ -16,10 +17,11 @@ import vip.qsos.im.lib.server.constant.IMConstant
 import vip.qsos.im.lib.server.filter.ServerMessageDecoder
 import vip.qsos.im.lib.server.filter.ServerMessageEncoder
 import vip.qsos.im.lib.server.model.HeartbeatRequest
-import vip.qsos.im.lib.server.model.Session
 import vip.qsos.im.lib.server.model.SendBody
+import vip.qsos.im.lib.server.model.Session
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+
 
 @Sharable
 class IMSocketAcceptor : SimpleChannelInboundHandler<SendBody>() {
@@ -32,10 +34,10 @@ class IMSocketAcceptor : SimpleChannelInboundHandler<SendBody>() {
         const val PING_TIME_OUT = 30
     }
 
+    private var port = 0
     private val innerHandlerMap = HashMap<String, IMRequestHandler>()
     private var outerRequestHandler: IMRequestHandler? = null
     private val channelGroup = ConcurrentHashMap<String, Channel>()
-    private var port = 0
     private var bossGroup: EventLoopGroup? = null
     private var workerGroup: EventLoopGroup? = null
 
@@ -43,6 +45,7 @@ class IMSocketAcceptor : SimpleChannelInboundHandler<SendBody>() {
     fun bind() {
         innerHandlerMap[IMConstant.CLIENT_WEBSOCKET_HANDSHAKE] = WebsocketHandler()
         innerHandlerMap[IMConstant.CLIENT_HEARTBEAT] = HeartbeatHandler()
+
         val bootstrap = ServerBootstrap()
         bossGroup = NioEventLoopGroup()
         workerGroup = NioEventLoopGroup()
@@ -53,6 +56,8 @@ class IMSocketAcceptor : SimpleChannelInboundHandler<SendBody>() {
         bootstrap.childHandler(object : ChannelInitializer<SocketChannel>() {
             @Throws(Exception::class)
             public override fun initChannel(ch: SocketChannel) {
+                /**优先加载当前处理器*/
+                ch.pipeline().addLast(this@IMSocketAcceptor)
                 /**消息处理切面-接收消息解码器*/
                 ch.pipeline().addLast(ServerMessageDecoder())
                 /**消息处理切面-发送消息编码器*/
@@ -60,7 +65,6 @@ class IMSocketAcceptor : SimpleChannelInboundHandler<SendBody>() {
 
                 ch.pipeline().addLast(LoggingHandler(LogLevel.INFO))
                 ch.pipeline().addLast(IdleStateHandler(READ_IDLE_TIME, WRITE_IDLE_TIME, 0))
-                ch.pipeline().addLast(this@IMSocketAcceptor)
             }
         })
         val channelFuture = bootstrap.bind(port).syncUninterruptibly()

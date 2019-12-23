@@ -1,0 +1,28 @@
+Manifest-Version: 1.0
+Main-Class: 
+Class-Path: kotlin-stdlib-1.3.61.jar spring-expression-5.1.9.RELEASE.jar
+  tomcat-embed-el-9.0.22.jar spring-webmvc-5.1.9.RELEASE.jar jackson-cor
+ e-2.9.9.jar kotlin-stdlib-common-1.3.61.jar jackson-annotations-2.9.0.j
+ ar commons-lang3-3.8.1.jar spring-boot-starter-2.1.7.RELEASE.jar spring
+ -core-5.1.9.RELEASE.jar spring-aop-5.1.9.RELEASE.jar logback-core-1.2.3
+ .jar im-sdk-netty.jar spring-boot-starter-web-2.1.7.RELEASE.jar freemar
+ ker-2.3.28.jar jackson-module-parameter-names-2.9.9.jar netty-transport
+ -4.1.35.Final.jar spring-boot-starter-logging-2.1.7.RELEASE.jar netty-c
+ odec-4.1.35.Final.jar jackson-datatype-jsr310-2.9.9.jar spring-boot-sta
+ rter-freemarker-2.1.7.RELEASE.jar jul-to-slf4j-1.7.26.jar netty-codec-h
+ ttp-4.1.35.Final.jar validation-api-2.0.1.Final.jar javax.annotation-ap
+ i-1.3.2.jar netty-resolver-4.1.35.Final.jar spring-boot-starter-tomcat-
+ 2.1.7.RELEASE.jar spring-boot-starter-json-2.1.7.RELEASE.jar kotlin-std
+ lib-jdk7-1.3.61.jar spring-web-5.1.9.RELEASE.jar netty-buffer-4.1.35.Fi
+ nal.jar spring-boot-configuration-processor-2.1.7.RELEASE.jar spring-be
+ ans-5.1.9.RELEASE.jar netty-handler-4.1.35.Final.jar spring-context-sup
+ port-5.1.9.RELEASE.jar snakeyaml-1.23.jar log4j-api-2.11.2.jar commons-
+ io-2.6.jar jackson-databind-2.9.9.jar spring-context-5.1.9.RELEASE.jar 
+ spring-boot-2.1.7.RELEASE.jar netty-common-4.1.35.Final.jar tomcat-embe
+ d-core-9.0.22.jar log4j-to-slf4j-2.11.2.jar classmate-1.4.0.jar annotat
+ ions-13.0.jar slf4j-api-1.7.26.jar jboss-logging-3.3.2.Final.jar hibern
+ ate-validator-6.0.17.Final.jar apns4j-1.1.4.jar logback-classic-1.2.3.j
+ ar protobuf-java-3.11.1.jar kotlin-stdlib-jdk8-1.3.61.jar spring-jcl-5.
+ 1.9.RELEASE.jar jackson-datatype-jdk8-2.9.9.jar tomcat-embed-websocket-
+ 9.0.22.jar spring-boot-autoconfigure-2.1.7.RELEASE.jar
+
