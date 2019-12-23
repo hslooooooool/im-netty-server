@@ -15,7 +15,7 @@ class SessionRepository {
     fun save(session: Session) {
         session.getAccount()?.let {
             map[it] = session
-        } ?: throw  NullPointerException("会话ID不存在")
+        } ?: throw  NullPointerException("账号不能为空")
     }
 
     operator fun get(account: String?): Session? {

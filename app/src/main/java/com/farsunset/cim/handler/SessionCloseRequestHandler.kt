@@ -13,7 +13,7 @@ import javax.annotation.Resource
  * 断开连接，清除session
  */
 @Component
-class SessionClosedHandler : IMRequestHandler {
+class SessionCloseRequestHandler : IMRequestHandler {
     @Resource
     private val imSessionService: IMSessionService? = null
 
