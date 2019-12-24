@@ -5,3 +5,4 @@
 *.iml
 app/app.iml
 im-netty-server.iml
+im-sdk-netty/target/
