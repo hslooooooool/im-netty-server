@@ -20,14 +20,13 @@ class WebMessageDecoder : ByteToMessageDecoder() {
         buffer.markReaderIndex()
         /**判断 fin 标志位是否是1 如果是0 则等待消息接收完成*/
         val tag = buffer.readByte()
-        println("收到指令：$buffer")
+        println("收到指令，完整数据：$buffer")
         /**有符号byte 第一位为1则为负数 第一位为0则为正数，以此 判断 fin 字段是 0 还是 1*/
         if (tag > 0) {
             /**等待消息接收完成，解除 mark*/
             buffer.resetReaderIndex()
             return
         } else {
-
             /**获取帧操作码。在 protobuf 中，仅支持二进制帧 OPCODE_BINARY，以及客户端关闭连接帧通知 OPCODE_CLOSE*/
             val frameOpcode: Int = tag.toInt() and TAG_MASK.toInt()
             if (OPCODE_BINARY.toInt() == frameOpcode) {
@@ -64,18 +63,23 @@ class WebMessageDecoder : ByteToMessageDecoder() {
                             // 数据进行异或运算
                             data[i] = (data[i] xor mask[i % 4])
                         }
+                        println("收到指令，获取掩码后有可读数据：realLength=$realLength")
                         handleMessage(data, queue)
                     }else{
-                        println("收到指令：$buffer")
+                        println("收到指令，获取掩码后无可读数据：$buffer")
+                        buffer.resetReaderIndex()
                     }
                 }else{
-                    println("收到指令：$buffer")
+                    println("收到指令，无掩码：$buffer")
+                    buffer.resetReaderIndex()
                 }
             } else if (OPCODE_CLOSE.toInt() == frameOpcode) {
                 /**关闭连接消息*/
+                println("收到指令，关闭连接：$buffer")
                 handleSocketClosed(arg0, buffer)
             } else {
                 /**忽略其他类型的消息，清除此次读取数据*/
+                println("收到指令，忽略其他类型：$buffer")
                 buffer.readBytes(ByteArray(buffer.readableBytes()))
             }
         }

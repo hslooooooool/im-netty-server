@@ -55,7 +55,7 @@ class IMSocketAcceptor : SimpleChannelInboundHandler<SendBody>() {
         bootstrap.childHandler(object : ChannelInitializer<SocketChannel>() {
             @Throws(Exception::class)
             public override fun initChannel(ch: SocketChannel) {
-                ch.pipeline().addLast(LoggingHandler(LogLevel.INFO))
+                ch.pipeline().addLast(LoggingHandler(LogLevel.TRACE))
                 ch.pipeline().addLast(IdleStateHandler(READ_IDLE_TIME, WRITE_IDLE_TIME, 0))
 
                 /**消息处理切面-接收消息解码器*/

@@ -73,7 +73,7 @@ class Session : IProtobufAble {
     var nid: String? = null
     /**客户端 ID (设备号码+应用包名),ios为 device token */
     var deviceId: String? = null
-    /**session绑定的服务器IP*/
+    /**session绑定的服务器IP，用于分布式区分*/
     var host: String? = null
     /**客户端设备类型*/
     var channel: String? = null

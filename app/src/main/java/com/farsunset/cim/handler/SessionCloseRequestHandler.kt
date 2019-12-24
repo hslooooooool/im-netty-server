@@ -23,6 +23,7 @@ class SessionCloseRequestHandler : IMRequestHandler {
             return
         }
         val account = session?.getAttribute(IMConstant.KEY_ACCOUNT) ?: return
+
         val oldSession = imSessionService!!.find(account.toString())
         if (oldSession == null || oldSession.isApnsOpen) {
             return
