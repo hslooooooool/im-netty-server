@@ -68,7 +68,6 @@ class BindAccountRequestHandler : IMRequestHandler {
                 if (oldSession.nid != session.nid && oldSession.isConnected) {
                     oldSession.closeOnFlush()
                 }
-                imSessionService.remove(oldSession.getAccount())
             } else {
                 /**不同设备连接，则关闭另一个终端连接，添加新连接*/
                 if (oldSession.nid != session.nid && oldSession.isConnected) {
@@ -81,8 +80,8 @@ class BindAccountRequestHandler : IMRequestHandler {
                     defaultMessagePusher!!.push(msg)
                     oldSession.closeOnFlush()
                 }
-                imSessionService.remove(oldSession.getAccount())
             }
+            imSessionService.remove(oldSession.getAccount())
         }
         /**将当前连接置入存储*/
         imSessionService.save(session)
