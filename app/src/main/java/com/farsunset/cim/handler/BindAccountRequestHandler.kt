@@ -87,17 +87,6 @@ class BindAccountRequestHandler : IMRequestHandler {
         imSessionService.save(session)
     }
 
-    /**不同设备同一账号登录时关闭旧的连接*/
-    private fun closeQuietly(oldSession: Session, newSession: Session) {
-        if (oldSession.isConnected && host == oldSession.host) {
-            oldSession.setAttribute(IMConstant.KEY_QUIETLY_CLOSE, true)
-            if (oldSession.nid != newSession.nid) {
-                oldSession.closeOnFlush()
-            }
-            imSessionService!!.remove(oldSession.getAccount())
-        }
-    }
-
     /**判断设备ID是否一致，表示同一设备*/
     private fun sameDeice(oldSession: Session?, newSession: Session): Boolean {
         return oldSession?.deviceId == newSession.deviceId
