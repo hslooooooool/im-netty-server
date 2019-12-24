@@ -13,16 +13,16 @@ import javax.annotation.Resource
  * 断开连接，清除session
  */
 @Component
-class SessionClosedHandler : IMRequestHandler {
+class SessionCloseRequestHandler : IMRequestHandler {
     @Resource
     private val imSessionService: IMSessionService? = null
 
     override fun process(session: Session?, message: SendBody?) {
-        val quietly = session!!.getAttribute(IMConstant.KEY_QUIETLY_CLOSE)
+        val quietly = session?.getAttribute(IMConstant.KEY_QUIETLY_CLOSE)
         if (quietly == true) {
             return
         }
-        val account = session.getAttribute(IMConstant.KEY_ACCOUNT) ?: return
+        val account = session?.getAttribute(IMConstant.KEY_ACCOUNT) ?: return
         val oldSession = imSessionService!!.find(account.toString())
         if (oldSession == null || oldSession.isApnsOpen) {
             return

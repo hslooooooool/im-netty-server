@@ -113,23 +113,23 @@ class Session : IProtobufAble {
     }
 
     fun setAttribute(key: String?, value: Any?) {
-        if (session != null) session!!.attr(AttributeKey.valueOf<Any>(key)).set(value)
+        session?.attr(AttributeKey.valueOf<Any>(key))?.set(value)
     }
 
     fun containsAttribute(key: String?): Boolean {
-        return if (session != null) session!!.hasAttr(AttributeKey.valueOf<Any>(key)) else false
+        return session?.hasAttr(AttributeKey.valueOf<Any>(key)) ?: false
     }
 
     fun getAttribute(key: String?): Any? {
-        return if (session != null) session!!.attr(AttributeKey.valueOf<Any>(key)).get() else null
+        return session?.attr(AttributeKey.valueOf<Any>(key))?.get()
     }
 
     fun removeAttribute(key: String?) {
-        if (session != null) session!!.attr(AttributeKey.valueOf<Any>(key)).set(null)
+        session?.attr(AttributeKey.valueOf<Any>(key))?.set(null)
     }
 
     val remoteAddress: SocketAddress?
-        get() = if (session != null) session!!.remoteAddress() else null
+        get() = session?.remoteAddress()
 
     @Throws(EncoderException::class)
     fun write(msg: Any?): Boolean {
@@ -142,11 +142,11 @@ class Session : IProtobufAble {
         get() = session != null && session!!.isActive || state == STATE_ENABLED
 
     fun closeNow() {
-        if (session != null) session!!.close()
+        session?.close()
     }
 
     fun closeOnFlush() {
-        if (session != null) session!!.close()
+        session?.close()
     }
 
     val isIOSChannel: Boolean

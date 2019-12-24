@@ -37,17 +37,16 @@ interface IMConstant {
     }
 
     companion object {
-        /**【定义】消息服务重连时长，毫秒*/
-        var RECONNECT_INTERVAL_TIME: Long = 30 * 1000L
         /**【定义】消息头长度3个字节，第一个字节为消息类型，第二、三字节转换 int 后为消息长度*/
         const val DATA_HEADER_LENGTH: Int = 3
 
         const val KEY_ACCOUNT = "account"
         const val KEY_QUIETLY_CLOSE = "quietly_close"
         const val KEY_HEARTBEAT = "heartbeat"
-        const val CLIENT_WEBSOCKET_HANDSHAKE = "client_websocket_handshake"
+
         const val CLIENT_HEARTBEAT = "client_heartbeat"
-        const val CLIENT_CONNECT_CLOSED = "client_closed"
         const val CLIENT_CONNECT_BIND = "client_bind"
+        const val CLIENT_CONNECT_CLOSED = "client_closed"
+        const val CLIENT_WEBSOCKET_HANDSHAKE = "client_websocket_handshake"
     }
 }

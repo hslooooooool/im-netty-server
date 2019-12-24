@@ -10,6 +10,7 @@
 	<version>1.0</version>
 	<modules>
 		<module>app</module>
+		<module>im-sdk-netty</module>
 	</modules>
 	
 	<properties>

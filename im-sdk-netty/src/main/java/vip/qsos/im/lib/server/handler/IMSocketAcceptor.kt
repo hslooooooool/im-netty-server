@@ -6,7 +6,6 @@ import io.netty.channel.ChannelHandler.Sharable
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
-import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder
 import io.netty.handler.logging.LogLevel
 import io.netty.handler.logging.LoggingHandler
 import io.netty.handler.timeout.IdleState
@@ -22,7 +21,6 @@ import vip.qsos.im.lib.server.model.Session
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
-
 @Sharable
 class IMSocketAcceptor : SimpleChannelInboundHandler<SendBody>() {
     companion object {
@@ -32,57 +30,59 @@ class IMSocketAcceptor : SimpleChannelInboundHandler<SendBody>() {
         const val WRITE_IDLE_TIME = 120
         /**心跳响应超时时间*/
         const val PING_TIME_OUT = 30
+        /**APP回调处理KEY*/
+        const val APP_HANDLER = "APP_HANDLER"
     }
 
-    private var port = 0
-    private val innerHandlerMap = HashMap<String, IMRequestHandler>()
-    private var outerRequestHandler: IMRequestHandler? = null
-    private val channelGroup = ConcurrentHashMap<String, Channel>()
-    private var bossGroup: EventLoopGroup? = null
-    private var workerGroup: EventLoopGroup? = null
+    private var mPort = 0
+    private val mHandlerMap = HashMap<String, IMRequestHandler>()
+    private val mChannelGroup = ConcurrentHashMap<String, Channel>()
+    private var mBossGroup: EventLoopGroup? = null
+    private var mWorkerGroup: EventLoopGroup? = null
 
     /**预制 websocket 握手请求的处理*/
     fun bind() {
-        innerHandlerMap[IMConstant.CLIENT_WEBSOCKET_HANDSHAKE] = WebsocketHandler()
-        innerHandlerMap[IMConstant.CLIENT_HEARTBEAT] = HeartbeatHandler()
+        mHandlerMap[IMConstant.CLIENT_HEARTBEAT] = HeartbeatHandler()
+        mHandlerMap[IMConstant.CLIENT_WEBSOCKET_HANDSHAKE] = WebsocketHandler()
 
         val bootstrap = ServerBootstrap()
-        bossGroup = NioEventLoopGroup()
-        workerGroup = NioEventLoopGroup()
-        bootstrap.group(bossGroup, workerGroup)
+        mBossGroup = NioEventLoopGroup()
+        mWorkerGroup = NioEventLoopGroup()
+        bootstrap.group(mBossGroup, mWorkerGroup)
         bootstrap.childOption(ChannelOption.TCP_NODELAY, true)
         bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true)
         bootstrap.channel(NioServerSocketChannel::class.java)
         bootstrap.childHandler(object : ChannelInitializer<SocketChannel>() {
             @Throws(Exception::class)
             public override fun initChannel(ch: SocketChannel) {
-                /**优先加载当前处理器*/
-                ch.pipeline().addLast(this@IMSocketAcceptor)
+                ch.pipeline().addLast(LoggingHandler(LogLevel.INFO))
+                ch.pipeline().addLast(IdleStateHandler(READ_IDLE_TIME, WRITE_IDLE_TIME, 0))
+
                 /**消息处理切面-接收消息解码器*/
                 ch.pipeline().addLast(ServerMessageDecoder())
                 /**消息处理切面-发送消息编码器*/
                 ch.pipeline().addLast(ServerMessageEncoder())
 
-                ch.pipeline().addLast(LoggingHandler(LogLevel.INFO))
-                ch.pipeline().addLast(IdleStateHandler(READ_IDLE_TIME, WRITE_IDLE_TIME, 0))
+                ch.pipeline().addLast(this@IMSocketAcceptor)
             }
         })
-        val channelFuture = bootstrap.bind(port).syncUninterruptibly()
-        channelFuture.channel().closeFuture().addListener { destroy() }
+        bootstrap.bind(mPort).syncUninterruptibly().channel().closeFuture().addListener {
+            destroy()
+        }
     }
 
     /**销毁服务*/
     private fun destroy() {
-        if (bossGroup != null && !bossGroup!!.isShuttingDown && !bossGroup!!.isShutdown) {
+        if (mBossGroup != null && !mBossGroup!!.isShuttingDown && !mBossGroup!!.isShutdown) {
             try {
-                bossGroup!!.shutdownGracefully()
+                mBossGroup!!.shutdownGracefully()
             } catch (ignore: Exception) {
             }
             return
         }
-        if (workerGroup != null && !workerGroup!!.isShuttingDown && !workerGroup!!.isShutdown) {
+        if (mWorkerGroup != null && !mWorkerGroup!!.isShuttingDown && !mWorkerGroup!!.isShutdown) {
             try {
-                workerGroup!!.shutdownGracefully()
+                mWorkerGroup!!.shutdownGracefully()
             } catch (ignore: Exception) {
             }
             return
@@ -90,33 +90,29 @@ class IMSocketAcceptor : SimpleChannelInboundHandler<SendBody>() {
     }
 
     /**设置应用层的消息处理器*/
-    fun setOuterRequestHandler(outerRequestHandler: IMRequestHandler?) {
-        this.outerRequestHandler = outerRequestHandler
+    fun setAppHandler(outerRequestHandler: IMRequestHandler) {
+        mHandlerMap[APP_HANDLER] = outerRequestHandler
     }
 
     /**有消息下达*/
     override fun channelRead0(ctx: ChannelHandlerContext, body: SendBody) {
         val session = Session(ctx.channel())
-        val handler = innerHandlerMap[body.key]
-        if (handler != null) {
-            handler.process(session, body)
-            return
-        }
-        outerRequestHandler?.process(session, body)
+        mHandlerMap[body.key]?.process(session, body)
+        mHandlerMap[APP_HANDLER]?.process(session, body)
     }
 
     /**检测到通道关闭*/
     override fun channelInactive(ctx: ChannelHandlerContext) {
-        channelGroup.remove(ctx.channel().id().asShortText())
+        mChannelGroup.remove(ctx.channel().id().asShortText())
         val session = Session(ctx.channel())
         val body = SendBody()
         body.key = IMConstant.CLIENT_CONNECT_CLOSED
-        outerRequestHandler?.process(session, body)
+        mHandlerMap[APP_HANDLER]?.process(session, body)
     }
 
     /**检测到通道活跃*/
     override fun channelActive(ctx: ChannelHandlerContext) {
-        channelGroup[ctx.channel().id().asShortText()] = ctx.channel()
+        mChannelGroup[ctx.channel().id().asShortText()] = ctx.channel()
     }
 
     @Throws(Exception::class)
@@ -136,12 +132,12 @@ class IMSocketAcceptor : SimpleChannelInboundHandler<SendBody>() {
     }
 
     fun setPort(port: Int) {
-        this.port = port
+        this.mPort = port
     }
 
     fun getManagedSession(id: String?): Channel? {
         return if (id == null) {
             null
-        } else channelGroup[id]
+        } else mChannelGroup[id]
     }
 }
