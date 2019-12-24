@@ -2,3 +2,6 @@
 /out/
 /app/target/
 /im-sdk-netty/jars/
+*.iml
+app/app.iml
+im-netty-server.iml
