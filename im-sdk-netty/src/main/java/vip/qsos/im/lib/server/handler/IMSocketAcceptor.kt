@@ -13,14 +13,18 @@ import io.netty.handler.timeout.IdleStateEvent
 import io.netty.handler.timeout.IdleStateHandler
 import io.netty.util.AttributeKey
 import vip.qsos.im.lib.server.constant.IMConstant
-import vip.qsos.im.lib.server.filter.ServerMessageDecoder
-import vip.qsos.im.lib.server.filter.ServerMessageEncoder
+import vip.qsos.im.lib.server.filter.SendBodyDecoder
+import vip.qsos.im.lib.server.filter.SendBodyEncoder
 import vip.qsos.im.lib.server.model.HeartbeatRequest
 import vip.qsos.im.lib.server.model.SendBody
 import vip.qsos.im.lib.server.model.Session
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
+/**
+ * @author : 华清松
+ * MessageLite 类型的消息处理，Protobuf 类型的消息将被解析成 MessageLite
+ */
 @Sharable
 class IMSocketAcceptor : SimpleChannelInboundHandler<SendBody>() {
     companion object {
@@ -43,7 +47,7 @@ class IMSocketAcceptor : SimpleChannelInboundHandler<SendBody>() {
     /**预制 websocket 握手请求的处理*/
     fun bind() {
         mHandlerMap[IMConstant.CLIENT_HEARTBEAT] = HeartbeatHandler()
-        mHandlerMap[IMConstant.CLIENT_WEBSOCKET_HANDSHAKE] = WebsocketHandler()
+        mHandlerMap[IMConstant.CLIENT_HANDSHAKE] = WebsocketHandler()
 
         val bootstrap = ServerBootstrap()
         mBossGroup = NioEventLoopGroup()
@@ -59,9 +63,9 @@ class IMSocketAcceptor : SimpleChannelInboundHandler<SendBody>() {
                 ch.pipeline().addLast(IdleStateHandler(READ_IDLE_TIME, WRITE_IDLE_TIME, 0))
 
                 /**消息处理切面-接收消息解码器*/
-                ch.pipeline().addLast(ServerMessageDecoder())
+                ch.pipeline().addLast("SendBodyDecoder", SendBodyDecoder())
                 /**消息处理切面-发送消息编码器*/
-                ch.pipeline().addLast(ServerMessageEncoder())
+                ch.pipeline().addLast("SendBodyEncoder", SendBodyEncoder())
 
                 ch.pipeline().addLast(this@IMSocketAcceptor)
             }
@@ -106,7 +110,7 @@ class IMSocketAcceptor : SimpleChannelInboundHandler<SendBody>() {
         mChannelGroup.remove(ctx.channel().id().asShortText())
         val session = Session(ctx.channel())
         val body = SendBody()
-        body.key = IMConstant.CLIENT_CONNECT_CLOSED
+        body.key = IMConstant.CLIENT_CLOSED
         mHandlerMap[APP_HANDLER]?.process(session, body)
     }
 
@@ -118,16 +122,16 @@ class IMSocketAcceptor : SimpleChannelInboundHandler<SendBody>() {
     @Throws(Exception::class)
     override fun userEventTriggered(ctx: ChannelHandlerContext, evt: Any) {
         if (evt is IdleStateEvent && evt.state() == IdleState.WRITER_IDLE) {
-            ctx.channel().attr(AttributeKey.valueOf<Any>(IMConstant.KEY_HEARTBEAT)).set(System.currentTimeMillis())
+            ctx.channel().attr(AttributeKey.valueOf<Any>(IMConstant.KEY_LAST_HEARTBEAT_TIME)).set(System.currentTimeMillis())
             ctx.channel().writeAndFlush(HeartbeatRequest.instance)
         }
         /**如果心跳请求发出【30】秒内没收到响应，则关闭连接*/
         if (evt is IdleStateEvent && evt.state() == IdleState.READER_IDLE) {
-            val lastTime = ctx.channel().attr(AttributeKey.valueOf<Any>(IMConstant.KEY_HEARTBEAT)).get() as Long?
+            val lastTime = ctx.channel().attr(AttributeKey.valueOf<Any>(IMConstant.KEY_LAST_HEARTBEAT_TIME)).get() as Long?
             if (lastTime != null && System.currentTimeMillis() - lastTime >= PING_TIME_OUT) {
                 ctx.channel().close()
             }
-            ctx.channel().attr(AttributeKey.valueOf<Any>(IMConstant.KEY_HEARTBEAT)).set(null)
+            ctx.channel().attr(AttributeKey.valueOf<Any>(IMConstant.KEY_LAST_HEARTBEAT_TIME)).set(null)
         }
     }
 

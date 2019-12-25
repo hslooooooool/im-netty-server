@@ -16,25 +16,28 @@ class Session : IProtobufAble {
 
     companion object {
         private const val serialVersionUID = 1L
-        const val PROTOCOL = "protocol"
-        /**消息客户端类型 */
-        const val WEBSOCKET = "websocket"
-        const val NATIVE_APP = "nativeapp"
+
+        /**当前服务器IP地址*/
         const val HOST = "HOST"
 
-        /**客户端连接状态 */
+        /**消息客户端类型*/
+        const val CHANNEL_TYPE = "CHANNEL_TYPE"
+        const val WEBSOCKET = "WEBSOCKET"
+        const val NATIVE_APP = "NATIVE_APP"
+
+        /**客户端连接状态*/
         const val STATE_ENABLED = 0
         const val STATE_DISABLED = 1
 
-        /**苹果推送服务开关 */
-        const val APNS_ON = 1
-        const val APNS_OFF = 0
+        /**苹果推送服务开关*/
+        const val APNS_ON = 0
+        const val APNS_OFF = 1
 
-        /**连接客户端类型 */
+        /**连接客户端类型*/
+        const val CHANNEL_WP = "wp"
         const val CHANNEL_IOS = "ios"
         const val CHANNEL_ANDROID = "android"
         const val CHANNEL_WINDOWS = "windows"
-        const val CHANNEL_WP = "wp"
         const val CHANNEL_BROWSER = "browser"
 
         @Throws(InvalidProtocolBufferException::class)
@@ -92,7 +95,7 @@ class Session : IProtobufAble {
     /**客户端位置*/
     var location: String? = null
     /**apns推送状态*/
-    var apns = 0
+    var apns = 1
     /**客户端在线状态*/
     var state = 0
 

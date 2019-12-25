@@ -40,13 +40,17 @@ interface IMConstant {
         /**【定义】消息头长度3个字节，第一个字节为消息类型，第二、三字节转换 int 后为消息长度*/
         const val DATA_HEADER_LENGTH: Int = 3
 
+        /**登录账号*/
         const val KEY_ACCOUNT = "account"
-        const val KEY_QUIETLY_CLOSE = "quietly_close"
-        const val KEY_HEARTBEAT = "heartbeat"
-
+        /**上一次心跳时间*/
+        const val KEY_LAST_HEARTBEAT_TIME = "last_heartbeat_time"
+        /**心跳请求*/
         const val CLIENT_HEARTBEAT = "client_heartbeat"
-        const val CLIENT_CONNECT_BIND = "client_bind"
-        const val CLIENT_CONNECT_CLOSED = "client_closed"
-        const val CLIENT_WEBSOCKET_HANDSHAKE = "client_websocket_handshake"
+        /**账号绑定请求*/
+        const val CLIENT_BIND = "client_bind"
+        /**连接关闭*/
+        const val CLIENT_CLOSED = "client_closed"
+        /**Websocket 握手*/
+        const val CLIENT_HANDSHAKE = "client_websocket_handshake"
     }
 }

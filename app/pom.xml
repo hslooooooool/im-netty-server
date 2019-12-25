@@ -26,7 +26,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>com.farsunset.cim.ServerLauncher</mainClass>
+					<mainClass>vip.qsos.im.ServerLauncher</mainClass>
 					<layout>ZIP</layout>
 				</configuration>
 				<executions>
