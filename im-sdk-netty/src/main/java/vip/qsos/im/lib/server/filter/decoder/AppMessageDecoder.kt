@@ -11,14 +11,13 @@ import vip.qsos.im.lib.server.model.Session
 
 /**
  * @author : 华清松
- * 服务端接收来自应用的消息解码
+ * 服务端接收来自应用的消息解码 Socket 版本
  */
 class AppMessageDecoder : ByteToMessageDecoder() {
     @Throws(Exception::class)
     public override fun decode(arg0: ChannelHandlerContext, buffer: ByteBuf, queue: MutableList<Any>) {
-        arg0.channel().attr(AttributeKey.valueOf<Any>(Session.CHANNEL_TYPE)).set(Session.NATIVE_APP)
-        while (buffer.readableBytes() > 4) {
-            // 如果可读长度小于包头长度，退出。
+        arg0.channel().attr(AttributeKey.valueOf<String>(Session.CHANNEL_TYPE)).set(Session.NATIVE_APP)
+        while (buffer.readableBytes() > IMConstant.DATA_HEADER_LENGTH) {
             buffer.markReaderIndex()
             // 获取类型
             val dataType: Byte = buffer.readByte()
@@ -36,8 +35,8 @@ class AppMessageDecoder : ByteToMessageDecoder() {
             }
             // 读取消息内容
             val bodyByteBuf: ByteBuf = buffer.readBytes(bodyLength)
-            var content: ByteArray
             val readableLen = bodyByteBuf.readableBytes()
+            var content: ByteArray
             if (bodyByteBuf.hasArray()) {
                 content = bodyByteBuf.array()
             } else {

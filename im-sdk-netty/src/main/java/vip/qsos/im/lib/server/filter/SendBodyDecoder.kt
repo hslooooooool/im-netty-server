@@ -31,7 +31,7 @@ class SendBodyDecoder : ByteToMessageDecoder() {
 
     @Throws(Exception::class)
     override fun decode(context: ChannelHandlerContext, buffer: ByteBuf, queue: MutableList<Any>) {
-        when (context.channel().attr(AttributeKey.valueOf<Any>(Session.CHANNEL_TYPE)).get()) {
+        when (context.channel().attr(AttributeKey.valueOf<String>(Session.CHANNEL_TYPE)).get()) {
             Session.WEBSOCKET -> {
                 webMessageDecoder.decode(context, buffer, queue)
             }
@@ -57,11 +57,11 @@ class SendBodyDecoder : ByteToMessageDecoder() {
         val handShake = secKey != null && getUpgradeProtocol(request) == Session.WEBSOCKET
         if (handShake) {
             /**握手响应之后，标记当前 session 的协议为 websocket */
-            arg0.channel().attr(AttributeKey.valueOf<Any>(Session.CHANNEL_TYPE)).set(Session.WEBSOCKET)
+            arg0.channel().attr(AttributeKey.valueOf<String>(Session.CHANNEL_TYPE)).set(Session.WEBSOCKET)
             val body = SendBody()
             body.key = IMConstant.CLIENT_HANDSHAKE
             body.timestamp = System.currentTimeMillis()
-            body.put("secKey", secKey)
+            body.put("key", secKey)
             queue.add(body)
         } else {
             buffer.resetReaderIndex()

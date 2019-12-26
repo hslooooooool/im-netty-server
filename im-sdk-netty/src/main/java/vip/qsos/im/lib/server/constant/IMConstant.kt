@@ -39,7 +39,6 @@ interface IMConstant {
     companion object {
         /**【定义】消息头长度3个字节，第一个字节为消息类型，第二、三字节转换 int 后为消息长度*/
         const val DATA_HEADER_LENGTH: Int = 3
-
         /**登录账号*/
         const val KEY_ACCOUNT = "account"
         /**上一次心跳时间*/

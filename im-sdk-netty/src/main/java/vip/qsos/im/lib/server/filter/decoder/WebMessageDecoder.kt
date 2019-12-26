@@ -12,7 +12,7 @@ import kotlin.experimental.xor
 
 /**
  * @author : 华清松
- * 客户端发送的消息解码
+ * 客户端发送的消息解码 WebSocket 版本
  */
 class WebMessageDecoder : ByteToMessageDecoder() {
 

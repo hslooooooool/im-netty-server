@@ -21,9 +21,9 @@ class Session : IProtobufAble {
         const val HOST = "HOST"
 
         /**消息客户端类型*/
-        const val CHANNEL_TYPE = "CHANNEL_TYPE"
-        const val WEBSOCKET = "WEBSOCKET"
-        const val NATIVE_APP = "NATIVE_APP"
+        const val CHANNEL_TYPE = "channel_type"
+        const val WEBSOCKET = "websocket"
+        const val NATIVE_APP = "native_app"
 
         /**客户端连接状态*/
         const val STATE_ENABLED = 0
