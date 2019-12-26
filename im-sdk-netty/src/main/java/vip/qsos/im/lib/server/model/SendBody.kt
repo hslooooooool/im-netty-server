@@ -14,7 +14,7 @@ class SendBody : IProtobufAble {
         private const val serialVersionUID = 1L
     }
 
-    /**请求key*/
+    /**请求key，即指令类型*/
     var key: String? = null
     /**发送时间*/
     var timestamp: Long = 0L
@@ -28,7 +28,7 @@ class SendBody : IProtobufAble {
     private val keySet: Set<String>
         get() = data.keys
 
-    operator fun get(k: String): String? {
+    fun find(k: String): String? {
         return data[k]
     }
 
@@ -68,7 +68,7 @@ class SendBody : IProtobufAble {
         buffer.append("\ndata{")
         if (!data.isEmpty) {
             for (key in keySet) {
-                buffer.append("\t\t\n$key").append(":").append(this[key])
+                buffer.append("\t\t\n$key").append(":").append(this.find(key))
             }
         }
         buffer.append("\n}")

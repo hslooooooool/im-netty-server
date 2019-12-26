@@ -17,8 +17,8 @@ class WebsocketHandler : IMRequestHandler {
     }
 
     override fun process(session: Session?, message: SendBody?) {
-        session!!.channel = Session.CHANNEL_BROWSER
-        var secKey = message!!["key"] + GUID
+        session!!.deviceType = Session.CHANNEL_BROWSER
+        var secKey = message!!.find("key") + GUID
         try {
             val md = MessageDigest.getInstance("SHA-1")
             md.update(secKey.toByteArray(charset("iso-8859-1")), 0, secKey.length)

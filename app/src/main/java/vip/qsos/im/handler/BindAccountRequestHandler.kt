@@ -1,17 +1,15 @@
 package vip.qsos.im.handler
 
-import vip.qsos.im.AppConstant
-import vip.qsos.im.push.IMMessagePusher
-import vip.qsos.im.service.IMSessionService
-import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import vip.qsos.im.lib.server.constant.IMConstant
+import vip.qsos.im.AppConstant
+import vip.qsos.im.AppProperties
 import vip.qsos.im.lib.server.handler.IMRequestHandler
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.lib.server.model.ReplyBody
 import vip.qsos.im.lib.server.model.SendBody
 import vip.qsos.im.lib.server.model.Session
+import vip.qsos.im.push.IMessagePusher
+import vip.qsos.im.service.IServerManager
 import javax.annotation.Resource
 
 /**
@@ -19,49 +17,43 @@ import javax.annotation.Resource
  * 账号绑定实现
  */
 @Component
-class BindAccountRequestHandler : IMRequestHandler {
-
-    private val logger = LoggerFactory.getLogger(BindAccountRequestHandler::class.java)
-
-    @Resource
-    private val imSessionService: IMSessionService? = null
-    @Value("\${im.server.host.ip}")
-    private val host: String? = null
-    @Resource
-    private val defaultMessagePusher: IMMessagePusher? = null
-
+class BindAccountRequestHandler constructor(
+        @Resource private val mProperties: AppProperties,
+        @Resource private val sessionManager: IServerManager,
+        @Resource private val defaultMessagePusher: IMessagePusher
+) : IMRequestHandler {
     override fun process(session: Session?, message: SendBody?) {
-        // TODO 判断host转发请求到其它服务器
-
         val reply = ReplyBody()
         reply.key = message!!.key
-        reply.code = IMConstant.ReturnCode.CODE_200
+        reply.code = "200"
         reply.timestamp = System.currentTimeMillis()
         try {
-            val account = message["account"]
+            val account = message.find("account")
             session!!.setAccount(account)
-            session.deviceId = message["deviceId"]
+            session.deviceId = message.find("deviceId")
             if (session.deviceId == null || session.deviceId!!.isEmpty()) {
                 throw  NullPointerException("设备ID不能为空")
             }
-            session.host = host
-            session.channel = message["channel"]
-            session.deviceModel = message["device"]
-            session.clientVersion = message["version"]
-            session.systemVersion = message["osVersion"]
+            session.host = mProperties.host
+            session.deviceType = message.find("channel")
+            session.deviceModel = message.find("device")
+            session.clientVersion = message.find("version")
+            session.systemVersion = message.find("osVersion")
             session.bindTime = System.currentTimeMillis()
             dellSession(session)
         } catch (exception: Exception) {
-            reply.code = IMConstant.ReturnCode.CODE_500
+            reply.code = "500"
             reply.message = "账号绑定失败"
-            logger.error("Bind has error", exception)
         }
         session!!.write(reply)
     }
 
     private fun dellSession(session: Session) {
         /**由于客户端断线服务端可能会无法获知的情况，客户端重连时，需要关闭旧的连接*/
-        imSessionService!!.find(session.getAccount())?.let { oldSession ->
+        if (null == session.getAccount()) {
+            throw NullPointerException("账号不能为空")
+        }
+        sessionManager.find(session.getAccount()!!)?.let { oldSession ->
             if (sameDeice(oldSession, session)) {
                 /**同一个设备重复连接，如果会话通道不变则替换旧连接，否则将关闭旧链接，添加新连接*/
                 if (oldSession.nid != session.nid && oldSession.isConnected) {
@@ -74,16 +66,16 @@ class BindAccountRequestHandler : IMRequestHandler {
                     msg.id = System.currentTimeMillis()
                     msg.action = AppConstant.IMMessageAction.ACTION_999
                     msg.receiver = session.getAccount()
-                    msg.sender = "system"
+                    msg.sender = mProperties.hostName
                     msg.content = "您的账号在其它地方登录"
-                    defaultMessagePusher!!.push(msg)
+                    defaultMessagePusher.push(msg)
                     oldSession.closeOnFlush()
                 }
             }
-            imSessionService.remove(oldSession.getAccount())
+            sessionManager.remove(oldSession.getAccount()!!)
         }
         /**将当前连接置入存储*/
-        imSessionService.save(session)
+        sessionManager.save(session)
     }
 
     /**判断设备ID是否一致，表示同一设备*/

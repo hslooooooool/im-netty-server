@@ -17,9 +17,6 @@ class Session : IProtobufAble {
     companion object {
         private const val serialVersionUID = 1L
 
-        /**当前服务器IP地址*/
-        const val HOST = "HOST"
-
         /**消息客户端类型*/
         const val CHANNEL_TYPE = "channel_type"
         const val WEBSOCKET = "websocket"
@@ -40,46 +37,48 @@ class Session : IProtobufAble {
         const val CHANNEL_WINDOWS = "windows"
         const val CHANNEL_BROWSER = "browser"
 
+        /**ByteArray 转为 Session 对象*/
         @Throws(InvalidProtocolBufferException::class)
         fun decode(protobufBody: ByteArray?): Session? {
-            if (protobufBody == null) {
-                return null
+            return protobufBody?.let {
+                val proto = SessionProto.Model.parseFrom(it)
+                val session = Session()
+                session.id = proto.id
+                session.apns = proto.apns
+                session.bindTime = proto.bindTime
+                session.deviceType = proto.channel
+                session.clientVersion = proto.clientVersion
+                session.deviceId = proto.deviceId
+                session.deviceModel = proto.deviceModel
+                session.host = proto.host
+                session.latitude = proto.latitude
+                session.longitude = proto.longitude
+                session.location = proto.location
+                session.nid = proto.nid
+                session.systemVersion = proto.systemVersion
+                session.state = proto.state
+                session.setAccount(proto.account)
+
+                session
             }
-            val proto = SessionProto.Model.parseFrom(protobufBody)
-            val session = Session()
-            session.id = proto.id
-            session.apns = proto.apns
-            session.bindTime = proto.bindTime
-            session.channel = proto.channel
-            session.clientVersion = proto.clientVersion
-            session.deviceId = proto.deviceId
-            session.deviceModel = proto.deviceModel
-            session.host = proto.host
-            session.latitude = proto.latitude
-            session.longitude = proto.longitude
-            session.location = proto.location
-            session.nid = proto.nid
-            session.systemVersion = proto.systemVersion
-            session.state = proto.state
-            session.setAccount(proto.account)
-            return session
+
         }
     }
 
     /**当前连接通道*/
-    var session: Channel? = null
+    var channel: Channel? = null
     /**数据库主键ID*/
     var id: Long? = null
-    /**session绑定的用户账号*/
+    /**channel 绑定的用户账号*/
     private var account: String? = null
-    /**session在本台服务器上的ID*/
+    /**channel ID*/
     var nid: String? = null
     /**客户端 ID (设备号码+应用包名),ios为 device token */
     var deviceId: String? = null
     /**session绑定的服务器IP，用于分布式区分*/
     var host: String? = null
     /**客户端设备类型*/
-    var channel: String? = null
+    var deviceType: String? = null
     /**客户端设备型号*/
     var deviceModel: String? = null
     /**客户端应用版本*/
@@ -101,9 +100,9 @@ class Session : IProtobufAble {
 
     constructor()
 
-    constructor(session: Channel) {
-        this.session = session
-        this.nid = session.id().asShortText()
+    constructor(channel: Channel) {
+        this.channel = channel
+        this.nid = channel.id().asShortText()
     }
 
     fun getAccount(): String? {
@@ -116,50 +115,50 @@ class Session : IProtobufAble {
     }
 
     fun setAttribute(key: String?, value: Any?) {
-        session?.attr(AttributeKey.valueOf<Any>(key))?.set(value)
+        channel?.attr(AttributeKey.valueOf<Any>(key))?.set(value)
     }
 
     fun containsAttribute(key: String?): Boolean {
-        return session?.hasAttr(AttributeKey.valueOf<Any>(key)) ?: false
+        return channel?.hasAttr(AttributeKey.valueOf<Any>(key)) ?: false
     }
 
-    fun getAttribute(key: String?): Any? {
-        return session?.attr(AttributeKey.valueOf<Any>(key))?.get()
+    fun <T> getAttribute(key: String?): T? {
+        return channel?.attr(AttributeKey.valueOf<T>(key))?.get()
     }
 
     fun removeAttribute(key: String?) {
-        session?.attr(AttributeKey.valueOf<Any>(key))?.set(null)
+        channel?.attr(AttributeKey.valueOf<Any>(key))?.set(null)
     }
 
     val remoteAddress: SocketAddress?
-        get() = session?.remoteAddress()
+        get() = channel?.remoteAddress()
 
     @Throws(EncoderException::class)
     fun write(msg: Any?): Boolean {
-        return if (session != null && session!!.isActive) {
-            session!!.writeAndFlush(msg).awaitUninterruptibly(5000)
+        return if (channel != null && channel!!.isActive) {
+            channel!!.writeAndFlush(msg).awaitUninterruptibly(5000)
         } else false
     }
 
     val isConnected: Boolean
-        get() = session != null && session!!.isActive || state == STATE_ENABLED
+        get() = channel != null && channel!!.isActive || state == STATE_ENABLED
 
     fun closeNow() {
-        session?.close()
+        channel?.close()
     }
 
     fun closeOnFlush() {
-        session?.close()
+        channel?.close()
     }
 
     val isIOSChannel: Boolean
-        get() = channel == CHANNEL_IOS
+        get() = deviceType == CHANNEL_IOS
 
     val isAndroidChannel: Boolean
-        get() = channel == CHANNEL_ANDROID
+        get() = deviceType == CHANNEL_ANDROID
 
     val isWindowsChannel: Boolean
-        get() = channel == CHANNEL_WINDOWS
+        get() = deviceType == CHANNEL_WINDOWS
 
     val isApnsOpen: Boolean
         get() = apns == APNS_ON
@@ -184,7 +183,7 @@ class Session : IProtobufAble {
             builder.nid = nid
             builder.deviceId = deviceId
             builder.host = host
-            builder.channel = channel
+            builder.channel = deviceType
             builder.deviceModel = deviceModel
             builder.clientVersion = clientVersion
             builder.systemVersion = systemVersion

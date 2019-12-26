@@ -1,40 +1,47 @@
 package vip.qsos.im.push
 
-import vip.qsos.im.service.ApnsService
-import vip.qsos.im.service.IMSessionService
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import vip.qsos.im.AppProperties
 import vip.qsos.im.lib.server.model.Message
+import vip.qsos.im.service.IApnsPusher
+import vip.qsos.im.service.IServerManager
 import javax.annotation.Resource
+import javax.xml.ws.http.HTTPException
 
 /**
  * @author : 华清松
  * 消息发送实现类
  */
 @Component
-class MessagePusher : IMMessagePusher {
-    @Value("\${im.server.host.ip}")
-    private val host: String? = null
-    @Resource
-    private val imSessionService: IMSessionService? = null
-    @Resource
-    private val apnsService: ApnsService? = null
+class MessagePusher constructor(
+        @Resource private val mProperties: AppProperties,
+        @Resource private val sessionManager: IServerManager,
+        @Resource private val apnsPusher: IApnsPusher
+) : IMessagePusher {
 
     override fun push(msg: Message) {
-        val session = imSessionService!!.find(msg.receiver) ?: return
-        /**IOS设备，如果开启了apns，则使用apns推送*/
-        if (session.isIOSChannel && session.isApnsOpen) {
-            apnsService!!.push(msg, session.deviceId)
-            return
-        }
-        /** 服务器集群时，判断当前session是否连接于本台服务器，如果连接到了其他服务器则转发请求到目标服务器*/
-        if (session.isConnected && host != session.host) {
-            /**TODO 在此调用目标服务器接口来发送*/
-            return
-        }
-        /**如果是Android，浏览器或者windows客户端则直接发送 */
-        if (session.isConnected && host == session.host) {
-            session.write(msg)
+        msg.receiver?.let { receiver ->
+            sessionManager.find(receiver)?.let { session ->
+                when {
+                    session.isIOSChannel && session.isApnsOpen -> {
+                        /**IOS设备，如果开启了apns，则使用apns推送*/
+                        session.deviceId?.let { token ->
+                            apnsPusher.push(msg, token)
+                        } ?: throw NullPointerException("苹果DEVICE TOKEN不存在")
+                    }
+                    session.isConnected && mProperties.host != session.host -> {
+                        /**通道正常，但连接的是其它服务器，转交发送*/
+                        /**TODO 在此调用目标服务器接口来发送*/
+                    }
+                    session.isConnected && mProperties.host == session.host -> {
+                        /**通道正常，连接的是当前服务器，直接发送*/
+                        session.write(msg)
+                    }
+                    else -> {
+                        throw HTTPException(500)
+                    }
+                }
+            }
         }
     }
 }

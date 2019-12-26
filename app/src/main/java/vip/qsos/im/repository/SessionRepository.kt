@@ -6,27 +6,27 @@ import java.util.concurrent.ConcurrentHashMap
 
 /**
  * @author : 华清松
- * 正式场景下，使用redis或者数据库来存储session信息
+ * 正式场景下，使用redis或者数据库来存储
  */
 @Repository
-class SessionRepository {
+class SessionRepository : ISessionRepository {
     private val map = ConcurrentHashMap<String?, Session>()
 
-    fun save(session: Session) {
+    override fun save(session: Session) {
         session.getAccount()?.let {
             map[it] = session
         } ?: throw  NullPointerException("账号不能为空")
     }
 
-    operator fun get(account: String?): Session? {
+    override fun find(account: String): Session? {
         return map[account]
     }
 
-    fun remove(account: String?) {
+    override fun remove(account: String) {
         map.remove(account)
     }
 
-    fun findAll(): List<Session> {
+    override fun list(): List<Session> {
         return map.values.toList()
     }
 }

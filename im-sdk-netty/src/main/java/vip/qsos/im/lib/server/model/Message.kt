@@ -42,13 +42,13 @@ class Message : IProtobufAble {
         get() {
             val builder = MessageProto.Model.newBuilder()
             builder.id = id
-            builder.action = action
-            title?.let { builder.title = title }
+            builder.action = action!!
+            builder.title = title ?: "新消息"
             builder.content = content
-            builder.sender = sender
-            builder.receiver = receiver
+            builder.sender = sender!!
+            builder.receiver = receiver!!
             builder.format = format
-            extra?.let { builder.extra = extra }
+            builder.extra = extra ?: ""
             builder.timestamp = timestamp
             return builder.build().toByteArray()
         }

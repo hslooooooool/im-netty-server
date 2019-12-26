@@ -20,3 +20,18 @@ spring:
       max-request-size: 50MB
       #是否延迟解析，默认是false
       resolve-lazily: false
+
+im:
+  server:
+    host:
+      ip: 127.0.0.1
+      name: 测试服务器
+    port: 23456
+    dispatch:
+      url: "http://%1$s:${im.server.port}/api/message/dispatch"
+  apple:
+    apns:
+      debug: true
+      p12:
+        file: /apns/xxx.p12
+        password: your p12 password

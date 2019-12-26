@@ -17,7 +17,7 @@ class ReplyBody : IProtobufAble {
     /**请求key*/
     var key: String? = null
     /**返回码*/
-    var code: String? = null
+    var code: String = "200"
     /**返回说明*/
     var message: String? = null
     /**返回时间*/
@@ -32,7 +32,7 @@ class ReplyBody : IProtobufAble {
     private val keySet: Set<String>
         get() = data.keys
 
-    operator fun get(k: String): String? {
+    fun find(k: String): String? {
         return data[k]
     }
 
@@ -75,7 +75,7 @@ class ReplyBody : IProtobufAble {
         buffer.append("\ndata{")
         if (!data.isEmpty) {
             for (key in keySet) {
-                buffer.append("\t\t\n$key").append(":").append(this[key])
+                buffer.append("\t\t\n$key").append(":").append(find(key))
             }
         }
         buffer.append("\n}")
