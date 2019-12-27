@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 /**
  * @author : 华清松
- * 消息接收处理器
+ * 消息服务管理
  */
 @Sharable
 class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {

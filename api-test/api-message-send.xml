@@ -1,0 +1,37 @@
+<RestClientRequest>
+  <option name="biscuits">
+    <list />
+  </option>
+  <option name="httpMethod" value="POST" />
+  <option name="urlBase" value="http://localhost:8085" />
+  <option name="urlPath" value="/api/message/send" />
+  <option name="headers">
+    <list>
+      <KeyValuePair>
+        <option name="key" value="Accept" />
+        <option name="value" value="*/*" />
+      </KeyValuePair>
+      <KeyValuePair>
+        <option name="key" value="Connection" />
+        <option name="value" value="keep-alive" />
+      </KeyValuePair>
+      <KeyValuePair>
+        <option name="key" value="Content-Type" />
+        <option name="value" value="application/x-www-form-urlencoded; charset=UTF-8" />
+      </KeyValuePair>
+      <KeyValuePair>
+        <option name="key" value="X-Requested-With" />
+        <option name="value" value="XMLHttpRequest" />
+      </KeyValuePair>
+    </list>
+  </option>
+  <option name="parameters">
+    <list />
+  </option>
+  <option name="parametersEnabled" value="false" />
+  <option name="haveTextToSend" value="true" />
+  <option name="haveFileToSend" value="false" />
+  <option name="isFileUpload" value="false" />
+  <option name="textToSend" value="content=TEST&amp;action=2&amp;sender=测试服务器&amp;receiver=999&amp;format=0" />
+  <option name="filesToSend" value="" />
+</RestClientRequest>
