@@ -1,11 +1,10 @@
 package vip.qsos.im.lib.server.filter
 
-import com.google.protobuf.InvalidProtocolBufferException
 import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.ByteToMessageDecoder
 import vip.qsos.im.lib.model.proto.SendBodyProto
-import vip.qsos.im.lib.server.IMConstant
+import vip.qsos.im.lib.server.config.IMConstant
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.SendBody
 import vip.qsos.im.lib.server.utils.DataUtils

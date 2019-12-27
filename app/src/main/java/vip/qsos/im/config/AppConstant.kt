@@ -1,4 +1,4 @@
-package vip.qsos.im
+package vip.qsos.im.config
 
 interface AppConstant {
 

@@ -1,4 +1,4 @@
-package vip.qsos.im.push
+package vip.qsos.im.component
 
 import vip.qsos.im.lib.server.model.Message
 

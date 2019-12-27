@@ -5,7 +5,7 @@ import io.netty.channel.Channel
 import io.netty.handler.codec.EncoderException
 import io.netty.util.AttributeKey
 import vip.qsos.im.lib.model.proto.SessionProto
-import vip.qsos.im.lib.server.IMConstant
+import vip.qsos.im.lib.server.config.IMConstant
 import java.net.SocketAddress
 
 /**

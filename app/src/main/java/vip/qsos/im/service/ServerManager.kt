@@ -7,7 +7,7 @@ import vip.qsos.im.repository.ISessionRepository
 import javax.annotation.Resource
 
 @Service
-class IServerManagerImpl(
+class ServerManager(
         @Resource private val mImServerInboundHandler: IMServerInboundHandler,
         @Resource private val mSessionRepository: ISessionRepository
 ) : IServerManager {

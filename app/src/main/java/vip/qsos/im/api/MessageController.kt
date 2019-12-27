@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.model.BaseResult
-import vip.qsos.im.push.MessagePusher
+import vip.qsos.im.component.MessagePusher
 import javax.annotation.Resource
 
 @RestController

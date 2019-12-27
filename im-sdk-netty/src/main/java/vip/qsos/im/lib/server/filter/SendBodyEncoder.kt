@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.MessageToByteEncoder
 import io.netty.util.AttributeKey
-import vip.qsos.im.lib.server.IMConstant
+import vip.qsos.im.lib.server.config.IMConstant
 import vip.qsos.im.lib.server.model.IProtobufAble
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Session

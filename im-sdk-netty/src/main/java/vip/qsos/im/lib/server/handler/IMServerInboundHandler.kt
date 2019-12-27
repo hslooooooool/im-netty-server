@@ -12,7 +12,7 @@ import io.netty.handler.timeout.IdleState
 import io.netty.handler.timeout.IdleStateEvent
 import io.netty.handler.timeout.IdleStateHandler
 import io.netty.util.AttributeKey
-import vip.qsos.im.lib.server.IMConstant
+import vip.qsos.im.lib.server.config.IMConstant
 import vip.qsos.im.lib.server.filter.SendBodyDecoder
 import vip.qsos.im.lib.server.filter.SendBodyEncoder
 import vip.qsos.im.lib.server.model.HeartbeatRequest

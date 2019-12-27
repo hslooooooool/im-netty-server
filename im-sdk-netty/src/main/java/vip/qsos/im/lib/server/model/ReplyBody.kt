@@ -2,7 +2,7 @@ package vip.qsos.im.lib.server.model
 
 import com.google.protobuf.InvalidProtocolBufferException
 import vip.qsos.im.lib.model.proto.ReplyBodyProto
-import vip.qsos.im.lib.server.IMConstant
+import vip.qsos.im.lib.server.config.IMConstant
 import java.util.*
 
 /**

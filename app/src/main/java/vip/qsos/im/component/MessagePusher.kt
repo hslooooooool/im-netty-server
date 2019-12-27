@@ -1,7 +1,7 @@
-package vip.qsos.im.push
+package vip.qsos.im.component
 
 import org.springframework.stereotype.Component
-import vip.qsos.im.AppProperties
+import vip.qsos.im.config.AppProperties
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.service.IApnsPusher
 import vip.qsos.im.service.IServerManager
@@ -18,7 +18,6 @@ class MessagePusher constructor(
         @Resource private val sessionManager: IServerManager,
         @Resource private val apnsPusher: IApnsPusher
 ) : IMessagePusher {
-
     override fun push(msg: Message) {
         msg.receiver?.let { receiver ->
             sessionManager.find(receiver)?.let { session ->
