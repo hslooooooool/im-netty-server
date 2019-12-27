@@ -15,7 +15,6 @@ import kotlin.experimental.xor
  * 客户端发送的消息解码 WebSocket 版本
  */
 class WebMessageDecoder : ByteToMessageDecoder() {
-
     @Throws(Exception::class)
     public override fun decode(arg0: ChannelHandlerContext, buffer: ByteBuf, queue: MutableList<Any>) {
         buffer.markReaderIndex()
@@ -62,7 +61,6 @@ class WebMessageDecoder : ByteToMessageDecoder() {
                         val data = ByteArray(realLength)
                         buffer.readBytes(data)
                         for (i in 0 until realLength) {
-                            // 数据进行异或运算
                             data[i] = (data[i] xor mask[i % 4])
                         }
                         handleMessage(data, queue)

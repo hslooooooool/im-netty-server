@@ -27,6 +27,7 @@ class BindAccountRequestHandler constructor(
         reply.key = message.key
         reply.code = "200"
         reply.timestamp = System.currentTimeMillis()
+        reply.message = "账号绑定成功"
         try {
             val account = message.find("account")
             session.setAccount(account)

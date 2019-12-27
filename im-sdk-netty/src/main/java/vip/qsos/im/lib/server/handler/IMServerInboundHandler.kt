@@ -23,7 +23,8 @@ import java.util.concurrent.ConcurrentHashMap
 
 /**
  * @author : 华清松
- * 消息服务管理
+ * 消息服务管理与消息接收处理器，接收的消息都将被解码为 SendBody
+ * @see SendBody
  */
 @Sharable
 class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
@@ -37,6 +38,7 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
     private val mHandlerMap = HashMap<String, IMRequestHandler>()
     /**已连接客户端 Channel 集合*/
     private val mChannelGroup = ConcurrentHashMap<String, Channel>()
+
     private var mParentGroup: NioEventLoopGroup? = null
     private var mChildGroup: NioEventLoopGroup? = null
 
@@ -61,8 +63,8 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
         bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true)
         bootstrap.channel(NioServerSocketChannel::class.java)
         bootstrap.childHandler(object : ChannelInitializer<SocketChannel>() {
-            @Throws(Exception::class)
-            public override fun initChannel(ch: SocketChannel) {
+
+            override fun initChannel(ch: SocketChannel) {
                 ch.pipeline().addLast(LoggingHandler(LogLevel.TRACE))
                 ch.pipeline().addLast(IdleStateHandler(mReadIdleTime, mWriteIdleTime, 0))
 
@@ -70,10 +72,11 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
                 ch.pipeline().addLast("SendBodyDecoder", SendBodyDecoder())
                 /**消息处理切面-发送消息编码器*/
                 ch.pipeline().addLast("SendBodyEncoder", SendBodyEncoder())
-                /**消息处理切面-业务处理器*/
+                /**消息处理切面-业务处理器，接收到的消息都将被解码为 SendBody */
                 ch.pipeline().addLast(this@IMServerInboundHandler)
             }
         })
+        /**服务端口绑定与销毁监听*/
         bootstrap.bind(mPort).syncUninterruptibly().channel().closeFuture().addListener {
             destroy()
         }
@@ -115,19 +118,24 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
 
     @Throws(Exception::class)
     override fun userEventTriggered(ctx: ChannelHandlerContext, evt: Any) {
-        if (evt is IdleStateEvent && evt.state() == IdleState.WRITER_IDLE) {
-            ctx.channel().attr(AttributeKey.valueOf<Any>(IMConstant.KEY_LAST_HEARTBEAT_TIME)).set(System.currentTimeMillis())
-            ctx.channel().writeAndFlush(HeartbeatRequest.instance)
-        }
-        /**如果心跳请求发出 mHeartbeatPingTime 秒内没收到响应，则关闭连接
-         * @see mHeartbeatPingTime
-         * */
-        if (evt is IdleStateEvent && evt.state() == IdleState.READER_IDLE) {
-            val lastTime = ctx.channel().attr(AttributeKey.valueOf<Any>(IMConstant.KEY_LAST_HEARTBEAT_TIME)).get() as Long?
-            if (lastTime != null && System.currentTimeMillis() - lastTime >= mHeartbeatPingTime) {
-                ctx.channel().close()
+        when {
+            evt is IdleStateEvent && evt.state() == IdleState.WRITER_IDLE -> {
+                /**每次写入消息，重置上一次通信时间*/
+                ctx.channel().attr(AttributeKey.valueOf<Long>(IMConstant.KEY_LAST_HEARTBEAT_TIME))
+                        .set(System.currentTimeMillis())
+                ctx.channel().writeAndFlush(HeartbeatRequest.instance)
             }
-            ctx.channel().attr(AttributeKey.valueOf<Any>(IMConstant.KEY_LAST_HEARTBEAT_TIME)).set(null)
+            evt is IdleStateEvent && evt.state() == IdleState.READER_IDLE -> {
+                /**每次读取消息，判断上一次通信时间，如果超过预定的时长，则断开连接*/
+                val lastTime = ctx.channel()
+                        .attr(AttributeKey.valueOf<Long>(IMConstant.KEY_LAST_HEARTBEAT_TIME)).get()
+                if (lastTime != null
+                        && System.currentTimeMillis() - lastTime > mHeartbeatPingTime) {
+                    ctx.channel().close()
+                }
+                ctx.channel().attr(AttributeKey.valueOf<Long>(IMConstant.KEY_LAST_HEARTBEAT_TIME))
+                        .set(null)
+            }
         }
     }
 
