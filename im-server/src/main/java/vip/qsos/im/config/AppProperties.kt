@@ -1,20 +1,15 @@
 package vip.qsos.im.config
 
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Component
+import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.context.annotation.Configuration
 
-@Component
-class AppProperties {
-    @Value("\${im.server.host.ip}")
-    lateinit var host: String
-    @Value("\${im.server.host.name}")
+@Configuration
+@ConfigurationProperties(prefix = "im.server")
+open class AppProperties {
+    lateinit var hostIp: String
     lateinit var hostName: String
-    @Value("\${im.server.port}")
     var port: Int = 23456
-    @Value("\${im.apple.apns.p12.password}")
-    var applePassword: String? = null
-    @Value("\${im.apple.apns.p12.file}")
-    var appleFilePath: String? = null
-    @Value("\${im.apple.apns.debug}")
-    var appleDebug: Boolean = false
+    var apnsP12Password: String? = null
+    var apnsP12File: String? = null
+    var apnsDebug: Boolean = false
 }

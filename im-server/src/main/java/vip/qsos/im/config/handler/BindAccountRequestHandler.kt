@@ -35,7 +35,7 @@ class BindAccountRequestHandler constructor(
             if (session.deviceId == null || session.deviceId!!.isEmpty()) {
                 throw  NullPointerException("设备ID不能为空")
             }
-            session.host = mProperties.host
+            session.host = mProperties.hostIp
             session.deviceType = message.find("channel")
             session.deviceModel = message.find("device")
             session.clientVersion = message.find("version")

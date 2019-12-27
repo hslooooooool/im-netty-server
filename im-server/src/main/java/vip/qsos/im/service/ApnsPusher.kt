@@ -13,13 +13,13 @@ class ApnsPusher constructor(
         @Resource private val mProperties: AppProperties
 ) : IApnsPusher {
     override fun push(message: Message, deviceToken: String) {
-        mProperties.appleFilePath?.let { path ->
+        mProperties.apnsP12File?.let { path ->
             val stream = javaClass.getResourceAsStream(path)
             val channel = Apns4j.newChannelFactoryBuilder()
                     .keyStoreMeta(stream)
-                    .keyStorePwd(mProperties.applePassword)
+                    .keyStorePwd(mProperties.apnsP12Password)
                     .apnsGateway(
-                            if (mProperties.appleDebug) {
+                            if (mProperties.apnsDebug) {
                                 ApnsGateway.DEVELOPMENT
                             } else {
                                 ApnsGateway.PRODUCTION

@@ -28,11 +28,11 @@ class MessagePusher constructor(
                             apnsPusher.push(msg, token)
                         } ?: throw NullPointerException("苹果DEVICE TOKEN不存在")
                     }
-                    session.isConnected && mProperties.host != session.host -> {
+                    session.isConnected && mProperties.hostIp != session.host -> {
                         /**通道正常，但连接的是其它服务器，转交发送*/
                         /**TODO 在此调用目标服务器接口来发送*/
                     }
-                    session.isConnected && mProperties.host == session.host -> {
+                    session.isConnected && mProperties.hostIp == session.host -> {
                         /**通道正常，连接的是当前服务器，直接发送*/
                         session.write(msg)
                     }

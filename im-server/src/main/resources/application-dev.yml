@@ -13,7 +13,7 @@ spring:
       #文件写入磁盘的阈值，默认是0
       file-size-threshold: 0
       #上传文件的临时保存位置
-      location: D:/file-server
+      location: ./cache
       #单个文件的最大值，默认是10MB
       max-file-size: 10MB
       #多个文件上传时的总大小 值，默认是50MB
@@ -23,15 +23,10 @@ spring:
 
 im:
   server:
-    host:
-      ip: 127.0.0.1
-      name: 测试服务器
+    host-ip: 127.0.0.1
+    host-name: 测试服务器
     port: 23456
-    dispatch:
-      url: "http://%1$s:${im.server.port}/api/message/dispatch"
-  apple:
-    apns:
-      debug: true
-      p12:
-        file: /apns/xxx.p12
-        password: your p12 password
+    dispatch-url: "http://%1$s:${im.server.port}/api/im.message/dispatch"
+    apns-debug: true
+    apns-p12-file: /apns/xxx.p12
+    apns-p12-password: password

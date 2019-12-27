@@ -1,0 +1,39 @@
+{
+  "properties": [
+    {
+      "name": "im.server.host-ip",
+      "type": "java.lang.String",
+      "description": "Description for im.server.host-ip."
+    },
+    {
+      "name": "im.server.host-name",
+      "type": "java.lang.String",
+      "description": "Description for im.server.host-name."
+    },
+    {
+      "name": "im.server.port",
+      "type": "java.lang.Integer",
+      "description": "Description for im.server.port."
+    },
+    {
+      "name": "im.server.dispatch-url",
+      "type": "java.lang.String",
+      "description": "Description for im.server.dispatch-url."
+    },
+    {
+      "name": "im.server.apns-debug",
+      "type": "java.lang.Boolean",
+      "description": "Description for im.server.apns-debug."
+    },
+    {
+      "name": "im.server.apns-p12-file",
+      "type": "java.lang.String",
+      "description": "Description for im.server.apns-p12-file."
+    },
+    {
+      "name": "im.server.apns-p12-password",
+      "type": "java.lang.String",
+      "description": "Description for im.server.apns-p12-password."
+    }
+  ]
+}
