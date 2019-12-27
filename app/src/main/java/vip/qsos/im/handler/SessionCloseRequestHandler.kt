@@ -1,7 +1,7 @@
 package vip.qsos.im.handler
 
 import org.springframework.stereotype.Component
-import vip.qsos.im.lib.server.constant.IMConstant
+import vip.qsos.im.lib.server.IMConstant
 import vip.qsos.im.lib.server.handler.IMRequestHandler
 import vip.qsos.im.lib.server.model.SendBody
 import vip.qsos.im.lib.server.model.Session

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration
 import vip.qsos.im.AppProperties
 import vip.qsos.im.handler.BindAccountRequestHandler
 import vip.qsos.im.handler.SessionCloseRequestHandler
-import vip.qsos.im.lib.server.constant.IMConstant
+import vip.qsos.im.lib.server.IMConstant
 import vip.qsos.im.lib.server.handler.IMRequestHandler
 import vip.qsos.im.lib.server.handler.IMServerInboundHandler
 import vip.qsos.im.lib.server.model.SendBody

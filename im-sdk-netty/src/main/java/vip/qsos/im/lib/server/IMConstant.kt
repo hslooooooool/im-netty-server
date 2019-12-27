@@ -1,4 +1,4 @@
-package vip.qsos.im.lib.server.constant
+package vip.qsos.im.lib.server
 
 /**
  * @author : 华清松

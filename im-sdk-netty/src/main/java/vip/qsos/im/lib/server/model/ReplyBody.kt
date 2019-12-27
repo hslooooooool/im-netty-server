@@ -1,7 +1,8 @@
 package vip.qsos.im.lib.server.model
 
+import com.google.protobuf.InvalidProtocolBufferException
 import vip.qsos.im.lib.model.proto.ReplyBodyProto
-import vip.qsos.im.lib.server.constant.IMConstant
+import vip.qsos.im.lib.server.IMConstant
 import java.util.*
 
 /**
@@ -54,6 +55,7 @@ class ReplyBody : IProtobufAble {
     override val type: Byte = IMConstant.ProtobufType.REPLY_BODY
 
     override val byteArray: ByteArray
+        @Throws(InvalidProtocolBufferException::class)
         get() {
             val builder = ReplyBodyProto.Model.newBuilder()
             builder.key = key

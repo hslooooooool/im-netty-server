@@ -1,6 +1,6 @@
 package vip.qsos.im.lib.server.model
 
-import vip.qsos.im.lib.server.constant.IMConstant
+import vip.qsos.im.lib.server.IMConstant
 
 /**
  * @author : 华清松

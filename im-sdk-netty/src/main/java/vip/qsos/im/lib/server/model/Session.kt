@@ -5,7 +5,7 @@ import io.netty.channel.Channel
 import io.netty.handler.codec.EncoderException
 import io.netty.util.AttributeKey
 import vip.qsos.im.lib.model.proto.SessionProto
-import vip.qsos.im.lib.server.constant.IMConstant
+import vip.qsos.im.lib.server.IMConstant
 import java.net.SocketAddress
 
 /**
@@ -176,6 +176,7 @@ class Session : IProtobufAble {
     override val type: Byte = IMConstant.ProtobufType.SESSION
 
     override val byteArray: ByteArray
+        @Throws(InvalidProtocolBufferException::class)
         get() {
             val builder = SessionProto.Model.newBuilder()
             id?.let { builder.id = it }

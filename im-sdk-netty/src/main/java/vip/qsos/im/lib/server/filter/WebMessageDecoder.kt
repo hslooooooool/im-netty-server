@@ -1,11 +1,12 @@
-package vip.qsos.im.lib.server.filter.decoder
+package vip.qsos.im.lib.server.filter
 
 import com.google.protobuf.InvalidProtocolBufferException
 import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.ByteToMessageDecoder
 import vip.qsos.im.lib.model.proto.SendBodyProto
-import vip.qsos.im.lib.server.constant.IMConstant
+import vip.qsos.im.lib.server.IMConstant
+import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.SendBody
 import vip.qsos.im.lib.server.utils.DataUtils
 import kotlin.experimental.xor
@@ -15,7 +16,7 @@ import kotlin.experimental.xor
  * 客户端发送的消息解码 WebSocket 版本
  */
 class WebMessageDecoder : ByteToMessageDecoder() {
-    @Throws(Exception::class)
+    @Throws(ImException::class)
     public override fun decode(arg0: ChannelHandlerContext, buffer: ByteBuf, queue: MutableList<Any>) {
         buffer.markReaderIndex()
         /**判断 fin 标志位是否是1 如果是0 则等待消息接收完成*/
@@ -90,7 +91,7 @@ class WebMessageDecoder : ByteToMessageDecoder() {
     }
 
     /**客户端发送的消息*/
-    @Throws(InvalidProtocolBufferException::class)
+    @Throws(ImException::class)
     fun handleMessage(data: ByteArray, queue: MutableList<Any>) {
         when (data[0]) {
             IMConstant.ProtobufType.HEART_CR -> {

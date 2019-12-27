@@ -1,7 +1,8 @@
 package vip.qsos.im.lib.server.model
 
+import com.google.protobuf.InvalidProtocolBufferException
 import vip.qsos.im.lib.model.proto.MessageProto
-import vip.qsos.im.lib.server.constant.IMConstant
+import vip.qsos.im.lib.server.IMConstant
 
 /**
  * @author : 华清松
@@ -39,6 +40,7 @@ class Message : IProtobufAble {
     override val type: Byte = IMConstant.ProtobufType.MESSAGE
 
     override val byteArray: ByteArray
+        @Throws(InvalidProtocolBufferException::class)
         get() {
             val builder = MessageProto.Model.newBuilder()
             builder.id = id

@@ -14,7 +14,6 @@
 	<version>1.0.0</version>
 	
 	<dependencies>
-		<!--- ##################使用netty本SDK时的配置  start ##################-->
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-handler</artifactId>
@@ -40,12 +39,6 @@
 			<artifactId>netty-common</artifactId>
 			<version>${netty.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>io.netty</groupId>
-			<artifactId>netty-transport</artifactId>
-			<version>${netty.version}</version>
-		</dependency>
-		<!--- ##################使用netty本SDK时的配置  end ##################-->
 		
 		<dependency>
 			<groupId>com.google.protobuf</groupId>

@@ -4,9 +4,8 @@ import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.ByteToMessageDecoder
 import io.netty.util.AttributeKey
-import vip.qsos.im.lib.server.constant.IMConstant
-import vip.qsos.im.lib.server.filter.decoder.AppMessageDecoder
-import vip.qsos.im.lib.server.filter.decoder.WebMessageDecoder
+import vip.qsos.im.lib.server.IMConstant
+import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.SendBody
 import vip.qsos.im.lib.server.model.Session
 import java.util.regex.Pattern
@@ -29,7 +28,7 @@ class SendBodyDecoder : ByteToMessageDecoder() {
     /**APP消息解析器*/
     private val appMessageDecoder: AppMessageDecoder = AppMessageDecoder()
 
-    @Throws(Exception::class)
+    @Throws(ImException::class)
     override fun decode(context: ChannelHandlerContext, buffer: ByteBuf, queue: MutableList<Any>) {
         when (context.channel().attr(AttributeKey.valueOf<String>(Session.CHANNEL_TYPE)).get()) {
             Session.WEBSOCKET -> {
@@ -48,6 +47,7 @@ class SendBodyDecoder : ByteToMessageDecoder() {
     }
 
     /**尝试解析为 web 消息，失败后解析为 app 消息*/
+    @Throws(ImException::class)
     private fun tryWebsocketHandleHandshake(arg0: ChannelHandlerContext, buffer: ByteBuf, queue: MutableList<Any>): Boolean {
         buffer.markReaderIndex()
         val data = ByteArray(buffer.readableBytes())

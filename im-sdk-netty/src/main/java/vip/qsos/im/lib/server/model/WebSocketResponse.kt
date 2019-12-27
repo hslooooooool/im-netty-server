@@ -1,6 +1,6 @@
 package vip.qsos.im.lib.server.model
 
-import vip.qsos.im.lib.server.constant.IMConstant
+import vip.qsos.im.lib.server.IMConstant
 
 /**
  * @author : 华清松
@@ -21,7 +21,7 @@ class WebSocketResponse(private val token: String) : IProtobufAble {
         builder.append("\r\n")
         builder.append("Connection: Upgrade")
         builder.append("\r\n")
-        builder.append("Sec-WebSocket-Accept:").append(token)
+        builder.append("Sec-WebSocket-Accept:$token")
         builder.append("\r\n")
         builder.append("\r\n")
         return builder.toString()

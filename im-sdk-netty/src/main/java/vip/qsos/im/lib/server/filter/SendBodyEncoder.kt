@@ -4,8 +4,7 @@ import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.MessageToByteEncoder
 import io.netty.util.AttributeKey
-import org.slf4j.LoggerFactory
-import vip.qsos.im.lib.server.constant.IMConstant
+import vip.qsos.im.lib.server.IMConstant
 import vip.qsos.im.lib.server.model.IProtobufAble
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Session
@@ -16,10 +15,7 @@ import vip.qsos.im.lib.server.model.WebSocketResponse
  * 服务端发送指令编码
  */
 class SendBodyEncoder : MessageToByteEncoder<Any>() {
-
-    private val logger = LoggerFactory.getLogger(SendBodyEncoder::class.java)
-
-    @Throws(Exception::class)
+    @Throws(ImException::class)
     override fun encode(ctx: ChannelHandlerContext, any: Any, out: ByteBuf) {
         val chanelType = ctx.channel()
                 .attr(AttributeKey.valueOf<String>(Session.CHANNEL_TYPE))
@@ -27,12 +23,10 @@ class SendBodyEncoder : MessageToByteEncoder<Any>() {
         when {
             /** Websocket 握手数据*/
             Session.WEBSOCKET == chanelType && any is WebSocketResponse -> {
-                logger.debug("Websocket 握手数据")
                 out.writeBytes(any.toString().toByteArray())
             }
             /** Websocket 业务数据*/
             Session.WEBSOCKET == chanelType && any is IProtobufAble -> {
-                logger.debug("Websocket 业务数据")
                 val body = any.byteArray
                 val header = createHeader(any.type, body.size)
                 val protobuf = ByteArray(body.size + IMConstant.DATA_HEADER_LENGTH)
@@ -43,14 +37,12 @@ class SendBodyEncoder : MessageToByteEncoder<Any>() {
             }
             /** Protobuf 业务数据*/
             Session.NATIVE_APP == chanelType && any is IProtobufAble -> {
-                logger.debug("Protobuf 业务数据")
                 val body = any.byteArray
                 val header = createHeader(any.type, body.size)
                 out.writeBytes(header)
                 out.writeBytes(body)
             }
             else -> {
-                logger.error("未识别消息类型")
                 throw ImException("未识别消息类型")
             }
         }
@@ -66,6 +58,7 @@ class SendBodyEncoder : MessageToByteEncoder<Any>() {
 
     companion object {
         /**发送到 Websocket 的数据需要进行相关格式转换，对传入数据进行无掩码转换*/
+        @Throws(ImException::class)
         fun encodeDataFrame(data: ByteArray): ByteArray {
             // 掩码开始位置
             var maskIndex = 2

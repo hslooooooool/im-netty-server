@@ -12,10 +12,11 @@ import io.netty.handler.timeout.IdleState
 import io.netty.handler.timeout.IdleStateEvent
 import io.netty.handler.timeout.IdleStateHandler
 import io.netty.util.AttributeKey
-import vip.qsos.im.lib.server.constant.IMConstant
+import vip.qsos.im.lib.server.IMConstant
 import vip.qsos.im.lib.server.filter.SendBodyDecoder
 import vip.qsos.im.lib.server.filter.SendBodyEncoder
 import vip.qsos.im.lib.server.model.HeartbeatRequest
+import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.SendBody
 import vip.qsos.im.lib.server.model.Session
 import java.util.*
@@ -63,7 +64,7 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
         bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true)
         bootstrap.channel(NioServerSocketChannel::class.java)
         bootstrap.childHandler(object : ChannelInitializer<SocketChannel>() {
-
+            @Throws(ImException::class)
             override fun initChannel(ch: SocketChannel) {
                 ch.pipeline().addLast(LoggingHandler(LogLevel.TRACE))
                 ch.pipeline().addLast(IdleStateHandler(mReadIdleTime, mWriteIdleTime, 0))
@@ -116,7 +117,7 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
         this.mHandlerMap[IMConstant.CLIENT_APP_CUSTOM]?.process(session, body)
     }
 
-    @Throws(Exception::class)
+    @Throws(ImException::class)
     override fun userEventTriggered(ctx: ChannelHandlerContext, evt: Any) {
         when {
             evt is IdleStateEvent && evt.state() == IdleState.WRITER_IDLE -> {

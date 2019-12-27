@@ -14,12 +14,6 @@ class MessageController constructor(
         @Resource private val messagePusher: MessagePusher
 ) {
 
-    /**此方法仅仅在集群时，通过服务器调用 */
-    @PostMapping("/dispatch")
-    fun dispatchSend(message: Message): BaseResult {
-        return send(message)
-    }
-
     @PostMapping("/send")
     fun send(message: Message): BaseResult {
         messagePusher.push(message)
