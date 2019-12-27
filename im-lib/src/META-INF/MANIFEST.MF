@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Main-Class: 
+Class-Path: netty-codec-http-4.1.28.Final.jar protobuf-javalite-3.11.1.j
+ ar netty-common-4.1.28.Final.jar netty-transport-4.1.28.Final.jar kotli
+ n-stdlib-common-1.3.61.jar kotlin-stdlib-jdk8-1.3.61.jar netty-buffer-4
+ .1.28.Final.jar slf4j-api-1.7.25.jar kotlin-stdlib-1.3.61.jar kotlin-st
+ dlib-jdk7-1.3.61.jar netty-handler-4.1.28.Final.jar annotations-13.0.ja
+ r netty-codec-4.1.28.Final.jar
+

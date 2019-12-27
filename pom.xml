@@ -17,7 +17,8 @@
 	<version>1.0</version>
 	<modules>
 		<module>app</module>
-		<module>im-sdk-netty</module>
+		<module>im-server</module>
+		<module>im-lib</module>
 	</modules>
 	
 	<properties>

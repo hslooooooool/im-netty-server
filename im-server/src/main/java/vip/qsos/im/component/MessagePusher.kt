@@ -2,11 +2,11 @@ package vip.qsos.im.component
 
 import org.springframework.stereotype.Component
 import vip.qsos.im.config.AppProperties
+import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.service.IApnsPusher
 import vip.qsos.im.service.IServerManager
 import javax.annotation.Resource
-import javax.xml.ws.http.HTTPException
 
 /**
  * @author : 华清松
@@ -37,10 +37,10 @@ class MessagePusher constructor(
                         session.write(msg)
                     }
                     else -> {
-                        throw HTTPException(500)
+                        throw ImException("消息发送失败，消息通道已关闭")
                     }
                 }
-            }
-        }
+            } ?: throw ImException("消息发送失败，接收账号未上线")
+        } ?: throw ImException("消息发送失败，接收账号不能为空")
     }
 }

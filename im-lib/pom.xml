@@ -9,9 +9,10 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	
-	<artifactId>im-sdk-netty</artifactId>
+	<artifactId>im-lib</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0.0</version>
+	<description>IM服务SDK</description>
 	
 	<dependencies>
 		<dependency>

@@ -11,26 +11,13 @@
 	
 	<artifactId>app</artifactId>
 	<packaging>jar</packaging>
+	<description>消息服务APP</description>
 	
 	<dependencies>
 		<dependency>
 			<groupId>vip.qsos.im</groupId>
-			<artifactId>im-sdk-netty</artifactId>
+			<artifactId>im-server</artifactId>
 			<version>1.0.0</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
 		</dependency>
 	</dependencies>
 	
@@ -46,7 +33,7 @@
 				<executions>
 					<execution>
 						<goals>
-                            <!--可以把依赖的包都打包到生成的Jar包中-->
+							<!--可以把依赖的包都打包到生成的Jar包中-->
 							<goal>repackage</goal>
 						</goals>
 					</execution>
