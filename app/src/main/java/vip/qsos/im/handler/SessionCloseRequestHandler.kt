@@ -16,8 +16,8 @@ import javax.annotation.Resource
 class SessionCloseRequestHandler constructor(
         @Resource private val sessionManager: IServerManager
 ) : IMRequestHandler {
-    override fun process(session: Session?, message: SendBody?) {
-        session?.getAttribute<String>(IMConstant.KEY_ACCOUNT)?.let { account ->
+    override fun process(session: Session, message: SendBody) {
+        session.getAttribute<String>(IMConstant.KEY_ACCOUNT)?.let { account ->
             sessionManager.find(account)?.let {
                 if (!it.isApnsOpen) {
                     sessionManager.remove(account)

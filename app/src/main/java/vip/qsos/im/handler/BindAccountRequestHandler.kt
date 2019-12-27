@@ -22,14 +22,14 @@ class BindAccountRequestHandler constructor(
         @Resource private val sessionManager: IServerManager,
         @Resource private val defaultMessagePusher: IMessagePusher
 ) : IMRequestHandler {
-    override fun process(session: Session?, message: SendBody?) {
+    override fun process(session: Session, message: SendBody) {
         val reply = ReplyBody()
-        reply.key = message!!.key
+        reply.key = message.key
         reply.code = "200"
         reply.timestamp = System.currentTimeMillis()
         try {
             val account = message.find("account")
-            session!!.setAccount(account)
+            session.setAccount(account)
             session.deviceId = message.find("deviceId")
             if (session.deviceId == null || session.deviceId!!.isEmpty()) {
                 throw  NullPointerException("设备ID不能为空")
@@ -43,9 +43,9 @@ class BindAccountRequestHandler constructor(
             dellSession(session)
         } catch (exception: Exception) {
             reply.code = "500"
-            reply.message = "账号绑定失败"
+            reply.message = "账号绑定失败，${exception.message}"
         }
-        session!!.write(reply)
+        session.write(reply)
     }
 
     private fun dellSession(session: Session) {

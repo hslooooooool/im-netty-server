@@ -48,8 +48,8 @@ open class IMServerConfig constructor(
         mApplicationContext.getBean(IMServerInboundHandler::class.java).start()
     }
 
-    override fun process(session: Session?, message: SendBody?) {
-        mAppHandlerMap[message!!.key]?.let {
+    override fun process(session: Session, message: SendBody) {
+        mAppHandlerMap[message.key]?.let {
             mApplicationContext.getBean(it).process(session, message)
         }
     }

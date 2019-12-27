@@ -12,5 +12,5 @@ interface IMRequestHandler {
      * @param session 当前连接通道
      * @param message 发送的消息
      * */
-    fun process(session: Session?, message: SendBody?)
+    fun process(session: Session, message: SendBody)
 }
