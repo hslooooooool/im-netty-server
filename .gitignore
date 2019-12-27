@@ -6,3 +6,5 @@
 app/app.iml
 im-netty-server.iml
 im-sdk-netty/target/
+im-lib/target/
+im-server/target/
