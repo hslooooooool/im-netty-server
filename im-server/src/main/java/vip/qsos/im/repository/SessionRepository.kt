@@ -18,6 +18,7 @@ open class SessionRepository @Autowired constructor(
 
     override fun save(session: Session) {
         session.getAccount()?.let {
+            remove(it)
             mSessionRepository.save(TableChatSession().create(session))
         } ?: throw  NullPointerException("账号不能为空")
     }

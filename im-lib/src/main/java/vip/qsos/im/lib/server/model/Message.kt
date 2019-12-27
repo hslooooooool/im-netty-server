@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.google.protobuf.InvalidProtocolBufferException
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import jdk.nashorn.internal.ir.annotations.Ignore
 import vip.qsos.im.lib.model.proto.MessageProto
 import vip.qsos.im.lib.server.config.IMConstant
 
@@ -17,7 +16,7 @@ data class Message constructor(
         @ApiModelProperty(value = "消息ID")
         @JsonIgnore
         var id: Long = 0,
-        @ApiModelProperty(value = "消息类型，自定义消息类型，如0:文本、1:文件等", required = true)
+        @ApiModelProperty(value = "消息类型，自定义消息类型，如0:文本、1:文件等")
         var action: String? = null,
         @ApiModelProperty(value = "消息标题")
         var title: String? = null,
@@ -27,7 +26,7 @@ data class Message constructor(
         var sender: String? = null,
         @ApiModelProperty(value = "消息接收者账号", required = true)
         var receiver: String? = null,
-        @ApiModelProperty(value = "消息数据格式 protobuf text json xml", required = true)
+        @ApiModelProperty(value = "消息数据格式 protobuf text json xml")
         var format: String? = null,
         @ApiModelProperty(value = "附加内容")
         var extra: String? = null,
