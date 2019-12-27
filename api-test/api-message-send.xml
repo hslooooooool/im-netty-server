@@ -4,7 +4,7 @@
   </option>
   <option name="httpMethod" value="POST" />
   <option name="urlBase" value="http://localhost:8085" />
-  <option name="urlPath" value="/api/message/send" />
+  <option name="urlPath" value="/api/im.message/send" />
   <option name="headers">
     <list>
       <KeyValuePair>

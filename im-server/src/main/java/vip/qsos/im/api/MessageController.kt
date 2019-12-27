@@ -9,11 +9,10 @@ import vip.qsos.im.component.MessagePusher
 import javax.annotation.Resource
 
 @RestController
-@RequestMapping("/api/message")
+@RequestMapping("/api/im.message")
 class MessageController constructor(
         @Resource private val messagePusher: MessagePusher
 ) {
-
     @PostMapping("/send")
     fun send(message: Message): BaseResult {
         messagePusher.push(message)

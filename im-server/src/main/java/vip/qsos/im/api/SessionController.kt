@@ -8,11 +8,10 @@ import vip.qsos.im.service.IServerManager
 import javax.annotation.Resource
 
 @RestController
-@RequestMapping("/api/session")
+@RequestMapping("/api/im.session")
 class SessionController constructor(
         @Resource private val sessionManager: IServerManager
 ) {
-
     @GetMapping("/list")
     fun list(): BaseResult {
         return BaseResult.data(sessionManager.list())
