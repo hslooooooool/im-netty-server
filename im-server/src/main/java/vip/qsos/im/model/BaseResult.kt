@@ -1,12 +1,19 @@
 package vip.qsos.im.model
 
+import io.swagger.annotations.ApiModel
+import io.swagger.annotations.ApiModelProperty
+
 /**
  * @author : 华清松
  * 基础返回对象
  */
+@ApiModel(description = "统一返回对象")
 open class BaseResult {
+    @ApiModelProperty(value = "返回码")
     var code = 200
+    @ApiModelProperty(value = "返回消息")
     var msg: String? = null
+    @ApiModelProperty(value = "返回数据")
     var data: Any? = null
 
     companion object {

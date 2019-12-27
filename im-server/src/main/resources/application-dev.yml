@@ -1,25 +1,44 @@
 spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/im_server?useSSL=false&useUnicode=true&characterEncoding=utf8
+    username: root
+    password: root@hqs
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    platform: mysql
+    type: com.alibaba.druid.pool.DruidDataSource
+    tomcat:
+      init-s-q-l: SET NAMES utf8mb4
+    # 连接池设置。初始化大小，最小，最大
+    druid:
+      initialSize: 1
+      minIdle: 3
+      maxActive: 20
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 30000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      # 打开PSCache，并且指定每个连接上PSCache的大小
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filters: stat,wall,log4j
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      # 合并多个DruidDataSource的监控数据
+      #useGlobalDataSourceStat: true
   jpa:
     database: MYSQL
     open-in-view: true
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-  servlet:
-    multipart:
-      #是否开启文件上传支持，默认是true
-      enabled: true
-      #文件写入磁盘的阈值，默认是0
-      file-size-threshold: 0
-      #上传文件的临时保存位置
-      location: ./cache
-      #单个文件的最大值，默认是10MB
-      max-file-size: 10MB
-      #多个文件上传时的总大小 值，默认是50MB
-      max-request-size: 50MB
-      #是否延迟解析，默认是false
-      resolve-lazily: false
 
 im:
   server:

@@ -12,7 +12,7 @@ import javax.annotation.Resource
 class SessionController constructor(
         @Resource private val sessionManager: IServerManager
 ) {
-    @GetMapping("/list")
+    @GetMapping("/list",produces = ["application/json"])
     fun list(): BaseResult {
         return BaseResult.data(sessionManager.list())
     }

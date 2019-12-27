@@ -100,7 +100,7 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
     }
 
     override fun channelRead0(ctx: ChannelHandlerContext, body: SendBody) {
-        val session = Session(ctx.channel())
+        val session = Session().create(ctx.channel())
         this.mHandlerMap[body.key]?.process(session, body)
         this.mHandlerMap[IMConstant.CLIENT_APP_CUSTOM]?.process(session, body)
     }
@@ -111,7 +111,7 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
 
     override fun channelInactive(ctx: ChannelHandlerContext) {
         this.mChannelGroup.remove(ctx.channel().id().asShortText())
-        val session = Session(ctx.channel())
+        val session = Session().create(ctx.channel())
         val body = SendBody()
         body.key = IMConstant.CLIENT_CLOSED
         this.mHandlerMap[IMConstant.CLIENT_APP_CUSTOM]?.process(session, body)

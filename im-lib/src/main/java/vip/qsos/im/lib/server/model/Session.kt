@@ -4,15 +4,49 @@ import com.google.protobuf.InvalidProtocolBufferException
 import io.netty.channel.Channel
 import io.netty.handler.codec.EncoderException
 import io.netty.util.AttributeKey
+import io.swagger.annotations.ApiModel
+import io.swagger.annotations.ApiModelProperty
 import vip.qsos.im.lib.model.proto.SessionProto
 import vip.qsos.im.lib.server.config.IMConstant
 import java.net.SocketAddress
 
 /**
  * @author : 华清松
- * 消息会话包装类。集群时，将此对象存入表中
+ * 消息会话实体
  */
-class Session : IProtobufAble {
+@ApiModel(description = "会话实体")
+data class Session(
+        @ApiModelProperty(value = "数据库主键ID", required = false)
+        var id: Long? = null,
+        @ApiModelProperty(value = "channel ID", required = false)
+        var nid: String? = null,
+        @ApiModelProperty(value = "客户端 ID (设备号码+应用包名),ios为 device token", required = false)
+        var deviceId: String? = null,
+        @ApiModelProperty(value = "channel 绑定的服务器IP，用于分布式区分", required = false)
+        var host: String? = null,
+        @ApiModelProperty(value = "客户端设备类型", required = false)
+        var deviceType: String? = null,
+        @ApiModelProperty(value = "客户端设备型号", required = false)
+        var deviceModel: String? = null,
+        @ApiModelProperty(value = "客户端应用版本", required = false)
+        var clientVersion: String? = null,
+        @ApiModelProperty(value = "客户端系统版本", required = false)
+        var systemVersion: String? = null,
+        @ApiModelProperty(value = "客户端登录时间", required = false)
+        var bindTime: Long? = null,
+        @ApiModelProperty(value = "客户端经度", required = false)
+        var longitude: Double? = null,
+        @ApiModelProperty(value = "客户端维度", required = false)
+        var latitude: Double? = null,
+        @ApiModelProperty(value = "客户端位置", required = false)
+        var location: String? = null,
+        @ApiModelProperty(value = "apns推送状态", required = false)
+        var apns: Int = 1,
+        @ApiModelProperty(value = "客户端在线状态", required = false)
+        var state: Int = 0,
+        @ApiModelProperty(value = "channel 绑定的用户账号", required = false)
+        private var account: String? = null
+) : IProtobufAble {
 
     companion object {
         private const val serialVersionUID = 1L
@@ -36,73 +70,15 @@ class Session : IProtobufAble {
         const val CHANNEL_ANDROID = "android"
         const val CHANNEL_WINDOWS = "windows"
         const val CHANNEL_BROWSER = "browser"
-
-        /**ByteArray 转为 Session 对象*/
-        @Throws(InvalidProtocolBufferException::class)
-        fun decode(protobufBody: ByteArray?): Session? {
-            return protobufBody?.let {
-                val proto = SessionProto.Model.parseFrom(it)
-                val session = Session()
-                session.id = proto.id
-                session.apns = proto.apns
-                session.bindTime = proto.bindTime
-                session.deviceType = proto.channel
-                session.clientVersion = proto.clientVersion
-                session.deviceId = proto.deviceId
-                session.deviceModel = proto.deviceModel
-                session.host = proto.host
-                session.latitude = proto.latitude
-                session.longitude = proto.longitude
-                session.location = proto.location
-                session.nid = proto.nid
-                session.systemVersion = proto.systemVersion
-                session.state = proto.state
-                session.setAccount(proto.account)
-
-                session
-            }
-
-        }
     }
 
     /**当前连接通道*/
     var channel: Channel? = null
-    /**数据库主键ID*/
-    var id: Long? = null
-    /**channel 绑定的用户账号*/
-    private var account: String? = null
-    /**channel ID*/
-    var nid: String? = null
-    /**客户端 ID (设备号码+应用包名),ios为 device token */
-    var deviceId: String? = null
-    /**session绑定的服务器IP，用于分布式区分*/
-    var host: String? = null
-    /**客户端设备类型*/
-    var deviceType: String? = null
-    /**客户端设备型号*/
-    var deviceModel: String? = null
-    /**客户端应用版本*/
-    var clientVersion: String? = null
-    /**客户端系统版本*/
-    var systemVersion: String? = null
-    /**客户端登录时间*/
-    var bindTime: Long? = null
-    /**客户端经度*/
-    var longitude: Double? = null
-    /**客户端维度*/
-    var latitude: Double? = null
-    /**客户端位置*/
-    var location: String? = null
-    /**apns推送状态*/
-    var apns = 1
-    /**客户端在线状态*/
-    var state = 0
 
-    constructor()
-
-    constructor(channel: Channel) {
+    fun create(channel: Channel): Session {
         this.channel = channel
         this.nid = channel.id().asShortText()
+        return this
     }
 
     fun getAccount(): String? {

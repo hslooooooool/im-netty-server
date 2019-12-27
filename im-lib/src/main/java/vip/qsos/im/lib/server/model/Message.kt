@@ -1,6 +1,10 @@
 package vip.qsos.im.lib.server.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.google.protobuf.InvalidProtocolBufferException
+import io.swagger.annotations.ApiModel
+import io.swagger.annotations.ApiModelProperty
+import jdk.nashorn.internal.ir.annotations.Ignore
 import vip.qsos.im.lib.model.proto.MessageProto
 import vip.qsos.im.lib.server.config.IMConstant
 
@@ -8,38 +12,43 @@ import vip.qsos.im.lib.server.config.IMConstant
  * @author : 华清松
  * 自定义消息对象
  */
-class Message : IProtobufAble {
+@ApiModel(description = "消息实体")
+data class Message constructor(
+        @ApiModelProperty(value = "消息ID")
+        @JsonIgnore
+        var id: Long = 0,
+        @ApiModelProperty(value = "消息类型，自定义消息类型，如0:文本、1:文件等", required = true)
+        var action: String? = null,
+        @ApiModelProperty(value = "消息标题")
+        var title: String? = null,
+        @ApiModelProperty(value = "消息内容，content 根据 format 数据格式进行解析", required = true)
+        var content: String? = null,
+        @ApiModelProperty(value = "消息发送者账号", required = true)
+        var sender: String? = null,
+        @ApiModelProperty(value = "消息接收者账号", required = true)
+        var receiver: String? = null,
+        @ApiModelProperty(value = "消息数据格式 protobuf text json xml", required = true)
+        var format: String? = null,
+        @ApiModelProperty(value = "附加内容")
+        var extra: String? = null,
+        @ApiModelProperty(value = "消息发送时间")
+        @JsonIgnore
+        var timestamp: Long = 0
+) : IProtobufAble {
 
     companion object {
         private const val serialVersionUID = 1L
     }
 
-    /**消息ID*/
-    var id: Long = 0
-    /**消息类型，自定义消息类型*/
-    var action: String? = null
-    /**消息标题*/
-    var title: String? = null
-    /**消息类容，content 根据 format 数据格式进行解析*/
-    var content: String? = null
-    /**消息发送者账号*/
-    var sender: String? = null
-    /**消息发送者接收者*/
-    var receiver: String? = null
-    /**content 内容格式，如 text,json,xml数据格式*/
-    var format: String? = null
-    /**附加内容*/
-    var extra: String? = null
-    /**消息发送时间*/
-    var timestamp: Long = 0
-
     init {
         timestamp = System.currentTimeMillis()
     }
 
+    @JsonIgnore
     override val type: Byte = IMConstant.ProtobufType.MESSAGE
 
     override val byteArray: ByteArray
+        @JsonIgnore
         @Throws(InvalidProtocolBufferException::class)
         get() {
             val builder = MessageProto.Model.newBuilder()

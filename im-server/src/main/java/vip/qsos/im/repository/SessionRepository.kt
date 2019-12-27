@@ -1,32 +1,38 @@
 package vip.qsos.im.repository
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import vip.qsos.im.lib.server.model.Session
-import java.util.concurrent.ConcurrentHashMap
+import vip.qsos.im.model.db.TableChatSession
+import vip.qsos.im.repository.db.IChatSessionRepository
+
 
 /**
  * @author : 华清松
  * 正式场景下，使用redis或者数据库来存储
  */
 @Repository
-class SessionRepository : ISessionRepository {
-    private val map = ConcurrentHashMap<String?, Session>()
+open class SessionRepository @Autowired constructor(
+        private val mSessionRepository: IChatSessionRepository
+) : ISessionRepository {
 
     override fun save(session: Session) {
         session.getAccount()?.let {
-            map[it] = session
+            mSessionRepository.save(TableChatSession().create(session))
         } ?: throw  NullPointerException("账号不能为空")
     }
 
     override fun find(account: String): Session? {
-        return map[account]
+        return mSessionRepository.findByAccount(account)?.getSession()
     }
 
     override fun remove(account: String) {
-        map.remove(account)
+        mSessionRepository.deleteByAccount(account)
     }
 
     override fun list(): List<Session> {
-        return map.values.toList()
+        return mSessionRepository.findAll().map {
+            it.getSession()
+        }
     }
 }
