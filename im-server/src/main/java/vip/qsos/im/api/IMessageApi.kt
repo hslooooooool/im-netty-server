@@ -15,14 +15,14 @@ import vip.qsos.im.model.form.SendNoticeForm
 @RequestMapping("/api/im.message")
 interface IMessageApi {
     @ApiOperation(value = "分布式消息发送")
-    @PostMapping("/dispatch")
+    @PostMapping("/dispatch/message")
     fun dispatch(
             @RequestBody
             message: SendMessageForm
     ): BaseResult
 
     @ApiOperation(value = "分布式公告发送")
-    @PostMapping("/dispatch")
+    @PostMapping("/dispatch/notice")
     fun dispatch(
             @RequestBody
             notice: SendNoticeForm
