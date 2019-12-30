@@ -28,13 +28,13 @@ class ApnsPusher constructor(
                     .build()
             val apnsChannel = channel.newChannel()
             try {
-                val apnsPayload = ApnsPayloadCompat().also {
-                    it.action = message.action
-                    it.content = message.content
-                    it.sender = message.sender
-                    it.format = message.format
-                    it.receiver = message.receiver
-                }
+                val apnsPayload = ApnsPayloadCompat(
+                        message.action,
+                        message.content,
+                        message.sender,
+                        message.format,
+                        message.receiver
+                )
                 apnsChannel.send(deviceToken, apnsPayload)
             } catch (e: Exception) {
                 e.printStackTrace()

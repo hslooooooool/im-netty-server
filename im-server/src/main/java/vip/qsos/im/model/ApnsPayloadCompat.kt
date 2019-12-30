@@ -6,12 +6,13 @@ import cn.teaey.apns4j.protocol.ApnsPayload
  * @author : 华清松
  * 苹果推送实体
  */
-class ApnsPayloadCompat : ApnsPayload() {
-    var action: String? = null
-    var content: String? = null
-    var sender: String? = null
-    var receiver: String? = null
-    var format: String? = null
+data class ApnsPayloadCompat(
+        var action: String,
+        var content: String,
+        var sender: String,
+        var receiver: String,
+        var format: String
+) : ApnsPayload() {
 
     override fun toJsonString(): String {
         return "{\"aps\": " +

@@ -1,8 +1,10 @@
 package vip.qsos.im.model.db
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import vip.qsos.im.lib.server.model.Session
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
@@ -25,7 +27,7 @@ data class TableChatSession(
         @ApiModelProperty(value = "账号", required = true)
         var account: String = "",
 
-        @Column(name = "deviceId", unique = true, nullable = false, length = 32)
+        @Column(name = "deviceId", nullable = false, length = 32)
         @ApiModelProperty(value = "客户端 ID (设备号码+应用包名),ios为 device token", required = false)
         var deviceId: String? = null,
         @Column(name = "device_type", length = 16)
@@ -43,8 +45,8 @@ data class TableChatSession(
         var systemVersion: String? = null,
 
         @Column(name = "bind_ime")
-        @ApiModelProperty(value = "客户端上一次登录时间", required = false)
-        var bindTime: Long? = null,
+        @ApiModelProperty(value = "客户端登录时间", required = false)
+        var bindTime: LocalDateTime? = null,
         @Column(name = "apns", nullable = false, length = 8)
         @ApiModelProperty(value = "apns推送状态", required = false)
         var apns: Int = 1,
@@ -63,6 +65,7 @@ data class TableChatSession(
         var location: String? = null
 ) : AbsTable() {
 
+    @JsonIgnore
     fun getSession(): Session {
         return Session(
                 id = sessionId, nid = nid, host = host, account = account, deviceId = deviceId, deviceModel = deviceModel,
@@ -72,22 +75,25 @@ data class TableChatSession(
         )
     }
 
-    fun create(session: Session): TableChatSession {
-        this.sessionId = session.id
-        this.nid = session.nid
-        this.host = session.host
-        this.account = session.getAccount()!!
-        this.deviceId = session.deviceId
-        this.deviceModel = session.deviceModel
-        this.deviceType = session.deviceType
-        this.clientVersion = session.clientVersion
-        this.systemVersion = session.systemVersion
-        this.bindTime = session.bindTime
-        this.apns = session.apns
-        this.state = session.state
-        this.longitude = session.longitude
-        this.latitude = session.latitude
-        this.location = session.location
-        return this
+    companion object {
+        fun create(session: Session): TableChatSession {
+            return TableChatSession(
+                    sessionId = session.id,
+                    nid = session.nid,
+                    host = session.host,
+                    account = session.getAccount(),
+                    deviceId = session.deviceId,
+                    deviceModel = session.deviceModel,
+                    deviceType = session.deviceType,
+                    clientVersion = session.clientVersion,
+                    systemVersion = session.systemVersion,
+                    bindTime = session.bindTime,
+                    apns = session.apns,
+                    state = session.state,
+                    longitude = session.longitude,
+                    latitude = session.latitude,
+                    location = session.location
+            )
+        }
     }
 }

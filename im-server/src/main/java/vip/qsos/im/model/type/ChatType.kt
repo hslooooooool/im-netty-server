@@ -5,14 +5,14 @@ import io.swagger.annotations.ApiModelProperty
 
 /**
  * @author : 华清松
- * 会话类型
- * @sample ChatSessionType.SINGLE 单聊
- * @sample ChatSessionType.GROUP 群聊
- * @sample ChatSessionType.NOTICE 公告
- * @sample ChatSessionType.SUBSCRIPTION 订阅
+ * 聊天类型
+ * @sample ChatType.SINGLE 单聊
+ * @sample ChatType.GROUP 群聊
+ * @sample ChatType.NOTICE 公告
+ * @sample ChatType.SUBSCRIPTION 订阅
  */
-@ApiModel(value = "会话类型")
-enum class ChatSessionType {
+@ApiModel(value = "聊天类型")
+enum class ChatType {
     @ApiModelProperty(value = "单聊")
     SINGLE,
     @ApiModelProperty(value = "群聊")
@@ -23,7 +23,7 @@ enum class ChatSessionType {
     SUBSCRIPTION;
 
     companion object {
-        fun getEnumByIndex(index: Int): ChatSessionType {
+        fun getEnumByIndex(index: Int): ChatType {
             return values().find {
                 it.ordinal == index
             }!!

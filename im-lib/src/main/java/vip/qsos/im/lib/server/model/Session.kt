@@ -1,5 +1,6 @@
 package vip.qsos.im.lib.server.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.google.protobuf.InvalidProtocolBufferException
 import io.netty.channel.Channel
 import io.netty.handler.codec.EncoderException
@@ -9,6 +10,9 @@ import io.swagger.annotations.ApiModelProperty
 import vip.qsos.im.lib.model.proto.SessionProto
 import vip.qsos.im.lib.server.config.IMConstant
 import java.net.SocketAddress
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.*
 
 /**
  * @author : 华清松
@@ -16,36 +20,36 @@ import java.net.SocketAddress
  */
 @ApiModel(description = "会话实体")
 data class Session(
-        @ApiModelProperty(value = "数据库主键ID", required = false)
+        @ApiModelProperty(value = "数据库主键ID")
         var id: Long? = null,
-        @ApiModelProperty(value = "channel ID", required = false)
+        @ApiModelProperty(value = "channel ID")
         var nid: String? = null,
-        @ApiModelProperty(value = "客户端 ID (设备号码+应用包名),ios为 device token", required = false)
+        @ApiModelProperty(value = "客户端 ID (设备号码+应用包名),ios为 device token")
         var deviceId: String? = null,
-        @ApiModelProperty(value = "channel 绑定的服务器IP，用于分布式区分", required = false)
+        @ApiModelProperty(value = "channel 绑定的服务器IP，用于分布式区分")
         var host: String? = null,
-        @ApiModelProperty(value = "客户端设备类型", required = false)
+        @ApiModelProperty(value = "客户端设备类型")
         var deviceType: String? = null,
-        @ApiModelProperty(value = "客户端设备型号", required = false)
+        @ApiModelProperty(value = "客户端设备型号")
         var deviceModel: String? = null,
-        @ApiModelProperty(value = "客户端应用版本", required = false)
+        @ApiModelProperty(value = "客户端应用版本")
         var clientVersion: String? = null,
-        @ApiModelProperty(value = "客户端系统版本", required = false)
+        @ApiModelProperty(value = "客户端系统版本")
         var systemVersion: String? = null,
-        @ApiModelProperty(value = "客户端登录时间", required = false)
-        var bindTime: Long? = null,
-        @ApiModelProperty(value = "客户端经度", required = false)
+        @ApiModelProperty(value = "客户端登录时间")
+        var bindTime: LocalDateTime? = null,
+        @ApiModelProperty(value = "客户端经度")
         var longitude: Double? = null,
-        @ApiModelProperty(value = "客户端维度", required = false)
+        @ApiModelProperty(value = "客户端维度")
         var latitude: Double? = null,
-        @ApiModelProperty(value = "客户端位置", required = false)
+        @ApiModelProperty(value = "客户端位置")
         var location: String? = null,
-        @ApiModelProperty(value = "apns推送状态", required = false)
+        @ApiModelProperty(value = "apns推送状态")
         var apns: Int = 1,
-        @ApiModelProperty(value = "客户端在线状态", required = false)
+        @ApiModelProperty(value = "客户端在线状态")
         var state: Int = 0,
-        @ApiModelProperty(value = "channel 绑定的用户账号", required = false)
-        private var account: String? = null
+        @ApiModelProperty(value = "channel 绑定的用户账号")
+        private var account: String = ""
 ) : IProtobufAble {
 
     companion object {
@@ -73,6 +77,7 @@ data class Session(
     }
 
     /**当前连接通道*/
+    @JsonIgnore
     var channel: Channel? = null
 
     fun create(channel: Channel): Session {
@@ -81,20 +86,20 @@ data class Session(
         return this
     }
 
-    fun getAccount(): String? {
+    fun getAccount(): String {
         return account
     }
 
-    fun setAccount(account: String?) {
+    fun setAccount(account: String) {
         this.account = account
         setAttribute(IMConstant.KEY_ACCOUNT, account)
     }
 
-    fun setAttribute(key: String?, value: Any?) {
+    fun setAttribute(key: String, value: Any?) {
         channel?.attr(AttributeKey.valueOf<Any>(key))?.set(value)
     }
 
-    fun containsAttribute(key: String?): Boolean {
+    fun containsAttribute(key: String): Boolean {
         return channel?.hasAttr(AttributeKey.valueOf<Any>(key)) ?: false
     }
 
@@ -102,7 +107,7 @@ data class Session(
         return channel?.attr(AttributeKey.valueOf<T>(key))?.get()
     }
 
-    fun removeAttribute(key: String?) {
+    fun removeAttribute(key: String) {
         channel?.attr(AttributeKey.valueOf<Any>(key))?.set(null)
     }
 
@@ -156,7 +161,7 @@ data class Session(
         get() {
             val builder = SessionProto.Model.newBuilder()
             id?.let { builder.id = it }
-            account?.let { builder.account = it }
+            builder.account = account
             builder.nid = nid
             builder.deviceId = deviceId
             builder.host = host
@@ -164,7 +169,10 @@ data class Session(
             builder.deviceModel = deviceModel
             builder.clientVersion = clientVersion
             builder.systemVersion = systemVersion
-            bindTime?.let { builder.bindTime = it }
+            bindTime?.let {
+                builder.bindTime = Date.from(it.atZone(ZoneId.systemDefault())
+                        .toInstant()).time
+            }
             longitude?.let { builder.longitude = it }
             latitude?.let { builder.latitude = it }
             location?.let { builder.location = it }

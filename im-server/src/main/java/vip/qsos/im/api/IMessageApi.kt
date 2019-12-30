@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.model.BaseResult
+import vip.qsos.im.model.form.SendMessageForm
 
 @Api(tags = ["消息服务"])
 @ApiSort(0)
@@ -18,13 +19,13 @@ interface IMessageApi {
     @PostMapping("/dispatch")
     fun dispatch(
             @RequestBody
-            message: Message
+            message: SendMessageForm
     ): BaseResult
 
     @ApiOperation(value = "消息发送")
     @PostMapping("/send")
     fun send(
             @RequestBody
-            message: Message
+            message: SendMessageForm
     ): BaseResult
 }

@@ -14,24 +14,22 @@ import vip.qsos.im.lib.server.config.IMConstant
 @ApiModel(description = "消息实体")
 data class Message constructor(
         @ApiModelProperty(value = "消息ID")
-        @JsonIgnore
         var id: Long = 0,
         @ApiModelProperty(value = "消息类型，自定义消息类型，如0:文本、1:文件等")
-        var action: String? = null,
+        var action: String = "0",
         @ApiModelProperty(value = "消息标题")
         var title: String? = null,
         @ApiModelProperty(value = "消息内容，content 根据 format 数据格式进行解析", required = true)
-        var content: String? = null,
+        var content: String,
         @ApiModelProperty(value = "消息发送者账号", required = true)
-        var sender: String? = null,
+        var sender: String,
         @ApiModelProperty(value = "消息接收者账号", required = true)
-        var receiver: String? = null,
+        var receiver: String,
         @ApiModelProperty(value = "消息数据格式 protobuf text json xml")
-        var format: String? = null,
+        var format: String = Format.PROTOBUF.value,
         @ApiModelProperty(value = "附加内容")
         var extra: String? = null,
         @ApiModelProperty(value = "消息发送时间")
-        @JsonIgnore
         var timestamp: Long = 0
 ) : IProtobufAble {
 
@@ -52,11 +50,11 @@ data class Message constructor(
         get() {
             val builder = MessageProto.Model.newBuilder()
             builder.id = id
-            builder.action = action!!
+            builder.action = action
             builder.title = title ?: "新消息"
             builder.content = content
-            builder.sender = sender!!
-            builder.receiver = receiver!!
+            builder.sender = sender
+            builder.receiver = receiver
             builder.format = format
             builder.extra = extra ?: ""
             builder.timestamp = timestamp
@@ -76,4 +74,11 @@ data class Message constructor(
                 "\ntimestamp:" + timestamp
     }
 
+    /**消息数据格式 protobuf text json xml*/
+    enum class Format(val value: String) {
+        PROTOBUF("protobuf"),
+        JSON("json"),
+        XML("xml"),
+        TEXT("text");
+    }
 }

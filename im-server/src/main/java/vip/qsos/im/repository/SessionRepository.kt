@@ -6,10 +6,9 @@ import vip.qsos.im.lib.server.model.Session
 import vip.qsos.im.model.db.TableChatSession
 import vip.qsos.im.repository.db.IChatSessionRepository
 
-
 /**
  * @author : 华清松
- * 正式场景下，使用redis或者数据库来存储
+ * 会话存储
  */
 @Repository
 open class SessionRepository @Autowired constructor(
@@ -17,10 +16,11 @@ open class SessionRepository @Autowired constructor(
 ) : ISessionRepository {
 
     override fun save(session: Session) {
-        session.getAccount()?.let {
-            remove(it)
-            mSessionRepository.save(TableChatSession().create(session))
-        } ?: throw  NullPointerException("账号不能为空")
+        session.nid?.let {
+            session.id = mSessionRepository.findByNid(it)?.getSession()?.id
+        }
+        session.id = session.id ?: find(session.getAccount())?.id
+        mSessionRepository.save(TableChatSession.create(session))
     }
 
     override fun find(account: String): Session? {
