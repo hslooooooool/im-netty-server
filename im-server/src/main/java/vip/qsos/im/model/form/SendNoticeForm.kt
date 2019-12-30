@@ -10,42 +10,42 @@ import javax.validation.constraints.NotNull
 
 /**
  * @author : 华清松
- * 发送的消息实体
+ * 发送的公告消息实体
  */
-@ApiModel(description = "发送的消息实体")
-data class SendMessageForm constructor(
-        @ApiModelProperty(value = "消息类型，如0:文本、1:文件等，默认：0")
-        @NotNull(message = "消息类型不能为空")
-        var action: String = "0",
+@ApiModel(description = "发送的公告消息实体")
+data class SendNoticeForm constructor(
         @ApiModelProperty(value = "消息内容", required = true)
         @NotNull(message = "消息内容不能为空")
         var content: String,
         @ApiModelProperty(value = "消息发送者账号", required = true)
         @NotNull(message = "发送者账号不能为空")
         var sender: String,
-        @ApiModelProperty(value = "消息接收者账号", required = true)
+        @ApiModelProperty(value = "消息接收者集合账号", required = true)
         @NotNull(message = "接收者账号不能为空")
-        var receiver: String,
-        @ApiModelProperty(value = "消息标题")
-        var title: String? = null,
+        var receiver: List<String>,
+        @ApiModelProperty(value = "消息标题", required = true)
+        var title: String,
         @ApiModelProperty(value = "聊天类型")
-        override var chatType: ChatType = ChatType.SINGLE
+        override var chatType: ChatType = ChatType.NOTICE
 ) : ISendForm, Serializable {
     companion object {
         private const val serialVersionUID = 1L
     }
 
     @JsonIgnore
-    fun getMessage(): Message {
-        return Message(
-                action = this.action,
-                title = this.title,
-                content = this.content,
-                sender = this.sender,
-                receiver = this.receiver,
-                extra = this.chatType.name,
-                format = Message.Format.JSON.value
-        )
+    fun getMessageList(): List<Message> {
+        return receiver.map {
+            Message(
+                    action = "0",
+                    title = this.title,
+                    content = this.content,
+                    sender = this.sender,
+                    receiver = it,
+                    extra = this.chatType.name,
+                    format = Message.Format.JSON.value
+            )
+        }
+
     }
 
 }

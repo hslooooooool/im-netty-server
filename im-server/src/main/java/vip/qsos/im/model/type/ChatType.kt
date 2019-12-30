@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiModelProperty
  * @sample ChatType.GROUP 群聊
  * @sample ChatType.NOTICE 公告
  * @sample ChatType.SUBSCRIPTION 订阅
+ * @sample ChatType.SYSTEM 系统指令
  */
 @ApiModel(value = "聊天类型")
 enum class ChatType {
@@ -20,7 +21,9 @@ enum class ChatType {
     @ApiModelProperty(value = "公告")
     NOTICE,
     @ApiModelProperty(value = "订阅")
-    SUBSCRIPTION;
+    SUBSCRIPTION,
+    @ApiModelProperty(value = "系统指令")
+    SYSTEM;
 
     companion object {
         fun getEnumByIndex(index: Int): ChatType {

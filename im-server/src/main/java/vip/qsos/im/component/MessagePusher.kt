@@ -16,12 +16,12 @@ import javax.annotation.Resource
 @Component
 class MessagePusher constructor(
         @Resource private val mProperties: AppProperties,
-        @Resource private val mSessionManager: IServerManager,
+        @Resource private val mServerManager: IServerManager,
         @Resource private val mApnsPusher: IApnsPusher,
         @Resource private val mMessageRepository: IMessageRepository
 ) : IMessagePusher {
     override fun push(msg: Message) {
-        mSessionManager.find(msg.receiver)?.let { session ->
+        mServerManager.find(msg.receiver)?.let { session ->
             when {
                 session.isIOSChannel && session.isApnsOpen -> {
                     /**IOS设备，如果开启了apns，则使用apns推送*/

@@ -5,8 +5,8 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationListener
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import vip.qsos.im.config.handler.BindAccountRequestHandler
-import vip.qsos.im.config.handler.SessionCloseRequestHandler
+import vip.qsos.im.handler.BindAccountRequestHandler
+import vip.qsos.im.handler.SessionCloseRequestHandler
 import vip.qsos.im.lib.server.config.IMConstant
 import vip.qsos.im.lib.server.handler.IMRequestHandler
 import vip.qsos.im.lib.server.handler.IMServerInboundHandler

@@ -1,4 +1,4 @@
-package vip.qsos.im.config.handler
+package vip.qsos.im.handler
 
 import org.springframework.stereotype.Component
 import vip.qsos.im.component.IMessagePusher
@@ -10,6 +10,7 @@ import vip.qsos.im.lib.server.model.ReplyBody
 import vip.qsos.im.lib.server.model.SendBody
 import vip.qsos.im.lib.server.model.Session
 import vip.qsos.im.model.form.SendMessageForm
+import vip.qsos.im.repository.IAccountRepository
 import vip.qsos.im.service.IServerManager
 import java.time.LocalDateTime
 import javax.annotation.Resource
@@ -22,7 +23,8 @@ import javax.annotation.Resource
 class BindAccountRequestHandler constructor(
         @Resource private val mProperties: AppProperties,
         @Resource private val mSessionManager: IServerManager,
-        @Resource private val mMessagePusher: IMessagePusher
+        @Resource private val mMessagePusher: IMessagePusher,
+        @Resource private val mAccountRepository: IAccountRepository
 ) : IMRequestHandler {
     override fun process(session: Session, message: SendBody) {
         val reply = ReplyBody()
@@ -32,6 +34,8 @@ class BindAccountRequestHandler constructor(
         reply.message = "账号绑定成功"
         try {
             val account = message.find("account") ?: throw ImException("账号不能为空")
+            mAccountRepository.findByAccount(account) ?: throw ImException("账号未经授权")
+
             session.setAccount(account)
             session.deviceId = message.find("deviceId")
             if (session.deviceId == null || session.deviceId!!.isEmpty()) {

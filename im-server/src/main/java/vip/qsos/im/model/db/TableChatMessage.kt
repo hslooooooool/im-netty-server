@@ -10,9 +10,9 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-@Table
+@Table(name = "table_chat_message")
 @ApiModel(value = "消息表")
-data class TableChatMessage(
+data class TableChatMessage constructor(
         @Id
         @Column(name = "id")
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,14 +25,14 @@ data class TableChatMessage(
         @Column(name = "title", length = 16)
         var title: String? = null,
         @ApiModelProperty(value = "消息内容", required = true)
-        @Column(name = "content", nullable = false, length = 255)
-        var content: String,
+        @Column(name = "content", nullable = false, length = 65536)
+        var content: String = "",
         @Column(name = "sender", nullable = false, length = 16)
         @ApiModelProperty(value = "消息发送者账号", required = true)
-        var sender: String,
+        var sender: String = "",
         @Column(name = "receiver", nullable = false, length = 16)
         @ApiModelProperty(value = "消息接收者账号", required = true)
-        var receiver: String,
+        var receiver: String = "",
         @Column(name = "format", nullable = false, length = 8)
         @ApiModelProperty(value = "消息数据格式")
         var format: String = Message.Format.PROTOBUF.value,

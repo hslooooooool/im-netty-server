@@ -24,7 +24,7 @@ open class BaseResult {
             }
         }
 
-        fun data(data: Any?, message: String? = null): BaseResult {
+        fun data(data: Any?, message: String = "success"): BaseResult {
             return BaseResult().also {
                 it.code = 200
                 it.data = data

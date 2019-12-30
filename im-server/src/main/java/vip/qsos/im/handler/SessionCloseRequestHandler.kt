@@ -1,4 +1,4 @@
-package vip.qsos.im.config.handler
+package vip.qsos.im.handler
 
 import org.springframework.stereotype.Component
 import vip.qsos.im.lib.server.config.IMConstant

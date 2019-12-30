@@ -3,7 +3,7 @@ package vip.qsos.im.repository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import vip.qsos.im.lib.server.model.Session
-import vip.qsos.im.model.db.TableChatSession
+import vip.qsos.im.model.db.TableChatSessionOfClient
 import vip.qsos.im.repository.db.IChatSessionRepository
 
 /**
@@ -20,7 +20,7 @@ open class SessionRepository @Autowired constructor(
             session.id = mSessionRepository.findByNid(it)?.getSession()?.id
         }
         session.id = session.id ?: find(session.getAccount())?.id
-        mSessionRepository.save(TableChatSession.create(session))
+        mSessionRepository.save(TableChatSessionOfClient.create(session))
     }
 
     override fun find(account: String): Session? {
