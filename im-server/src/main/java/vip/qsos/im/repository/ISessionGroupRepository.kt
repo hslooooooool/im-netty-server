@@ -12,7 +12,7 @@ interface ISessionGroupRepository {
     fun findByName(name: String, like: Boolean): List<TableChatSessionOfGroup>
     fun list(): List<TableChatSessionOfGroup>
     fun listLikeMember(member: String): List<TableChatSessionOfGroup>
-    fun updateMemberState(groupId: Int, member: String, online: Boolean)
+    fun joinGroup(groupId: Int, member: String)
     fun leaveGroup(groupId: Int, member: String)
     fun deleteGroup(groupId: Int)
 }

@@ -31,6 +31,11 @@ class GroupControllerImpl : GroupController {
         return BaseResult.data("群已删除")
     }
 
+    override fun joinGroup(groupId: Int, member: String): BaseResult {
+        mGroupRepository.joinGroup(groupId, member)
+        return BaseResult.data()
+    }
+
     override fun leaveGroup(groupId: Int, member: String): BaseResult {
         mGroupRepository.leaveGroup(groupId, member)
         return BaseResult.data()

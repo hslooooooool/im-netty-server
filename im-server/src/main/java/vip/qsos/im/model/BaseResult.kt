@@ -32,14 +32,21 @@ open class BaseResult {
             }
         }
 
-        fun error(error: String, code: Int = 500): BaseResult {
+        fun error(error: String): BaseResult {
+            return BaseResult().also {
+                it.msg = error
+                it.code = 500
+            }
+        }
+
+        fun error(code: Int, error: String): BaseResult {
             return BaseResult().also {
                 it.msg = error
                 it.code = code
             }
         }
 
-        fun error(error: Exception, code: Int = 500): BaseResult {
+        fun error(code: Int = 500, error: Exception): BaseResult {
             return BaseResult().also {
                 it.msg = error.message
                 it.code = code

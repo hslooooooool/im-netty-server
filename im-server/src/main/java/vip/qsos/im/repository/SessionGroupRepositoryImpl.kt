@@ -30,7 +30,13 @@ class SessionGroupRepositoryImpl : ISessionGroupRepository {
     }
 
     override fun findByGroupId(groupId: Int): TableChatSessionOfGroup {
-        return mSessionOfGroupRepository.findById(groupId).get()
+        val group: TableChatSessionOfGroup
+        try {
+            group = mSessionOfGroupRepository.findById(groupId).get()
+        } catch (e: Exception) {
+            throw ImException("聊天群不存在")
+        }
+        return group
     }
 
     override fun findByName(name: String, like: Boolean): List<TableChatSessionOfGroup> {
@@ -39,7 +45,6 @@ class SessionGroupRepositoryImpl : ISessionGroupRepository {
         } else {
             mSessionOfGroupRepository.findByName(name)
         }
-
     }
 
     override fun list(): List<TableChatSessionOfGroup> {
@@ -50,21 +55,30 @@ class SessionGroupRepositoryImpl : ISessionGroupRepository {
         return mSessionOfGroupRepository.findByMemberLike(member)
     }
 
-    override fun updateMemberState(groupId: Int, member: String, online: Boolean) {
-        val group = mSessionOfGroupRepository.findById(groupId).get()
+    override fun joinGroup(groupId: Int, member: String) {
+        val group: TableChatSessionOfGroup = findByGroupId(groupId)
         assert(member.length == 9)
-        val memberStart = group.member.indexOf(member) - 1
-        val newMember = (if (online) "1" else "0") + member
-        group.member = group.member.replaceRange(memberStart, memberStart + 10, newMember)
+        val joined = group.member.indexOf(member) > 0
+        if (joined) {
+            val memberStart = group.member.indexOf(member) - 1
+            group.member = group.member.replaceRange(memberStart, memberStart + 1, "0")
+        } else {
+            group.member = group.member + "0$member"
+        }
         mSessionOfGroupRepository.save(group)
     }
 
     override fun leaveGroup(groupId: Int, member: String) {
-        val group = mSessionOfGroupRepository.findById(groupId).get()
+        val group: TableChatSessionOfGroup = findByGroupId(groupId)
         assert(member.length == 9)
-        val memberStart = group.member.indexOf(member) - 1
-        group.member = group.member.replaceRange(memberStart, memberStart + 10, "")
-        mSessionOfGroupRepository.save(group)
+        val memberStart = group.member.indexOf(member)
+        val joined = memberStart > -1
+        if (joined) {
+            group.member = group.member.replaceRange(memberStart - 1, memberStart, "1")
+            mSessionOfGroupRepository.save(group)
+        } else {
+            throw ImException("此账号 $member 不在群内，无需移除")
+        }
     }
 
     override fun deleteGroup(groupId: Int) {

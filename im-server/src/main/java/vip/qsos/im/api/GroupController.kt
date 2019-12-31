@@ -54,6 +54,17 @@ interface GroupController {
             groupId: Int
     ): BaseResult
 
+    @ApiOperation(value = "加入群")
+    @PostMapping("/join")
+    fun joinGroup(
+            @RequestParam
+            @ApiParam(value = "群ID")
+            groupId: Int,
+            @RequestParam
+            @ApiParam(value = "加入的成员账号")
+            member: String
+    ): BaseResult
+
     @ApiOperation(value = "离开群")
     @PostMapping("/leave")
     fun leaveGroup(

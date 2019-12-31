@@ -19,9 +19,12 @@ data class TableChatSessionOfGroup constructor(
         @Column(name = "name", nullable = false, length = 16)
         @ApiModelProperty(value = "群名称")
         var name: String = "",
-        @Column(name = "member", nullable = false, length = 65530)
+        @Column(name = "creator", nullable = false, length = 9)
+        @ApiModelProperty(value = "创建者账号")
+        var creator: String = "",
+        @Column(name = "member", nullable = false, length = 65530, columnDefinition = "TEXT")
         @ApiModelProperty(value = "群成员账号集合，【规定】群成员不得超过【6553】人，" +
-                "存储方式为成员9位账号 account 前追加一位 0/1 表在线状态")
+                "存储方式为成员9位账号 account 前追加一位 0/1 表是离群状态")
         var member: String = ""
 ) : AbsTable() {
 
