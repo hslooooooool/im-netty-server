@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam
 import vip.qsos.im.model.BaseResult
 
 @Api(tags = ["消息账号"])
-@ApiSort(0)
-@RequestMapping("/api/im.account")
-interface IAccountApi {
+@ApiSort(2)
+@RequestMapping("/api/im/account")
+interface AccountApi {
     @ApiOperation(value = "分配账号")
     @GetMapping("/assign")
     fun assign(): BaseResult

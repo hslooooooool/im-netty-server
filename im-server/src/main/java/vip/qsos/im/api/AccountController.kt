@@ -9,7 +9,7 @@ import javax.annotation.Resource
 @RestController
 class AccountController constructor(
         @Resource private val mAccountRepository: IAccountRepository
-) : IAccountApi {
+) : AccountApi {
 
     override fun assign(): BaseResult {
         return BaseResult.data(data = mAccountRepository.assign())

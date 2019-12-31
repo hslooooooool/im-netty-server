@@ -6,7 +6,7 @@ import vip.qsos.im.repository.ISessionGroupRepository
 import javax.annotation.Resource
 
 @RestController
-class GroupControllerImpl : GroupController {
+class GroupControllerImpl : GroupApi {
     @Resource
     private lateinit var mGroupRepository: ISessionGroupRepository
 

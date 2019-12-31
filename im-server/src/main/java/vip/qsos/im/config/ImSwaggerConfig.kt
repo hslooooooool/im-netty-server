@@ -8,7 +8,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import springfox.documentation.builders.ApiInfoBuilder
 import springfox.documentation.builders.PathSelectors
 import springfox.documentation.builders.RequestHandlerSelectors
-import springfox.documentation.service.ApiInfo
 import springfox.documentation.service.ApiKey
 import springfox.documentation.service.Contact
 import springfox.documentation.spi.DocumentationType
@@ -17,38 +16,32 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2
 
 @Configuration
 @EnableSwagger2
-open class SwaggerConfig : WebMvcConfigurer {
+open class ImSwaggerConfig : WebMvcConfigurer {
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
         registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resources/")
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/")
     }
 
-    @Bean
-    open fun createRestApi(): Docket {
+    @Bean(name = ["IM-API"])
+    open fun imApi(): Docket {
         return Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
-                .groupName("IM-API")
+                .groupName("消息服务")
+                .apiInfo(
+                        ApiInfoBuilder().title("im")
+                                .description("消息服务接口文档")
+                                .version("1.0.0")
+                                .contact(Contact("华清松", "https://github.com/hslooooooool", "821034742@qq.com"))
+                                .build()
+                )
                 .select()
-                // 加了 ApiOperation 注解的类，才生成接口文档
                 .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation::class.java))
-                .paths(PathSelectors.any())
+                .paths(PathSelectors.ant("/api/im/**"))
                 .build()
                 .securitySchemes(security())
     }
 
-    private fun apiInfo(): ApiInfo {
-        return ApiInfoBuilder()
-                .title("IM-API")
-                .description("消息服务接口文档")
-                .termsOfServiceUrl("https://github.com/hslooooooool/im-netty-server")
-                .version("1.0.0")
-                .contact(Contact("华清松", "https://github.com/hslooooooool", "821034742@qq.com"))
-                .license("Apache 2.0")
-                .build()
-    }
-
-    private fun security(): List<ApiKey> {
+    open fun security(): List<ApiKey> {
         return arrayListOf(ApiKey("token", "token", "header"))
     }
 

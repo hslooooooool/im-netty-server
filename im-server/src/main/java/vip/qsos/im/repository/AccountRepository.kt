@@ -13,7 +13,7 @@ class AccountRepository constructor(
 
     override fun assign(): String {
         val account = mAccountRepository.findTopByUsed(false)
-                ?: throw ImException("无可用账号")
+                ?: throw ImException("无可用消息账号")
         account.used = true
         mAccountRepository.save(account)
         return account.account

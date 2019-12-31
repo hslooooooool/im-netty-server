@@ -7,10 +7,10 @@ import io.swagger.annotations.ApiSort
 import org.springframework.web.bind.annotation.*
 import vip.qsos.im.model.BaseResult
 
-@Api(tags = ["消息群"])
-@ApiSort(1)
-@RequestMapping("/api/im.group")
-interface GroupController {
+@Api(tags = ["消息群管理"])
+@ApiSort(2)
+@RequestMapping("/api/im/group")
+interface GroupApi {
 
     @ApiOperation(value = "群ID获取群信息")
     @GetMapping("/info.id")

@@ -10,7 +10,7 @@ import vip.qsos.im.model.type.ChatType
 import javax.annotation.Resource
 
 @RestController
-class MessageController : IMessageApi {
+class MessageController : MessageApi {
     @Resource
     private lateinit var messagePusher: MessagePusher
 

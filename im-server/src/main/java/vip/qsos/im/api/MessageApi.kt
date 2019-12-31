@@ -10,10 +10,10 @@ import vip.qsos.im.model.BaseResult
 import vip.qsos.im.model.form.SendMessageForm
 import vip.qsos.im.model.form.SendNoticeForm
 
-@Api(tags = ["消息服务"])
+@Api(tags = ["消息管理"])
 @ApiSort(2)
-@RequestMapping("/api/im.message")
-interface IMessageApi {
+@RequestMapping("/api/im/message")
+interface MessageApi {
     @ApiOperation(value = "发送消息")
     @PostMapping("/send")
     fun send(
