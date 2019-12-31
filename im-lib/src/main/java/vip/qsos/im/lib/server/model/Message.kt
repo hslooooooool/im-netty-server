@@ -14,7 +14,7 @@ import vip.qsos.im.lib.server.config.IMConstant
 @ApiModel(description = "消息实体")
 data class Message constructor(
         @ApiModelProperty(value = "消息ID")
-        var id: Long = 0,
+        var id: Long? = null,
         @ApiModelProperty(value = "消息类型，自定义消息类型，如0:文本、1:文件等")
         var action: String = "0",
         @ApiModelProperty(value = "消息标题")
@@ -49,7 +49,7 @@ data class Message constructor(
         @Throws(InvalidProtocolBufferException::class)
         get() {
             val builder = MessageProto.Model.newBuilder()
-            builder.id = id
+            builder.id = id ?: -1L
             builder.action = action
             builder.title = title ?: "新消息"
             builder.content = content

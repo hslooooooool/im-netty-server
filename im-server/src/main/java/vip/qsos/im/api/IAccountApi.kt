@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
 import io.swagger.annotations.ApiSort
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import vip.qsos.im.model.BaseResult
@@ -21,7 +22,15 @@ interface IAccountApi {
     @GetMapping("/list")
     fun list(
             @RequestParam
-            @ApiParam(value = "账号是否被使用")
+            @ApiParam(value = "账号是否被使用", required = false, defaultValue = "true", type = "Boolean")
             used: Boolean? = null
+    ): BaseResult
+
+    @ApiOperation(value = "账号生成")
+    @PostMapping("/init")
+    fun init(
+            @RequestParam
+            @ApiParam(value = "生成个数", required = false, defaultValue = "10", type = "Int")
+            size: Int = 10
     ): BaseResult
 }

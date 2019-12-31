@@ -45,7 +45,6 @@ im:
     host-ip: 127.0.0.1
     host-name: 测试服务器
     port: 23456
-    dispatch-url: "http://%1$s:${im.server.port}/api/im.message/dispatch"
     apns-debug: true
     apns-p12-file: /apns/xxx.p12
     apns-p12-password: password

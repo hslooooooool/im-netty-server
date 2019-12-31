@@ -14,14 +14,6 @@ class MessageController : IMessageApi {
     @Resource
     private lateinit var messagePusher: MessagePusher
 
-    override fun dispatch(message: SendMessageForm): BaseResult {
-        return send(message)
-    }
-
-    override fun dispatch(notice: SendNoticeForm): BaseResult {
-        return send(notice)
-    }
-
     override fun send(message: SendMessageForm): BaseResult {
         when (message.chatType) {
             ChatType.SINGLE -> {

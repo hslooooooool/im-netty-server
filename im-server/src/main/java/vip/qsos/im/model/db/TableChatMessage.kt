@@ -17,7 +17,7 @@ data class TableChatMessage constructor(
         @Column(name = "id")
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @ApiModelProperty(value = "消息ID")
-        var messageId: Long = 0,
+        var messageId: Long? = null,
         @Column(name = "action", nullable = false, length = 16)
         @ApiModelProperty(value = "消息类型")
         var action: String = "0",
