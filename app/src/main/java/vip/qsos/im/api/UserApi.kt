@@ -19,10 +19,10 @@ interface UserApi {
     @PostMapping("/register")
     fun register(
             @RequestParam
-            @ApiParam(value = "name", required = true)
-            name: String,
+            @ApiParam(value = "account", required = true)
+            account: String,
             @RequestParam
-            @ApiParam(value = "name", required = true)
+            @ApiParam(value = "password", required = true)
             password: String
     ): BaseResult
 
@@ -30,10 +30,10 @@ interface UserApi {
     @GetMapping("/login")
     fun login(
             @RequestParam
-            @ApiParam(value = "name", required = true)
-            name: String,
+            @ApiParam(value = "account", required = true)
+            account: String,
             @RequestParam
-            @ApiParam(value = "name", required = true)
+            @ApiParam(value = "password", required = true)
             password: String
     ): BaseResult
 

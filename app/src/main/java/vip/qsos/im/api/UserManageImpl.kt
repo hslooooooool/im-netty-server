@@ -11,13 +11,13 @@ class UserManageImpl : UserApi {
     @Resource
     private lateinit var mUserManageComponent: UserManageComponent
 
-    override fun register(name: String, password: String): BaseResult {
-        val user = mUserManageComponent.register(name, password)
+    override fun register(account: String, password: String): BaseResult {
+        val user = mUserManageComponent.register(account, password)
         return BaseResult.data(user)
     }
 
-    override fun login(name: String, password: String): BaseResult {
-        val user = mUserManageComponent.login(name, password)
+    override fun login(account: String, password: String): BaseResult {
+        val user = mUserManageComponent.login(account, password)
         return BaseResult.data(user)
     }
 }
