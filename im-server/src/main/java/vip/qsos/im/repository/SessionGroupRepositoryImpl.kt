@@ -18,14 +18,16 @@ class SessionGroupRepositoryImpl : ISessionGroupRepository {
     private lateinit var mAccountRepository: IAccountRepository
 
     override fun create(name: String, memberList: List<String>): TableChatSessionOfGroup {
+        val members = memberList.toSet()
         /**较验账号是否授权*/
-        memberList.forEach {
-            if (false == mAccountRepository.findByAccount(it)?.used) {
+        members.forEach {
+            val joined = mAccountRepository.findByAccount(it)
+            if (joined == null || !joined.used) {
                 throw ImException("账号 $it 未授权")
             }
         }
         return mSessionOfGroupRepository.saveAndFlush(TableChatSessionOfGroup(
-                name = name, member = TableChatSessionOfGroup.addMember(memberList)
+                name = name, member = TableChatSessionOfGroup.addMember(members.toList())
         ))
     }
 
