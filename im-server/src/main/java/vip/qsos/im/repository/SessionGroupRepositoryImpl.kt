@@ -2,7 +2,9 @@ package vip.qsos.im.repository
 
 import org.springframework.stereotype.Repository
 import vip.qsos.im.lib.server.model.ImException
+import vip.qsos.im.model.ChatGroupBo
 import vip.qsos.im.model.db.TableChatSessionOfGroup
+import vip.qsos.im.model.type.ChatType
 import vip.qsos.im.repository.db.IChatSessionOfGroupRepository
 import javax.annotation.Resource
 
@@ -17,7 +19,7 @@ class SessionGroupRepositoryImpl : ISessionGroupRepository {
     @Resource
     private lateinit var mAccountRepository: IAccountRepository
 
-    override fun create(name: String, memberList: List<String>): TableChatSessionOfGroup {
+    override fun create(name: String, memberList: List<String>): ChatGroupBo {
         val members = memberList.toSet()
         /**较验账号是否授权*/
         members.forEach {
@@ -26,9 +28,16 @@ class SessionGroupRepositoryImpl : ISessionGroupRepository {
                 throw ImException("账号 $it 未授权")
             }
         }
+        var chatType: ChatType = ChatType.SINGLE
+        if (members.size > 2) {
+            chatType = ChatType.GROUP
+        }
         return mSessionOfGroupRepository.saveAndFlush(TableChatSessionOfGroup(
-                name = name, member = TableChatSessionOfGroup.addMember(members.toList())
-        ))
+                name = name, member = TableChatSessionOfGroup.addMember(members.toList()),
+                chatType = chatType
+        )).let {
+            ChatGroupBo.getBo(it)
+        }
     }
 
     override fun findByGroupId(groupId: Int): TableChatSessionOfGroup {

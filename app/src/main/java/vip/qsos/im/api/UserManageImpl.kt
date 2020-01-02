@@ -20,4 +20,15 @@ class UserManageImpl : UserApi {
         val user = mUserManageComponent.login(account, password)
         return BaseResult.data(user)
     }
+
+    override fun list(): BaseResult {
+        val user = mUserManageComponent.findAll()
+        return BaseResult.data(user)
+    }
+
+    override fun findByUserId(userId: Long): BaseResult {
+        val user = mUserManageComponent.findById(userId)
+        return BaseResult.data(user)
+    }
+
 }

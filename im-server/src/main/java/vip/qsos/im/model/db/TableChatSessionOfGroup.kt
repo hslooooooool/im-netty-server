@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import org.springframework.util.StringUtils
 import vip.qsos.im.lib.server.model.ImException
+import vip.qsos.im.model.type.ChatType
 import javax.persistence.*
 
 @Entity
@@ -22,6 +23,9 @@ data class TableChatSessionOfGroup constructor(
         @Column(name = "creator", nullable = false, length = 9)
         @ApiModelProperty(value = "创建者账号")
         var creator: String = "",
+        @Column(name = "creator", nullable = false, length = 9)
+        @ApiModelProperty(value = "群类型，默认 SINGLE 单聊")
+        var chatType: ChatType = ChatType.SINGLE,
         @Column(name = "member", nullable = false, length = 65530, columnDefinition = "TEXT")
         @ApiModelProperty(value = "群成员账号集合，【规定】群成员不得超过【6553】人，" +
                 "存储方式为成员9位账号 account 前追加一位 0/1 表是离群状态")

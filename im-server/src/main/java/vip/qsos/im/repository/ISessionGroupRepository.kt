@@ -1,5 +1,6 @@
 package vip.qsos.im.repository
 
+import vip.qsos.im.model.ChatGroupBo
 import vip.qsos.im.model.db.TableChatSessionOfGroup
 
 /**
@@ -7,7 +8,7 @@ import vip.qsos.im.model.db.TableChatSessionOfGroup
  * 聊天群存储
  */
 interface ISessionGroupRepository {
-    fun create(name: String, memberList: List<String> = arrayListOf()): TableChatSessionOfGroup
+    fun create(name: String, memberList: List<String> = arrayListOf()): ChatGroupBo
     fun findByGroupId(groupId: Int): TableChatSessionOfGroup
     fun findByName(name: String, like: Boolean): List<TableChatSessionOfGroup>
     fun list(): List<TableChatSessionOfGroup>

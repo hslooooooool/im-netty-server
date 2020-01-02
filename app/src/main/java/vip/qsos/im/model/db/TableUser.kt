@@ -32,6 +32,6 @@ data class TableUser(
         @ApiModelProperty(value = "关联的消息账号")
         var imAccount: String = "",
         @Column(name = "avatar")
-        @ApiModelProperty(name = "avatar", value = "用户头像")
+        @ApiModelProperty(value = "用户头像")
         var avatar: String? = null
 ) : AbsTable()

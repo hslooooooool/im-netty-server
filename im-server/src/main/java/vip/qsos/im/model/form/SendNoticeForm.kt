@@ -25,7 +25,7 @@ data class SendNoticeForm constructor(
         var receiver: List<String>,
         @ApiModelProperty(value = "消息标题", required = true)
         var title: String,
-        @ApiModelProperty(value = "聊天类型")
+        @ApiModelProperty(value = "聊天类型", required = true, example = "NOTICE")
         override var chatType: ChatType = ChatType.NOTICE
 ) : ISendForm, Serializable {
     companion object {

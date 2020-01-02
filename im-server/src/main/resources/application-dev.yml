@@ -37,12 +37,12 @@ spring:
     open-in-view: true
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
 
 im:
   server:
-    host-ip: 127.0.0.1
+    host-ip: 192.168.1.103
     host-name: 测试服务器
     port: 23456
     apns-debug: true

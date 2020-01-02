@@ -37,7 +37,7 @@ interface GroupApi {
             @RequestParam
             @ApiParam(value = "群名称")
             name: String,
-            @RequestParam
+            @RequestParam("members")
             @ApiParam(value = "群成员账号集合")
             memberList: List<String>
     ): BaseResult

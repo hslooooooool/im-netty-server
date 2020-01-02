@@ -28,7 +28,7 @@ data class SendMessageForm constructor(
         var receiver: String,
         @ApiModelProperty(value = "消息标题")
         var title: String? = null,
-        @ApiModelProperty(value = "聊天类型")
+        @ApiModelProperty(value = "聊天类型", required = true, example = "SINGLE")
         override var chatType: ChatType = ChatType.SINGLE
 ) : ISendForm, Serializable {
     companion object {

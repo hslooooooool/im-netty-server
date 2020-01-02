@@ -37,4 +37,16 @@ interface UserApi {
             password: String
     ): BaseResult
 
+    @ApiOperation(value = "用户列表")
+    @GetMapping("/list")
+    fun list(): BaseResult
+
+    @ApiOperation(value = "ID获取用户")
+    @GetMapping("/user.id")
+    fun findByUserId(
+            @RequestParam
+            @ApiParam(value = "userId", required = true)
+            userId: Long
+    ): BaseResult
+
 }

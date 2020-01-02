@@ -12,6 +12,11 @@ class UserManageServiceImpl : UserManageService {
     private lateinit var mTableUserRepository: TableUserRepository
 
     override fun register(name: String, password: String): TableUser {
+        try {
+            val user = mTableUserRepository.findByName(name)
+        } catch (e: Exception) {
+            throw AppException("账号不存在")
+        }
         if (null != this.findByName(name)) {
             throw AppException("账号已存在")
         }
@@ -20,16 +25,27 @@ class UserManageServiceImpl : UserManageService {
 
     override fun login(name: String, password: String): TableUser {
         val user = this.findByName(name)
-        when {
-            null == user -> throw AppException("账号不存在")
-            user.password != password -> throw AppException("密码错误")
+        if (user?.password != password) {
+            throw AppException("密码错误")
         }
-        return user!!
+        return user
     }
 
     override fun updateUser(user: TableUser): TableUser {
         assert(user.userId > 0)
         return mTableUserRepository.saveAndFlush(user)
+    }
+
+    override fun findById(userId: Long): TableUser {
+        try {
+            return mTableUserRepository.findById(userId).get()
+        } catch (e: Exception) {
+            throw AppException("账号不存在")
+        }
+    }
+
+    override fun findAll(): List<TableUser> {
+        return mTableUserRepository.findAll()
     }
 
     override fun findByName(name: String): TableUser? {
