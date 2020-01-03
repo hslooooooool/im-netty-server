@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.RestController
 import vip.qsos.im.component.MessagePusher
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.model.BaseResult
-import vip.qsos.im.model.form.SendMessageForm
 import vip.qsos.im.model.form.SendNoticeForm
+import vip.qsos.im.model.form.SendTextMessageForm
 import vip.qsos.im.model.type.ChatType
 import vip.qsos.im.repository.GroupRepository
 import vip.qsos.im.repository.MessageRepository
@@ -20,7 +20,11 @@ class MessageController : MessageSendApi, MessageMangeApi {
     @Resource
     private lateinit var mGroupRepository: GroupRepository
 
-    override fun send(message: SendMessageForm): BaseResult {
+    override fun send(action: String, contentType: Int, content: String, sender: String, groupId: String): BaseResult {
+        return this.send(SendTextMessageForm(action, contentType, content, sender, groupId))
+    }
+
+    private fun send(message: SendTextMessageForm): BaseResult {
         var size = 0
         when (message.chatType) {
             ChatType.SINGLE, ChatType.GROUP -> {

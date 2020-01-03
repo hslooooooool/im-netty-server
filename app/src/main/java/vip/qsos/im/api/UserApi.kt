@@ -19,10 +19,10 @@ interface UserApi {
     @PostMapping("/register")
     fun register(
             @RequestParam
-            @ApiParam(value = "account", required = true)
+            @ApiParam(value = "账号", required = true)
             account: String,
             @RequestParam
-            @ApiParam(value = "password", required = true)
+            @ApiParam(value = "密码", required = true)
             password: String
     ): BaseResult
 
@@ -30,10 +30,10 @@ interface UserApi {
     @GetMapping("/login")
     fun login(
             @RequestParam
-            @ApiParam(value = "account", required = true)
+            @ApiParam(value = "账号", required = true)
             account: String,
             @RequestParam
-            @ApiParam(value = "password", required = true)
+            @ApiParam(value = "密码", required = true)
             password: String
     ): BaseResult
 
@@ -45,7 +45,7 @@ interface UserApi {
     @GetMapping("/user.id")
     fun findByUserId(
             @RequestParam
-            @ApiParam(value = "userId", required = true)
+            @ApiParam(value = "用户ID", required = true)
             userId: Long
     ): BaseResult
 
@@ -53,10 +53,10 @@ interface UserApi {
     @PostMapping("/friend.add")
     fun addFriend(
             @RequestParam
-            @ApiParam(value = "userId", name = "申请用户ID", required = true)
+            @ApiParam(value = "申请用户ID", required = true)
             userId: Long,
             @RequestParam
-            @ApiParam(value = "friendId", name = "待加好友ID", required = true)
+            @ApiParam(value = "待加好友ID", required = true)
             friendId: Long
     ): BaseResult
 
@@ -64,10 +64,10 @@ interface UserApi {
     @GetMapping("/friend")
     fun findFriend(
             @RequestParam
-            @ApiParam(value = "userId", name = "用户ID", required = true)
+            @ApiParam(value = "用户ID", required = true)
             userId: Long,
             @RequestParam
-            @ApiParam(value = "friendId", name = "好友ID", required = true)
+            @ApiParam(value = "好友ID", required = true)
             friendId: Long
     ): BaseResult
 

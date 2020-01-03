@@ -1,9 +1,12 @@
 package vip.qsos.im.model.db
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.google.gson.Gson
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
+import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Message
+import vip.qsos.im.model.MessageExtra
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
@@ -18,33 +21,33 @@ data class TableChatMessage constructor(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @ApiModelProperty(value = "消息ID")
         var messageId: Long? = null,
-        @Column(name = "action", nullable = false, length = 16)
-        @ApiModelProperty(value = "消息类型")
-        var action: String = "0",
         @ApiModelProperty(value = "消息标题")
         @Column(name = "title", length = 16)
         var title: String? = null,
+        @Column(name = "timeline")
+        @ApiModelProperty(value = "消息时序，同一聊天群下递增，唯一")
+        var timeline: Long,
+        @Column(name = "action", nullable = false, length = 16)
+        @ApiModelProperty(value = "消息类型")
+        var action: String,
         @ApiModelProperty(value = "消息内容", required = true)
-        @Column(name = "content", nullable = false, length = 65536)
-        var content: String = "",
+        @Column(name = "content", nullable = false, columnDefinition = "TEXT")
+        var content: String,
         @Column(name = "sender", nullable = false, length = 16)
         @ApiModelProperty(value = "消息发送者账号", required = true)
-        var sender: String = "",
+        var sender: String,
         @Column(name = "receiver", nullable = false, length = 16)
         @ApiModelProperty(value = "消息接收者账号", required = true)
-        var receiver: String = "",
-        @Column(name = "format", nullable = false, length = 8)
-        @ApiModelProperty(value = "消息数据格式")
-        var format: String = Message.Format.PROTOBUF.value,
-        @Column(name = "extra", length = 64)
+        var receiver: String,
+        @Column(name = "extra")
         @ApiModelProperty(value = "附加内容")
-        var extra: String? = null,
+        var extra: String,
         @Column(name = "timestamp")
         @ApiModelProperty(value = "消息发送时间")
         var timestamp: LocalDateTime = LocalDateTime.now(),
-        @Column(name = "timeline")
-        @ApiModelProperty(value = "消息时序，同一聊天群下递增，唯一")
-        var timeline: Long = -1L
+        @Column(name = "format", nullable = false, length = 8)
+        @ApiModelProperty(value = "消息数据格式")
+        var format: String = Message.Format.PROTOBUF.value
 ) : AbsTable() {
 
     @JsonIgnore
@@ -74,11 +77,21 @@ data class TableChatMessage constructor(
                     sender = message.sender,
                     receiver = message.receiver,
                     format = message.format,
-                    extra = message.extra,
+                    extra = message.extra!!,
                     timestamp = Date(message.timestamp).toInstant()
                             .atZone(ZoneId.systemDefault())
-                            .toLocalDateTime()
+                            .toLocalDateTime(),
+                    timeline = -1L
             )
+        }
+
+        fun formatExtra(extra: String): MessageExtra {
+            try {
+                return Gson().fromJson(extra, MessageExtra::class.java)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                throw ImException("消息附加信息解析失败")
+            }
         }
     }
 }

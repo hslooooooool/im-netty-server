@@ -33,7 +33,7 @@ data class TableChatClient constructor(
         @Column(name = "device_type", length = 16)
         @ApiModelProperty(value = "客户端设备类型", required = false)
         var deviceType: String? = null,
-        @Column(name = "device_model", length = 16)
+        @Column(name = "device_model")
         @ApiModelProperty(value = "客户端设备型号", required = false)
         var deviceModel: String? = null,
 
@@ -60,7 +60,7 @@ data class TableChatClient constructor(
         @Column(name = "latitude")
         @ApiModelProperty(value = "客户端维度", required = false)
         var latitude: Double? = null,
-        @Column(name = "location", length = 32)
+        @Column(name = "location", length = 64)
         @ApiModelProperty(value = "客户端位置", required = false)
         var location: String? = null
 ) : AbsTable() {
