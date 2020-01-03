@@ -3,12 +3,12 @@ package vip.qsos.im.api
 import org.springframework.web.bind.annotation.RestController
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.model.BaseResult
-import vip.qsos.im.repository.IAccountRepository
+import vip.qsos.im.repository.AccountRepository
 import javax.annotation.Resource
 
 @RestController
 class AccountController constructor(
-        @Resource private val mAccountRepository: IAccountRepository
+        @Resource private val mAccountRepository: AccountRepository
 ) : AccountApi {
 
     override fun assign(): BaseResult {

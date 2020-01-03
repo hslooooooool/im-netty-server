@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*
 import vip.qsos.im.model.BaseResult
 
 @Api(tags = ["消息群管理"])
-@ApiSort(2)
+@ApiSort(3)
 @RequestMapping("/api/im/group")
 interface GroupApi {
 
@@ -31,12 +31,34 @@ interface GroupApi {
             like: Boolean = false
     ): BaseResult
 
+    @ApiOperation(value = "获取单聊关系的群信息", notes = "存在，则表面两人为好友关系，否则不是好友关系")
+    @GetMapping("/info.single")
+    fun findSingle(
+            @RequestParam
+            @ApiParam(value = "发送人消息账号")
+            sender: String,
+            @RequestParam
+            @ApiParam(value = "接收人消息账号")
+            receiver: String
+    ): BaseResult
+
+    @ApiOperation(value = "获取群聊关系的群信息")
+    @GetMapping("/info.group")
+    fun findGroup(
+            @RequestParam
+            @ApiParam(value = "群ID")
+            groupId: String
+    ): BaseResult
+
     @ApiOperation(value = "创建群")
     @PostMapping("/create")
     fun create(
             @RequestParam
             @ApiParam(value = "群名称")
             name: String,
+            @RequestParam
+            @ApiParam(value = "创建人消息账号")
+            creator: String,
             @RequestParam("members")
             @ApiParam(value = "群成员账号集合")
             memberList: List<String>

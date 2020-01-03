@@ -21,11 +21,11 @@ data class SendMessageForm constructor(
         @NotNull(message = "消息内容不能为空")
         var content: String,
         @ApiModelProperty(value = "消息发送者账号", required = true)
-        @NotNull(message = "发送者账号不能为空")
+        @NotNull(message = "发送账号不能为空")
         var sender: String,
-        @ApiModelProperty(value = "消息接收者账号", required = true)
-        @NotNull(message = "接收者账号不能为空")
-        var receiver: String,
+        @ApiModelProperty(value = "消息接收群ID", required = true)
+        @NotNull(message = "接收账号不能为空")
+        var groupId: String,
         @ApiModelProperty(value = "消息标题")
         var title: String? = null,
         @ApiModelProperty(value = "聊天类型", required = true, example = "SINGLE")
@@ -36,13 +36,13 @@ data class SendMessageForm constructor(
     }
 
     @JsonIgnore
-    fun getMessage(): Message {
+    fun getMessage(receiver: String? = null): Message {
         return Message(
                 action = this.action,
                 title = this.title,
                 content = this.content,
                 sender = this.sender,
-                receiver = this.receiver,
+                receiver = receiver ?: this.groupId,
                 extra = this.chatType.name,
                 format = Message.Format.JSON.value
         )

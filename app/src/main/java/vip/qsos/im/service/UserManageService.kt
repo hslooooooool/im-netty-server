@@ -1,5 +1,6 @@
 package vip.qsos.im.service
 
+import vip.qsos.im.model.db.TableFriend
 import vip.qsos.im.model.db.TableUser
 
 /**
@@ -16,5 +17,7 @@ interface UserManageService {
     fun findById(userId: Long): TableUser
     fun findByNameLike(name: String): List<TableUser>
     fun findByImAccount(account: String): TableUser?
+
+    fun addFriend(userId: Long, friendId: Long): TableFriend
 
 }

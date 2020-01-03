@@ -41,7 +41,10 @@ data class TableChatMessage constructor(
         var extra: String? = null,
         @Column(name = "timestamp")
         @ApiModelProperty(value = "消息发送时间")
-        var timestamp: LocalDateTime = LocalDateTime.now()
+        var timestamp: LocalDateTime = LocalDateTime.now(),
+        @Column(name = "timeline")
+        @ApiModelProperty(value = "消息时序，同一聊天群下递增，唯一")
+        var timeline: Long = -1L
 ) : AbsTable() {
 
     @JsonIgnore

@@ -4,6 +4,7 @@ import cn.teaey.apns4j.Apns4j
 import cn.teaey.apns4j.network.ApnsGateway
 import org.springframework.stereotype.Service
 import vip.qsos.im.config.AppProperties
+import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.model.ApnsPayloadCompat
 import javax.annotation.Resource
@@ -42,6 +43,6 @@ class ApnsPusher constructor(
                 apnsChannel.close()
                 stream.close()
             }
-        } ?: throw NullPointerException("苹果证书不存在")
+        } ?: throw ImException("消息发送失败，苹果证书不存在")
     }
 }

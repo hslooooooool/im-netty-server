@@ -8,9 +8,9 @@ import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
-@Table(name = "table_chat_session_client")
+@Table(name = "table_chat_client")
 @ApiModel(value = "客户端连接表")
-data class TableChatSessionOfClient constructor(
+data class TableChatClient constructor(
         @Id
         @Column(name = "id")
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,8 +76,8 @@ data class TableChatSessionOfClient constructor(
     }
 
     companion object {
-        fun create(session: Session): TableChatSessionOfClient {
-            return TableChatSessionOfClient(
+        fun create(session: Session): TableChatClient {
+            return TableChatClient(
                     sessionId = session.id,
                     nid = session.nid,
                     host = session.host,

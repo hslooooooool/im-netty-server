@@ -9,9 +9,9 @@ import vip.qsos.im.model.type.ChatType
 import javax.persistence.*
 
 @Entity
-@Table(name = "table_chat_session_group")
-@ApiModel(value = "客户端群组表")
-data class TableChatSessionOfGroup constructor(
+@Table(name = "table_chat_group")
+@ApiModel(value = "聊天群表")
+data class TableChatGroup constructor(
         @Id
         @Column(name = "id", length = 16)
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,8 @@ data class TableChatSessionOfGroup constructor(
         @Column(name = "creator", nullable = false, length = 9)
         @ApiModelProperty(value = "创建者账号")
         var creator: String = "",
-        @Column(name = "creator", nullable = false, length = 9)
+        @Column(name = "chat_type", nullable = false, length = 20)
+        @Enumerated(EnumType.STRING)
         @ApiModelProperty(value = "群类型，默认 SINGLE 单聊")
         var chatType: ChatType = ChatType.SINGLE,
         @Column(name = "member", nullable = false, length = 65530, columnDefinition = "TEXT")
@@ -36,7 +37,7 @@ data class TableChatSessionOfGroup constructor(
         /**将账号列表转为集合字符串*/
         fun addMember(memberList: List<String>): String {
             var member = ""
-            memberList.forEach {
+            memberList.toSet().sorted().forEach {
                 member = member + "0" + it
             }
             return member
@@ -45,10 +46,24 @@ data class TableChatSessionOfGroup constructor(
 
     /**获取群内成员账号与对应状态*/
     @JsonIgnore
+    fun getAccount(account: String): Account? {
+        var mAccount: Account? = null
+        val accounts = getAccountList()
+        for (it in accounts) {
+            if (it.account == account) {
+                mAccount = it
+                break
+            }
+        }
+        return mAccount
+    }
+
+    /**获取群内成员账号与对应状态*/
+    @JsonIgnore
     fun getAccountList(): List<Account> {
         return getAccountList(member, arrayListOf()).map {
-            val online = it.substring(0, 1) == "1"
-            Account(it.substring(1), online)
+            val leave = it.substring(0, 1) == "1"
+            Account(it.substring(1), leave)
         }
     }
 
@@ -76,7 +91,7 @@ data class TableChatSessionOfGroup constructor(
 
     /**成员账号
      * @param account 账号
-     * @param online 在线
+     * @param leave 离群状态
      */
-    data class Account(var account: String, var online: Boolean)
+    data class Account(var account: String, var leave: Boolean)
 }

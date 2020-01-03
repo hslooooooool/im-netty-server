@@ -2,6 +2,7 @@ package vip.qsos.im.component
 
 import vip.qsos.im.model.AppException
 import vip.qsos.im.model.AppUser
+import vip.qsos.im.model.db.TableFriend
 import vip.qsos.im.model.db.TableUser
 import javax.transaction.Transactional
 
@@ -20,5 +21,7 @@ interface UserManageComponent {
     /**分配账号*/
     @Throws(AppException::class)
     fun assignImAccount(user: TableUser): TableUser
+
+    fun addFriend(sender: AppUser, receiver: AppUser): TableFriend
 
 }

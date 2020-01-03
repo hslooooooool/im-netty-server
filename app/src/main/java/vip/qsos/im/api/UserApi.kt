@@ -49,4 +49,15 @@ interface UserApi {
             userId: Long
     ): BaseResult
 
+    @ApiOperation(value = "加好友")
+    @PostMapping("/friend.add")
+    fun addFriend(
+            @RequestParam
+            @ApiParam(value = "userId", name = "申请用户ID", required = true)
+            userId: Long,
+            @RequestParam
+            @ApiParam(value = "friendId", name = "待加好友ID", required = true)
+            friendId: Long
+    ): BaseResult
+
 }

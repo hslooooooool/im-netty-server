@@ -10,7 +10,7 @@ import vip.qsos.im.lib.server.model.ReplyBody
 import vip.qsos.im.lib.server.model.SendBody
 import vip.qsos.im.lib.server.model.Session
 import vip.qsos.im.model.form.SendMessageForm
-import vip.qsos.im.repository.IAccountRepository
+import vip.qsos.im.repository.AccountRepository
 import vip.qsos.im.service.IServerManager
 import java.time.LocalDateTime
 import javax.annotation.Resource
@@ -24,7 +24,7 @@ class BindAccountRequestHandler constructor(
         @Resource private val mProperties: AppProperties,
         @Resource private val mSessionManager: IServerManager,
         @Resource private val mMessagePusher: IMessagePusher,
-        @Resource private val mAccountRepository: IAccountRepository
+        @Resource private val mAccountRepository: AccountRepository
 ) : IMRequestHandler {
     override fun process(session: Session, message: SendBody) {
         val reply = ReplyBody()
@@ -68,7 +68,7 @@ class BindAccountRequestHandler constructor(
                 if (oldSession.nid != session.nid && oldSession.isConnected) {
                     val msg = SendMessageForm(
                             action = AppConstant.IMMessageAction.ACTION_999,
-                            receiver = session.getAccount(),
+                            groupId = session.getAccount(),
                             sender = mProperties.hostName,
                             content = "您的账号在其它地方登录"
                     )

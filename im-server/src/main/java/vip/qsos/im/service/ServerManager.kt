@@ -3,13 +3,13 @@ package vip.qsos.im.service
 import org.springframework.stereotype.Service
 import vip.qsos.im.lib.server.handler.IMServerInboundHandler
 import vip.qsos.im.lib.server.model.Session
-import vip.qsos.im.repository.ISessionRepository
+import vip.qsos.im.repository.SessionRepository
 import javax.annotation.Resource
 
 @Service
 class ServerManager(
         @Resource private val mImServerInboundHandler: IMServerInboundHandler,
-        @Resource private val mSessionRepository: ISessionRepository
+        @Resource private val mSessionRepository: SessionRepository
 ) : IServerManager {
 
     override fun save(session: Session) {

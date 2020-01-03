@@ -2,8 +2,10 @@ package vip.qsos.im.component
 
 import org.springframework.stereotype.Component
 import vip.qsos.im.model.AppUser
+import vip.qsos.im.model.db.TableFriend
 import vip.qsos.im.model.db.TableUser
-import vip.qsos.im.repository.IAccountRepository
+import vip.qsos.im.repository.AccountRepository
+import vip.qsos.im.repository.GroupRepository
 import vip.qsos.im.service.UserManageService
 import javax.annotation.Resource
 
@@ -17,7 +19,9 @@ class UserManageComponentImpl : UserManageComponent {
     @Resource
     private lateinit var mUserManageService: UserManageService
     @Resource
-    private lateinit var mAccountRepository: IAccountRepository
+    private lateinit var mAccountRepository: AccountRepository
+    @Resource
+    private lateinit var mGroupRepository: GroupRepository
 
     override fun register(name: String, password: String): TableUser {
         return assignImAccount(mUserManageService.register(name, password))
@@ -68,4 +72,11 @@ class UserManageComponentImpl : UserManageComponent {
         }
     }
 
+    override fun addFriend(sender: AppUser, receiver: AppUser): TableFriend {
+        /**创建聊天关系*/
+        mGroupRepository.create("", sender.imAccount, arrayListOf(sender.imAccount, receiver.imAccount))
+        val friend = mUserManageService.addFriend(sender.userId, receiver.userId)
+        // TODO 发送申请消息
+        return friend
+    }
 }
