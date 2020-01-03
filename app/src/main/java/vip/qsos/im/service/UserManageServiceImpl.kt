@@ -70,13 +70,18 @@ class UserManageServiceImpl : UserManageService {
         } else {
             "$userId" + "$friendId"
         }
-        val mTableFriend = mTableFriendRepository.findByHashCode(hashCode)
-        if (mTableFriend == null) {
-            return mTableFriendRepository.saveAndFlush(TableFriend(
-                    applicant = userId, friend = friendId, hashCode = hashCode
-            ))
+        val mTableFriend = findFriend(userId, friendId)
+        return mTableFriend ?: mTableFriendRepository.saveAndFlush(TableFriend(
+                applicant = userId, friend = friendId, hashCode = hashCode
+        ))
+    }
+
+    override fun findFriend(userId: Long, friendId: Long): TableFriend? {
+        val hashCode: String = if (userId > friendId) {
+            "$friendId" + "$userId"
         } else {
-            throw AppException("已是好友关系")
+            "$userId" + "$friendId"
         }
+        return mTableFriendRepository.findByHashCode(hashCode)
     }
 }

@@ -60,4 +60,15 @@ interface UserApi {
             friendId: Long
     ): BaseResult
 
+    @ApiOperation(value = "获取好友关系")
+    @GetMapping("/friend")
+    fun findFriend(
+            @RequestParam
+            @ApiParam(value = "userId", name = "用户ID", required = true)
+            userId: Long,
+            @RequestParam
+            @ApiParam(value = "friendId", name = "好友ID", required = true)
+            friendId: Long
+    ): BaseResult
+
 }

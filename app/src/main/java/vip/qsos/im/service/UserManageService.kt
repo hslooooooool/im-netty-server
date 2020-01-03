@@ -19,5 +19,6 @@ interface UserManageService {
     fun findByImAccount(account: String): TableUser?
 
     fun addFriend(userId: Long, friendId: Long): TableFriend
+    fun findFriend(userId: Long, friendId: Long): TableFriend?
 
 }

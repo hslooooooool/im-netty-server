@@ -23,5 +23,6 @@ interface UserManageComponent {
     fun assignImAccount(user: TableUser): TableUser
 
     fun addFriend(sender: AppUser, receiver: AppUser): TableFriend
+    fun findFriend(userId: Long, friendId: Long): TableFriend?
 
 }
