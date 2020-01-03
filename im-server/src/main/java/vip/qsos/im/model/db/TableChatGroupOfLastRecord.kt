@@ -12,9 +12,9 @@ import javax.persistence.Table
 @ApiModel(value = "群组最后的消息记录表")
 data class TableChatGroupOfLastRecord constructor(
         @Id
-        @Column(name = "id", length = 16)
+        @Column(name = "id")
         @ApiModelProperty(value = "群号")
-        var groupId: Int = -1,
+        var groupId: Long = -1L,
         @Column(name = "last_message_id")
         @ApiModelProperty(value = "最后一条消息ID")
         var lastMessageId: Long? = null,

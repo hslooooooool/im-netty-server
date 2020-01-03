@@ -7,8 +7,8 @@ import vip.qsos.im.model.BaseResult
 import vip.qsos.im.model.form.SendMessageForm
 import vip.qsos.im.model.form.SendNoticeForm
 import vip.qsos.im.model.type.ChatType
-import vip.qsos.im.repository.MessageRepository
 import vip.qsos.im.repository.GroupRepository
+import vip.qsos.im.repository.MessageRepository
 import javax.annotation.Resource
 
 @RestController
@@ -24,7 +24,7 @@ class MessageController : MessageSendApi, MessageMangeApi {
         var size = 0
         when (message.chatType) {
             ChatType.SINGLE, ChatType.GROUP -> {
-                val groupId = message.groupId.toInt()
+                val groupId = message.groupId.toLong()
                 mGroupRepository.findByGroupId(groupId).getAccountList().map {
                     /**给未离群的账号发送消息*/
                     if (!it.leave && it.account != message.sender) {

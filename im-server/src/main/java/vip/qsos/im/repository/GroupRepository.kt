@@ -12,13 +12,14 @@ interface GroupRepository {
 
     fun findSingle(sender: String, receiver: String): ChatGroupBo?
     fun create(name: String, creator: String, memberList: List<String> = arrayListOf()): ChatGroupBo
-    fun findByGroupId(groupId: Int): TableChatGroup
+    fun findGroup(groupId: Long): ChatGroupBo
+    fun findByGroupId(groupId: Long): TableChatGroup
     fun findByName(name: String, like: Boolean): List<TableChatGroup>
     fun list(): List<ChatGroupBo>
     fun listLikeMember(member: String): List<TableChatGroup>
-    fun joinGroup(groupId: Int, member: String)
-    fun leaveGroup(groupId: Int, member: String)
-    fun deleteGroup(groupId: Int)
-    fun findGroupOfLastRecord(groupId: Int): TableChatGroupOfLastRecord
+    fun joinGroup(groupId: Long, member: String)
+    fun leaveGroup(groupId: Long, member: String)
+    fun deleteGroup(groupId: Long)
+    fun findGroupOfLastRecord(groupId: Long): TableChatGroupOfLastRecord
 
 }

@@ -13,10 +13,10 @@ import javax.persistence.*
 @ApiModel(value = "聊天群表")
 data class TableChatGroup constructor(
         @Id
-        @Column(name = "id", length = 16)
+        @Column(name = "id")
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @ApiModelProperty(value = "群号")
-        var groupId: Int? = null,
+        var groupId: Long? = -1L,
         @Column(name = "name", nullable = false, length = 16)
         @ApiModelProperty(value = "群名称")
         var name: String = "",

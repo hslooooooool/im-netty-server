@@ -65,7 +65,14 @@ class GroupRepositoryImpl : GroupRepository {
         }
     }
 
-    override fun findByGroupId(groupId: Int): TableChatGroup {
+    override fun findGroup(groupId: Long): ChatGroupBo {
+        return findByGroupId(groupId).let {
+            val record = mGroupOfLastRecordRepository.saveAndFlush(TableChatGroupOfLastRecord(groupId = it.groupId!!))
+            ChatGroupBo.getBo(it).addLastRecord(record)
+        }
+    }
+
+    override fun findByGroupId(groupId: Long): TableChatGroup {
         val group: TableChatGroup
         try {
             group = mGroupRepository.findById(groupId).get()
@@ -93,7 +100,7 @@ class GroupRepositoryImpl : GroupRepository {
         return mGroupRepository.findByMemberLike(member)
     }
 
-    override fun joinGroup(groupId: Int, member: String) {
+    override fun joinGroup(groupId: Long, member: String) {
         val group: TableChatGroup = findByGroupId(groupId)
         assert(member.length == 9)
         val joined = group.member.indexOf(member) > 0
@@ -106,7 +113,7 @@ class GroupRepositoryImpl : GroupRepository {
         mGroupRepository.save(group)
     }
 
-    override fun leaveGroup(groupId: Int, member: String) {
+    override fun leaveGroup(groupId: Long, member: String) {
         val group: TableChatGroup = findByGroupId(groupId)
         assert(member.length == 9)
         val memberStart = group.member.indexOf(member)
@@ -119,11 +126,11 @@ class GroupRepositoryImpl : GroupRepository {
         }
     }
 
-    override fun deleteGroup(groupId: Int) {
+    override fun deleteGroup(groupId: Long) {
         mGroupRepository.deleteById(groupId)
     }
 
-    override fun findGroupOfLastRecord(groupId: Int): TableChatGroupOfLastRecord {
+    override fun findGroupOfLastRecord(groupId: Long): TableChatGroupOfLastRecord {
         try {
             return mGroupOfLastRecordRepository.findById(groupId).get()
         } catch (e: Exception) {

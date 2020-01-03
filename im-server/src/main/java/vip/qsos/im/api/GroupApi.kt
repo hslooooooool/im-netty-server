@@ -17,7 +17,7 @@ interface GroupApi {
     fun findByGroupId(
             @RequestParam
             @ApiParam(value = "群ID")
-            groupId: Int
+            groupId: String
     ): BaseResult
 
     @ApiOperation(value = "群名称获取群信息")
@@ -73,7 +73,7 @@ interface GroupApi {
     fun deleteGroup(
             @RequestParam
             @ApiParam(value = "群ID")
-            groupId: Int
+            groupId: String
     ): BaseResult
 
     @ApiOperation(value = "加入群")
@@ -81,7 +81,7 @@ interface GroupApi {
     fun joinGroup(
             @RequestParam
             @ApiParam(value = "群ID")
-            groupId: Int,
+            groupId: String,
             @RequestParam
             @ApiParam(value = "加入的成员账号")
             member: String
@@ -92,7 +92,7 @@ interface GroupApi {
     fun leaveGroup(
             @RequestParam
             @ApiParam(value = "群ID")
-            groupId: Int,
+            groupId: String,
             @RequestParam
             @ApiParam(value = "离开的成员账号")
             member: String

@@ -10,7 +10,7 @@ import vip.qsos.im.model.type.ChatType
 @ApiModel(value = "群组实体")
 data class ChatGroupBo(
         @ApiModelProperty(value = "群号")
-        var id: Int,
+        var id: Long,
         @ApiModelProperty(value = "群名称")
         var name: String,
         @ApiModelProperty(value = "创建者账号")

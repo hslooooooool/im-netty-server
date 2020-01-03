@@ -10,8 +10,8 @@ class GroupControllerImpl : GroupApi {
     @Resource
     private lateinit var mGroupRepository: GroupRepository
 
-    override fun findByGroupId(groupId: Int): BaseResult {
-        return BaseResult.data(mGroupRepository.findByGroupId(groupId))
+    override fun findByGroupId(groupId: String): BaseResult {
+        return BaseResult.data(mGroupRepository.findGroup(groupId.toLong()))
     }
 
     override fun findByName(name: String, like: Boolean): BaseResult {
@@ -35,18 +35,18 @@ class GroupControllerImpl : GroupApi {
         return BaseResult.data(mGroupRepository.list())
     }
 
-    override fun deleteGroup(groupId: Int): BaseResult {
-        mGroupRepository.deleteGroup(groupId)
+    override fun deleteGroup(groupId: String): BaseResult {
+        mGroupRepository.deleteGroup(groupId.toLong())
         return BaseResult.data("群已删除")
     }
 
-    override fun joinGroup(groupId: Int, member: String): BaseResult {
-        mGroupRepository.joinGroup(groupId, member)
+    override fun joinGroup(groupId: String, member: String): BaseResult {
+        mGroupRepository.joinGroup(groupId.toLong(), member)
         return BaseResult.data()
     }
 
-    override fun leaveGroup(groupId: Int, member: String): BaseResult {
-        mGroupRepository.leaveGroup(groupId, member)
+    override fun leaveGroup(groupId: String, member: String): BaseResult {
+        mGroupRepository.leaveGroup(groupId.toLong(), member)
         return BaseResult.data()
     }
 }
