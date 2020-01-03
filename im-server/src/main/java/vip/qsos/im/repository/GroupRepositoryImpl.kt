@@ -27,7 +27,7 @@ class GroupRepositoryImpl : GroupRepository {
     override fun findSingle(sender: String, receiver: String): ChatGroupBo? {
         var members = ""
         arrayListOf(sender, receiver).toSet().sorted().forEach {
-            members = members + "0$it" + it
+            members += "0$it"
         }
         return mGroupRepository
                 .findByChatTypeAndMember(ChatType.SINGLE, members)
@@ -53,10 +53,13 @@ class GroupRepositoryImpl : GroupRepository {
             StringUtils.isEmpty(name) -> throw ImException("群名称不能为空")
             StringUtils.isEmpty(creator) || creator.length != 9 -> throw ImException("创建人不能为空")
         }
-        return mGroupRepository.saveAndFlush(TableChatGroup(
-                name = name, creator = creator, member = TableChatGroup.addMember(members.toList()),
-                chatType = chatType
-        )).let {
+        val memberString = TableChatGroup.addMember(members.toList())
+        val group = mGroupRepository.findByMember(memberString)
+                ?: mGroupRepository.saveAndFlush(TableChatGroup(
+                        name = name, creator = creator, member = memberString,
+                        chatType = chatType
+                ))
+        return group.let {
             val record = mGroupOfLastRecordRepository.saveAndFlush(TableChatGroupOfLastRecord(groupId = it.groupId!!))
             ChatGroupBo.getBo(it).addLastRecord(record)
         }

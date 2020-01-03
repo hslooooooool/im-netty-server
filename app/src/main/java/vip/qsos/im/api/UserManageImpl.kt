@@ -39,6 +39,7 @@ class UserManageImpl : UserApi {
     }
 
     override fun findFriend(userId: Long, friendId: Long): BaseResult {
-        return BaseResult.data(mUserManageComponent.findFriend(userId, friendId))
+        val friend = mUserManageComponent.findFriend(userId, friendId)
+        return BaseResult.data(friend)
     }
 }
