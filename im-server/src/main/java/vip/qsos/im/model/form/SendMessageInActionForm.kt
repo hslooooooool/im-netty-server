@@ -5,7 +5,6 @@ import com.google.gson.Gson
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import vip.qsos.im.lib.server.model.Message
-import vip.qsos.im.model.MessageExtra
 import vip.qsos.im.model.type.ChatType
 import java.io.Serializable
 import javax.validation.constraints.NotNull
@@ -14,23 +13,25 @@ import javax.validation.constraints.NotNull
  * @author : 华清松
  * 发送基本消息实体
  */
-@ApiModel(description = "发送文本消息的实体")
-data class SendTextMessageForm constructor(
-        @ApiModelProperty(value = "消息行为")
-        @NotNull(message = "消息行为不能为空")
-        var action: String = "0",
-        @ApiModelProperty(value = "消息类型", required = true)
-        @NotNull(message = "消息类型不能为空")
-        var contentType: Int = 0,
-        @ApiModelProperty(value = "消息内容", required = true)
-        @NotNull(message = "消息内容不能为空")
-        var content: String,
+@ApiModel(description = "发送指令消息")
+data class SendMessageInActionForm constructor(
+        @ApiModelProperty(value = "消息指令", required = true)
+        @NotNull(message = "消息指令不能为空")
+        var action: String,
         @ApiModelProperty(value = "消息发送者账号", required = true)
         @NotNull(message = "发送账号不能为空")
         var sender: String,
-        @ApiModelProperty(value = "消息接收群ID", required = true)
+        @ApiModelProperty(value = "消息接收账号", required = true)
         @NotNull(message = "接收账号不能为空")
-        var groupId: String
+        var receiver: String,
+        @ApiModelProperty(value = "消息内容", required = true)
+        @NotNull(message = "消息内容不能为空")
+        var content: String,
+        @ApiModelProperty(value = "消息类型", required = true)
+        @NotNull(message = "消息类型不能为空")
+        var contentType: Int = 0,
+        @ApiModelProperty(value = "消息附加信息")
+        var extra: String? = null
 ) : ISendForm, Serializable {
 
     companion object {
@@ -57,17 +58,17 @@ data class SendTextMessageForm constructor(
     }
 
     @JsonIgnore
-    override var chatType: ChatType = ChatType.SINGLE
+    override var chatType: ChatType = ChatType.GROUP
 
     @JsonIgnore
     fun getMessage(receiver: String? = null): Message {
         return Message(
-                action = this.action,
+                action = chatType.name,
                 content = getChatContent().toString(),
                 sender = this.sender,
-                receiver = receiver ?: this.groupId,
-                extra = MessageExtra(chatType, this.groupId).toString(),
-                format = Message.Format.JSON.value
+                receiver = receiver ?: this.receiver,
+                extra = extra,
+                format = Message.Format.JSON.name
         )
     }
 

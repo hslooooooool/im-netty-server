@@ -9,7 +9,7 @@ import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.ReplyBody
 import vip.qsos.im.lib.server.model.SendBody
 import vip.qsos.im.lib.server.model.Session
-import vip.qsos.im.model.form.SendTextMessageForm
+import vip.qsos.im.model.form.SendMessageInActionForm
 import vip.qsos.im.repository.AccountRepository
 import vip.qsos.im.service.IServerManager
 import java.time.LocalDateTime
@@ -66,9 +66,9 @@ class BindAccountRequestHandler constructor(
             } else {
                 /**不同设备连接，则关闭另一个终端连接，添加新连接*/
                 if (oldSession.nid != session.nid && oldSession.isConnected) {
-                    val msg = SendTextMessageForm(
+                    val msg = SendMessageInActionForm(
                             action = AppConstant.IMMessageAction.ACTION_999,
-                            groupId = session.getAccount(),
+                            receiver = session.getAccount(),
                             sender = mProperties.hostName,
                             content = "您的账号在其它地方登录"
                     )

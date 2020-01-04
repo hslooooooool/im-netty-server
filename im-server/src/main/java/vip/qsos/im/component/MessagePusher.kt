@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component
 import vip.qsos.im.config.AppProperties
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Message
-import vip.qsos.im.repository.MessageRepository
 import vip.qsos.im.service.IApnsPusher
 import vip.qsos.im.service.IServerManager
 import javax.annotation.Resource
@@ -17,8 +16,7 @@ import javax.annotation.Resource
 class MessagePusher constructor(
         @Resource private val mProperties: AppProperties,
         @Resource private val mServerManager: IServerManager,
-        @Resource private val mApnsPusher: IApnsPusher,
-        @Resource private val mMessageRepository: MessageRepository
+        @Resource private val mApnsPusher: IApnsPusher
 ) : IMessagePusher {
     override fun push(msg: Message) {
         //TODO 设计发送失败的处理机制
@@ -36,14 +34,13 @@ class MessagePusher constructor(
                 }
                 session.isConnected && mProperties.hostIp == session.host -> {
                     /**通道正常，连接的是当前服务器，直接发送*/
-                    msg.format = Message.Format.PROTOBUF.value
+                    msg.format = Message.Format.PROTOBUF.name
                     session.write(msg)
                 }
                 else -> {
                     throw ImException("消息发送失败，消息通道已关闭")
                 }
             }
-            mMessageRepository.save(msg)
         } ?: throw ImException("消息发送失败，接收账号未上线")
     }
 }

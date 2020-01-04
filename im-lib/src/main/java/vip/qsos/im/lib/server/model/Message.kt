@@ -15,8 +15,8 @@ import vip.qsos.im.lib.server.config.IMConstant
 data class Message constructor(
         @ApiModelProperty(value = "消息ID")
         var id: Long? = null,
-        @ApiModelProperty(value = "消息类型，自定义消息类型，如0:文本、1:文件等")
-        var action: String = "0",
+        @ApiModelProperty(value = "消息类型")
+        var action: String,
         @ApiModelProperty(value = "消息标题")
         var title: String? = null,
         @ApiModelProperty(value = "消息内容，content 根据 format 数据格式进行解析", required = true)
@@ -25,8 +25,8 @@ data class Message constructor(
         var sender: String,
         @ApiModelProperty(value = "消息接收者账号", required = true)
         var receiver: String,
-        @ApiModelProperty(value = "消息数据格式 protobuf text json xml")
-        var format: String = Format.PROTOBUF.value,
+        @ApiModelProperty(value = "消息数据格式", dataType = "Enum")
+        var format: String = Format.PROTOBUF.name,
         @ApiModelProperty(value = "附加内容")
         var extra: String? = null,
         @ApiModelProperty(value = "消息发送时间")
@@ -74,11 +74,8 @@ data class Message constructor(
                 "\ntimestamp:" + timestamp
     }
 
-    /**消息数据格式 protobuf text json xml*/
-    enum class Format(val value: String) {
-        PROTOBUF("protobuf"),
-        JSON("json"),
-        XML("xml"),
-        TEXT("text");
+    /**消息数据格式*/
+    enum class Format {
+        PROTOBUF, JSON, XML, TEXT;
     }
 }

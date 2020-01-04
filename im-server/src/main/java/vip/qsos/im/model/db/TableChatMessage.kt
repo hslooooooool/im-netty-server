@@ -1,12 +1,9 @@
 package vip.qsos.im.model.db
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.google.gson.Gson
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Message
-import vip.qsos.im.model.MessageExtra
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
@@ -47,7 +44,7 @@ data class TableChatMessage constructor(
         var timestamp: LocalDateTime = LocalDateTime.now(),
         @Column(name = "format", nullable = false, length = 8)
         @ApiModelProperty(value = "消息数据格式")
-        var format: String = Message.Format.PROTOBUF.value
+        var format: String = Message.Format.PROTOBUF.name
 ) : AbsTable() {
 
     @JsonIgnore
@@ -83,15 +80,6 @@ data class TableChatMessage constructor(
                             .toLocalDateTime(),
                     timeline = -1L
             )
-        }
-
-        fun formatExtra(extra: String): MessageExtra {
-            try {
-                return Gson().fromJson(extra, MessageExtra::class.java)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                throw ImException("消息附加信息解析失败")
-            }
         }
     }
 }

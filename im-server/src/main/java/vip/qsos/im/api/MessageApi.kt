@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiSort
 import org.springframework.web.bind.annotation.*
 import vip.qsos.im.model.BaseResult
 import vip.qsos.im.model.form.SendNoticeForm
+import vip.qsos.im.model.type.ChatType
 import javax.validation.constraints.NotNull
 
 @Api(tags = ["消息发送"])
@@ -15,11 +16,11 @@ import javax.validation.constraints.NotNull
 interface MessageSendApi {
     @ApiOperation(value = "发送消息")
     @PostMapping("/message")
-    fun send(
+    fun sendToGroup(
             @RequestParam
-            @ApiParam(value = "消息类型，如0:文本、1:文件等，默认：0")
-            @NotNull(message = "消息类型不能为空")
-            action: String = "0",
+            @ApiParam(value = "消息接收群ID")
+            @NotNull(message = "接收账号不能为空")
+            groupId: String,
             @RequestParam
             @ApiParam(value = "消息类型")
             @NotNull(message = "消息类型不能为空")
@@ -33,14 +34,14 @@ interface MessageSendApi {
             @NotNull(message = "发送账号不能为空")
             sender: String,
             @RequestParam
-            @ApiParam(value = "消息接收群ID")
-            @NotNull(message = "接收账号不能为空")
-            groupId: String
+            @ApiParam(value = "消息附加信息")
+            @NotNull(message = "发送账号不能为空")
+            extra: String? = null
     ): BaseResult
 
     @ApiOperation(value = "发送通知")
     @PostMapping("/notice")
-    fun send(
+    fun notice(
             @RequestBody
             notice: SendNoticeForm
     ): BaseResult
@@ -54,6 +55,10 @@ interface MessageMangeApi {
 
     @ApiOperation(value = "消息列表")
     @GetMapping("/list")
-    fun list(): BaseResult
+    fun list(
+            @RequestParam
+            @ApiParam(value = "消息类型")
+            chatType: ChatType
+    ): BaseResult
 
 }
