@@ -16,11 +16,6 @@ class UserManageServiceImpl : UserManageService {
     private lateinit var mTableFriendRepository: TableFriendRepository
 
     override fun register(name: String, password: String): TableUser {
-        try {
-            val user = mTableUserRepository.findByName(name)
-        } catch (e: Exception) {
-            throw AppException("账号不存在")
-        }
         if (null != this.findByName(name)) {
             throw AppException("账号已存在")
         }
