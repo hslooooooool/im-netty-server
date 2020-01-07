@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import vip.qsos.im.lib.server.model.Message
+import vip.qsos.im.model.MessageExtra
 import vip.qsos.im.model.type.ChatType
 import java.io.Serializable
 import javax.validation.constraints.NotNull
@@ -17,7 +18,7 @@ import javax.validation.constraints.NotNull
 data class SendMessageInGroupForm constructor(
         @ApiModelProperty(value = "消息会话ID", required = true)
         @NotNull(message = "消息会话ID不能为空")
-        var sessionId: String,
+        var sessionId: Long,
         @ApiModelProperty(value = "消息类型", required = true)
         @NotNull(message = "消息类型不能为空")
         var contentType: Int = 0,
@@ -26,9 +27,7 @@ data class SendMessageInGroupForm constructor(
         var content: String,
         @ApiModelProperty(value = "消息发送者账号", required = true)
         @NotNull(message = "发送账号不能为空")
-        var sender: String,
-        @ApiModelProperty(value = "消息附加信息")
-        var extra: String? = null
+        var sender: String
 ) : ISendForm, Serializable {
 
     companion object {
@@ -58,13 +57,13 @@ data class SendMessageInGroupForm constructor(
     override var chatType: ChatType = ChatType.GROUP
 
     @JsonIgnore
-    fun getMessage(receiver: String? = null): Message {
+    fun getMessage(receiver: String): Message {
         return Message(
                 action = chatType.name,
                 content = getChatContent().toString(),
                 sender = this.sender,
-                receiver = receiver ?: this.sessionId,
-                extra = extra,
+                receiver = receiver,
+                extra = MessageExtra(ChatType.GROUP, this.sessionId).toString(),
                 format = Message.Format.JSON.name
         )
     }

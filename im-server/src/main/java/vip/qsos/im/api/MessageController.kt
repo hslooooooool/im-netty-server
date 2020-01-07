@@ -20,15 +20,15 @@ class MessageController : MessageSendApi, MessageMangeApi {
     @Resource
     private lateinit var mTableChatSessionRepository: TableChatSessionRepository
 
-    override fun sendToGroup(groupId: String, contentType: Int, content: String, sender: String, extra: String?): BaseResult {
-        return this.send(SendMessageInGroupForm(groupId, contentType, content, sender, extra))
+    override fun sendToGroup(sessionId: Long, contentType: Int, content: String, sender: String): BaseResult {
+        return this.send(SendMessageInGroupForm(sessionId, contentType, content, sender))
     }
 
     private fun send(message: SendMessageInGroupForm): BaseResult {
         var size = 0
         when (message.chatType) {
             ChatType.SINGLE, ChatType.GROUP -> {
-                val sessionId = message.sessionId.toLong()
+                val sessionId = message.sessionId
                 mTableChatSessionRepository.findById(sessionId).get().getAccountList().map {
                     /**给未离群的账号发送消息*/
                     if (!it.leave && it.account != message.sender) {

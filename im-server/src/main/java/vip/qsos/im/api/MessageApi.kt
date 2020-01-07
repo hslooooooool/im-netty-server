@@ -18,9 +18,9 @@ interface MessageSendApi {
     @PostMapping("/message")
     fun sendToGroup(
             @RequestParam
-            @ApiParam(value = "消息接收群ID")
-            @NotNull(message = "接收账号不能为空")
-            groupId: String,
+            @ApiParam(value = "消息会话ID")
+            @NotNull(message = "消息会话ID不能为空")
+            sessionId: Long,
             @RequestParam
             @ApiParam(value = "消息类型")
             @NotNull(message = "消息类型不能为空")
@@ -32,11 +32,7 @@ interface MessageSendApi {
             @RequestParam
             @ApiParam(value = "消息发送者账号")
             @NotNull(message = "发送账号不能为空")
-            sender: String,
-            @RequestParam
-            @ApiParam(value = "消息附加信息")
-            @NotNull(message = "发送账号不能为空")
-            extra: String? = null
+            sender: String
     ): BaseResult
 
     @ApiOperation(value = "发送通知")

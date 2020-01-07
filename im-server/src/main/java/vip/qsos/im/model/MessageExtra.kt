@@ -8,12 +8,12 @@ import java.io.Serializable
  * @author : 华清松
  * 消息附加信息实体
  * @param chatType 聊天类型
- * @param belongId 所属ID，根据聊天类型区分
+ * @param sessionId 聊天会话ID
  * 当前版本 1
  */
 data class MessageExtra constructor(
         var chatType: ChatType,
-        var belongId: String
+        var sessionId: Long
 ) : Serializable {
     companion object {
         private const val serialVersionUID = 1L
