@@ -36,7 +36,7 @@ class MessageController : MessageSendApi, MessageMangeApi {
                             size++
                             val msg = message.getMessage(it.account)
                             messagePusher.push(msg)
-                            mMessageDataComponent.save(msg)
+                            mMessageDataComponent.save(sessionId, msg)
                         } catch (ignore: Exception) {
                             size--
                         }
@@ -56,7 +56,6 @@ class MessageController : MessageSendApi, MessageMangeApi {
             try {
                 size++
                 messagePusher.push(msg)
-                mMessageDataComponent.save(msg)
             } catch (ignore: Exception) {
                 size--
             }

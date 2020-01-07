@@ -16,10 +16,10 @@ class MessageDataComponent {
     @Resource
     private lateinit var mMessageOfGroupRepository: MessageOfGroupRepository
 
-    fun save(message: Message) {
+    fun save(sessionId: Long, message: Message) {
         when (message.action) {
             ChatType.GROUP.name -> {
-                mMessageOfGroupRepository.save(message)
+                mMessageOfGroupRepository.save(sessionId, message)
             }
             else -> throw ImException("消息类型不支持")
         }

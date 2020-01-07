@@ -16,8 +16,8 @@ open class MessageOfGroupRepositoryImpl @Autowired constructor(
         private val mMessageRepository: TableChatMessageOfGroupRepository
 ) : MessageOfGroupRepository {
 
-    override fun save(message: Message) {
-        mMessageRepository.save(TableChatMessageOfGroup.create(message))
+    override fun save(sessionId: Long, message: Message) {
+        mMessageRepository.save(TableChatMessageOfGroup.create(sessionId, message))
     }
 
     override fun find(messageId: Long): Message? {

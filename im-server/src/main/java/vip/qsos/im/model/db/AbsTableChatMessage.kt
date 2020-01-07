@@ -33,8 +33,8 @@ abstract class AbsTableChatMessage : AbsTable() {
     @ApiModelProperty(value = "消息接收者账号", required = true)
     var receiver: String = ""
     @Column(name = "group_id")
-    @ApiModelProperty(value = "群ID")
-    var groupId: String = ""
+    @ApiModelProperty(value = "会话ID")
+    var sessionId: Long = -1L
     @Column(name = "format", nullable = false, length = 8)
     @ApiModelProperty(value = "消息数据格式")
     var format: Message.Format = Message.Format.PROTOBUF
