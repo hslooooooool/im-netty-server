@@ -6,7 +6,7 @@ import vip.qsos.im.model.BaseResult
 import javax.annotation.Resource
 
 @RestController
-class UserManageImpl : UserApi {
+class UserController : UserApi {
 
     @Resource
     private lateinit var mUserManageComponent: UserManageComponent
@@ -29,17 +29,5 @@ class UserManageImpl : UserApi {
     override fun findByUserId(userId: Long): BaseResult {
         val user = mUserManageComponent.findById(userId)
         return BaseResult.data(user)
-    }
-
-    override fun addFriend(userId: Long, friendId: Long): BaseResult {
-        val sender = mUserManageComponent.findById(userId)
-        val receiver = mUserManageComponent.findById(friendId)
-        val friend = mUserManageComponent.addFriend(sender, receiver)
-        return BaseResult.data(friend)
-    }
-
-    override fun findFriend(userId: Long, friendId: Long): BaseResult {
-        val friend = mUserManageComponent.findFriend(userId, friendId)
-        return BaseResult.data(friend)
     }
 }

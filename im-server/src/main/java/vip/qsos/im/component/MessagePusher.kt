@@ -4,8 +4,8 @@ import org.springframework.stereotype.Component
 import vip.qsos.im.config.AppProperties
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Message
-import vip.qsos.im.service.IApnsPusher
-import vip.qsos.im.service.IServerManager
+import vip.qsos.im.service.ApnsPusher
+import vip.qsos.im.service.SessionClientManager
 import javax.annotation.Resource
 
 /**
@@ -15,12 +15,12 @@ import javax.annotation.Resource
 @Component
 class MessagePusher constructor(
         @Resource private val mProperties: AppProperties,
-        @Resource private val mServerManager: IServerManager,
-        @Resource private val mApnsPusher: IApnsPusher
+        @Resource private val mSessionClientManager: SessionClientManager,
+        @Resource private val mApnsPusher: ApnsPusher
 ) : IMessagePusher {
     override fun push(msg: Message) {
         //TODO 设计发送失败的处理机制
-        mServerManager.find(msg.receiver)?.let { session ->
+        mSessionClientManager.find(msg.receiver)?.let { session ->
             when {
                 session.isIOSChannel && session.isApnsOpen -> {
                     /**IOS设备，如果开启了apns，则使用apns推送*/

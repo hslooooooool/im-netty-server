@@ -8,8 +8,8 @@ import vip.qsos.im.model.BaseResult
 
 @Api(tags = ["消息会话管理"])
 @ApiSort(2)
-@RequestMapping("/api/im/session")
-interface ApiSession {
+@RequestMapping("/api/im/client")
+interface ApiSessionClient {
     @GetMapping("/list")
     fun list(): BaseResult
 }

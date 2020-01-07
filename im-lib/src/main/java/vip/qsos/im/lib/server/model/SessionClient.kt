@@ -18,10 +18,10 @@ import java.util.*
  * @author : 华清松
  * 消息会话实体
  */
-@ApiModel(description = "会话实体")
-data class Session(
+@ApiModel(description = "建立会话的终端信息实体")
+data class SessionClient(
         @ApiModelProperty(value = "数据库主键ID")
-        var id: Long? = null,
+        var id: Long = -1L,
         @ApiModelProperty(value = "channel ID")
         var nid: String? = null,
         @ApiModelProperty(value = "客户端 ID (设备号码+应用包名),ios为 device token")
@@ -80,7 +80,7 @@ data class Session(
     @JsonIgnore
     var channel: Channel? = null
 
-    fun create(channel: Channel): Session {
+    fun create(channel: Channel): SessionClient {
         this.channel = channel
         this.nid = channel.id().asShortText()
         return this
@@ -149,7 +149,7 @@ data class Session(
     }
 
     override fun equals(other: Any?): Boolean {
-        return if (other is Session) {
+        return if (other is SessionClient) {
             (other.deviceId == deviceId && other.nid == nid && other.host == host)
         } else false
     }

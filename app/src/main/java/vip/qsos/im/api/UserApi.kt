@@ -41,34 +41,11 @@ interface UserApi {
     @GetMapping("/list")
     fun list(): BaseResult
 
-    @ApiOperation(value = "ID获取用户")
-    @GetMapping("/user.id")
+    @ApiOperation(value = "获取用户信息")
+    @GetMapping("/info")
     fun findByUserId(
             @RequestParam
             @ApiParam(value = "用户ID", required = true)
             userId: Long
     ): BaseResult
-
-    @ApiOperation(value = "加好友")
-    @PostMapping("/friend.add")
-    fun addFriend(
-            @RequestParam
-            @ApiParam(value = "申请用户ID", required = true)
-            userId: Long,
-            @RequestParam
-            @ApiParam(value = "待加好友ID", required = true)
-            friendId: Long
-    ): BaseResult
-
-    @ApiOperation(value = "获取好友关系")
-    @GetMapping("/friend")
-    fun findFriend(
-            @RequestParam
-            @ApiParam(value = "用户ID", required = true)
-            userId: Long,
-            @RequestParam
-            @ApiParam(value = "好友ID", required = true)
-            friendId: Long
-    ): BaseResult
-
 }

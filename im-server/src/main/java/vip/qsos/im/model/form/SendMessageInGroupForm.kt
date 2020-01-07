@@ -15,9 +15,9 @@ import javax.validation.constraints.NotNull
  */
 @ApiModel(description = "发送群消息")
 data class SendMessageInGroupForm constructor(
-        @ApiModelProperty(value = "消息接收群ID", required = true)
-        @NotNull(message = "接收账号不能为空")
-        var groupId: String,
+        @ApiModelProperty(value = "消息会话ID", required = true)
+        @NotNull(message = "消息会话ID不能为空")
+        var sessionId: String,
         @ApiModelProperty(value = "消息类型", required = true)
         @NotNull(message = "消息类型不能为空")
         var contentType: Int = 0,
@@ -63,7 +63,7 @@ data class SendMessageInGroupForm constructor(
                 action = chatType.name,
                 content = getChatContent().toString(),
                 sender = this.sender,
-                receiver = receiver ?: this.groupId,
+                receiver = receiver ?: this.sessionId,
                 extra = extra,
                 format = Message.Format.JSON.name
         )

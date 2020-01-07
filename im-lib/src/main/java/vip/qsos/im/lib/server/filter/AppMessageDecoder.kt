@@ -8,7 +8,7 @@ import vip.qsos.im.lib.model.proto.SendBodyProto
 import vip.qsos.im.lib.server.config.IMConstant
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.SendBody
-import vip.qsos.im.lib.server.model.Session
+import vip.qsos.im.lib.server.model.SessionClient
 
 /**
  * @author : 华清松
@@ -17,7 +17,7 @@ import vip.qsos.im.lib.server.model.Session
 class AppMessageDecoder : ByteToMessageDecoder() {
     @Throws(ImException::class)
     public override fun decode(arg0: ChannelHandlerContext, buffer: ByteBuf, queue: MutableList<Any>) {
-        arg0.channel().attr(AttributeKey.valueOf<String>(Session.CHANNEL_TYPE)).set(Session.NATIVE_APP)
+        arg0.channel().attr(AttributeKey.valueOf<String>(SessionClient.CHANNEL_TYPE)).set(SessionClient.NATIVE_APP)
         while (buffer.readableBytes() > IMConstant.DATA_HEADER_LENGTH) {
             buffer.markReaderIndex()
             // 获取类型

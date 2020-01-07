@@ -7,6 +7,6 @@ interface TableFriendRepository : JpaRepository<TableFriend, Long> {
 
     fun findByHashCode(hashCode: String): TableFriend?
     /**获取对此用户发起的好友申请列表*/
-    fun findByFriendAndAccept(friend: String, accept: Boolean? = null): List<TableFriend>
+    fun findByFriendAndAccept(friend: Long, accept: Boolean? = null): List<TableFriend>
 
 }

@@ -6,11 +6,10 @@ import vip.qsos.im.model.db.TableFriend
 import vip.qsos.im.model.db.TableUser
 import javax.transaction.Transactional
 
+@Transactional
 interface UserManageComponent {
 
-    @Transactional
     fun register(name: String, password: String): TableUser
-
     fun login(name: String, password: String): TableUser
     fun findAll(): List<AppUser>
     fun findByName(name: String): AppUser?
@@ -22,7 +21,6 @@ interface UserManageComponent {
     @Throws(AppException::class)
     fun assignImAccount(user: TableUser): TableUser
 
-    fun addFriend(sender: AppUser, receiver: AppUser): TableFriend
-    fun findFriend(userId: Long, friendId: Long): TableFriend?
+    fun addFriend(userId: Long, friendId: Long): TableFriend
 
 }

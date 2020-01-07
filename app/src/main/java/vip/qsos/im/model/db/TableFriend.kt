@@ -13,7 +13,7 @@ import javax.persistence.*
     Index(name = "hash_code", columnList = "hash_code", unique = true)
 ])
 @ApiModel(value = "好友关系表")
-data class TableFriend(
+data class TableFriend constructor(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "id")

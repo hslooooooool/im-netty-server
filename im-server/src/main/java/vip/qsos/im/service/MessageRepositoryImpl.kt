@@ -1,10 +1,10 @@
-package vip.qsos.im.repository
+package vip.qsos.im.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.model.db.TableChatMessage
-import vip.qsos.im.repository.db.IChatMessageRepository
+import vip.qsos.im.repository.db.TableChatMessageRepository
 
 
 /**
@@ -13,7 +13,7 @@ import vip.qsos.im.repository.db.IChatMessageRepository
  */
 @Repository
 open class MessageRepositoryImpl @Autowired constructor(
-        private val mMessageRepository: IChatMessageRepository
+        private val mMessageRepository: TableChatMessageRepository
 ) : MessageRepository {
 
     override fun save(message: Message) {

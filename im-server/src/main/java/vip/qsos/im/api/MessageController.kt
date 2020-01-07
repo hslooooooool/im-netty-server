@@ -8,7 +8,7 @@ import vip.qsos.im.model.BaseResult
 import vip.qsos.im.model.form.SendMessageInGroupForm
 import vip.qsos.im.model.form.SendNoticeForm
 import vip.qsos.im.model.type.ChatType
-import vip.qsos.im.repository.GroupRepository
+import vip.qsos.im.repository.db.TableChatSessionRepository
 import javax.annotation.Resource
 
 @RestController
@@ -18,7 +18,7 @@ class MessageController : MessageSendApi, MessageMangeApi {
     @Resource
     private lateinit var mMessageDataComponent: MessageDataComponent
     @Resource
-    private lateinit var mGroupRepository: GroupRepository
+    private lateinit var mTableChatSessionRepository: TableChatSessionRepository
 
     override fun sendToGroup(groupId: String, contentType: Int, content: String, sender: String, extra: String?): BaseResult {
         return this.send(SendMessageInGroupForm(groupId, contentType, content, sender, extra))
@@ -28,8 +28,8 @@ class MessageController : MessageSendApi, MessageMangeApi {
         var size = 0
         when (message.chatType) {
             ChatType.SINGLE, ChatType.GROUP -> {
-                val groupId = message.groupId.toLong()
-                mGroupRepository.findByGroupId(groupId).getAccountList().map {
+                val sessionId = message.sessionId.toLong()
+                mTableChatSessionRepository.findById(sessionId).get().getAccountList().map {
                     /**给未离群的账号发送消息*/
                     if (!it.leave && it.account != message.sender) {
                         try {

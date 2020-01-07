@@ -5,9 +5,10 @@ import io.swagger.annotations.ApiModelProperty
 import vip.qsos.im.model.db.TableChatGroup
 import vip.qsos.im.model.db.TableChatGroupOfLastRecord
 import vip.qsos.im.model.db.TableChatMessage
+import vip.qsos.im.model.db.TableChatSession
 import vip.qsos.im.model.type.ChatType
 
-@ApiModel(value = "群组实体")
+@ApiModel(value = "群聊实体")
 data class ChatGroupBo(
         @ApiModelProperty(value = "群号")
         var id: Long,
@@ -27,13 +28,13 @@ data class ChatGroupBo(
         var lastMessage: TableChatMessage? = null
 ) {
     companion object {
-        fun getBo(table: TableChatGroup): ChatGroupBo {
+        fun getBo(session: TableChatSession, group: TableChatGroup): ChatGroupBo {
             return ChatGroupBo(
-                    id = table.groupId!!,
-                    name = table.name,
-                    creator = table.creator,
-                    chatType = table.chatType,
-                    member = table.getAccountList().map { it.account }
+                    id = group.groupId,
+                    name = group.name,
+                    creator = session.creator,
+                    chatType = session.chatType,
+                    member = session.getAccountList().map { it.account }
             )
         }
     }

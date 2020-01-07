@@ -3,19 +3,19 @@ package vip.qsos.im.model.db
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import vip.qsos.im.lib.server.model.Session
+import vip.qsos.im.lib.server.model.SessionClient
 import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
-@Table(name = "table_chat_client")
-@ApiModel(value = "客户端连接表")
-data class TableChatClient constructor(
+@Table(name = "table_session_client")
+@ApiModel(value = "客户端会话连接表")
+data class TableSessionClient constructor(
         @Id
         @Column(name = "id")
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @ApiModelProperty(value = "会话ID")
-        var sessionId: Long? = null,
+        @ApiModelProperty(value = "连接ID")
+        var id: Long = -1L,
 
         @Column(name = "nid", unique = true, nullable = false, length = 16)
         @ApiModelProperty(value = "channel ID", required = false)
@@ -66,9 +66,9 @@ data class TableChatClient constructor(
 ) : AbsTable() {
 
     @JsonIgnore
-    fun getSession(): Session {
-        return Session(
-                id = sessionId, nid = nid, host = host, account = account, deviceId = deviceId, deviceModel = deviceModel,
+    fun getSession(): SessionClient {
+        return SessionClient(
+                id = id, nid = nid, host = host, account = account, deviceId = deviceId, deviceModel = deviceModel,
                 deviceType = deviceType, clientVersion = clientVersion,
                 systemVersion = systemVersion, bindTime = bindTime, apns = apns, state = state,
                 longitude = longitude, latitude = latitude, location = location
@@ -76,23 +76,23 @@ data class TableChatClient constructor(
     }
 
     companion object {
-        fun create(session: Session): TableChatClient {
-            return TableChatClient(
-                    sessionId = session.id,
-                    nid = session.nid,
-                    host = session.host,
-                    account = session.getAccount(),
-                    deviceId = session.deviceId,
-                    deviceModel = session.deviceModel,
-                    deviceType = session.deviceType,
-                    clientVersion = session.clientVersion,
-                    systemVersion = session.systemVersion,
-                    bindTime = session.bindTime,
-                    apns = session.apns,
-                    state = session.state,
-                    longitude = session.longitude,
-                    latitude = session.latitude,
-                    location = session.location
+        fun create(sessionClient: SessionClient): TableSessionClient {
+            return TableSessionClient(
+                    id = sessionClient.id,
+                    nid = sessionClient.nid,
+                    host = sessionClient.host,
+                    account = sessionClient.getAccount(),
+                    deviceId = sessionClient.deviceId,
+                    deviceModel = sessionClient.deviceModel,
+                    deviceType = sessionClient.deviceType,
+                    clientVersion = sessionClient.clientVersion,
+                    systemVersion = sessionClient.systemVersion,
+                    bindTime = sessionClient.bindTime,
+                    apns = sessionClient.apns,
+                    state = sessionClient.state,
+                    longitude = sessionClient.longitude,
+                    latitude = sessionClient.latitude,
+                    location = sessionClient.location
             )
         }
     }

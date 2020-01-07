@@ -4,8 +4,7 @@ import org.springframework.stereotype.Component
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.model.type.ChatType
-import vip.qsos.im.repository.MessageOfGroupRepository
-import vip.qsos.im.repository.MessageOfGroupRepositoryImpl
+import vip.qsos.im.service.MessageOfGroupRepository
 import javax.annotation.Resource
 
 /**

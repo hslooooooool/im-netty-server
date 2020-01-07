@@ -2,14 +2,13 @@ package vip.qsos.im.service
 
 import org.springframework.stereotype.Service
 import vip.qsos.im.model.AppException
-import vip.qsos.im.model.db.TableFriend
 import vip.qsos.im.model.db.TableUser
 import vip.qsos.im.repository.db.TableFriendRepository
 import vip.qsos.im.repository.db.TableUserRepository
 import javax.annotation.Resource
 
 @Service
-class UserManageServiceImpl : UserManageService {
+class UserServiceImpl : UserService {
     @Resource
     private lateinit var mTableUserRepository: TableUserRepository
     @Resource
@@ -59,24 +58,4 @@ class UserManageServiceImpl : UserManageService {
         return mTableUserRepository.findByImAccount(account)
     }
 
-    override fun addFriend(userId: Long, friendId: Long): TableFriend {
-        val hashCode: String = if (userId > friendId) {
-            "$friendId" + "$userId"
-        } else {
-            "$userId" + "$friendId"
-        }
-        val mTableFriend = findFriend(userId, friendId)
-        return mTableFriend ?: mTableFriendRepository.saveAndFlush(TableFriend(
-                applicant = userId, friend = friendId, hashCode = hashCode
-        ))
-    }
-
-    override fun findFriend(userId: Long, friendId: Long): TableFriend? {
-        val hashCode: String = if (userId > friendId) {
-            "$friendId" + "$userId"
-        } else {
-            "$userId" + "$friendId"
-        }
-        return mTableFriendRepository.findByHashCode(hashCode)
-    }
 }

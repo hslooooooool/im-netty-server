@@ -2,24 +2,24 @@ package vip.qsos.im.api
 
 import org.springframework.web.bind.annotation.RestController
 import vip.qsos.im.model.BaseResult
-import vip.qsos.im.repository.GroupRepository
+import vip.qsos.im.service.ChatGroupRepository
 import javax.annotation.Resource
 
 @RestController
 class GroupControllerImpl : GroupApi {
     @Resource
-    private lateinit var mGroupRepository: GroupRepository
+    private lateinit var mChatGroupRepository: ChatGroupRepository
 
     override fun findByGroupId(groupId: String): BaseResult {
-        return BaseResult.data(mGroupRepository.findGroup(groupId.toLong()))
+        return BaseResult.data(mChatGroupRepository.findGroup(groupId.toLong()))
     }
 
     override fun findByName(name: String, like: Boolean): BaseResult {
-        return BaseResult.data(mGroupRepository.findByName(name, like))
+        return BaseResult.data(mChatGroupRepository.findByName(name, like))
     }
 
     override fun findSingle(sender: String, receiver: String): BaseResult {
-        val friend = mGroupRepository.findSingle(sender, receiver)
+        val friend = mChatGroupRepository.findSingle(sender, receiver)
         return BaseResult.data(friend)
     }
 
@@ -28,25 +28,25 @@ class GroupControllerImpl : GroupApi {
     }
 
     override fun create(name: String, creator: String, memberList: List<String>): BaseResult {
-        return BaseResult.data(mGroupRepository.create(name, creator, memberList))
+        return BaseResult.data(mChatGroupRepository.create(name, creator, memberList))
     }
 
     override fun list(): BaseResult {
-        return BaseResult.data(mGroupRepository.list())
+        return BaseResult.data(mChatGroupRepository.list())
     }
 
     override fun deleteGroup(groupId: String): BaseResult {
-        mGroupRepository.deleteGroup(groupId.toLong())
+        mChatGroupRepository.deleteGroup(groupId.toLong())
         return BaseResult.data("群已删除")
     }
 
     override fun joinGroup(groupId: String, member: String): BaseResult {
-        mGroupRepository.joinGroup(groupId.toLong(), member)
+        mChatGroupRepository.joinGroup(groupId.toLong(), member)
         return BaseResult.data()
     }
 
     override fun leaveGroup(groupId: String, member: String): BaseResult {
-        mGroupRepository.leaveGroup(groupId.toLong(), member)
+        mChatGroupRepository.leaveGroup(groupId.toLong(), member)
         return BaseResult.data()
     }
 }

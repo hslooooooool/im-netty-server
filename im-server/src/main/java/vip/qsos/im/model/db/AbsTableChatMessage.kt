@@ -16,7 +16,7 @@ abstract class AbsTableChatMessage : AbsTable() {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(value = "消息ID")
-    var messageId: Long? = null
+    var messageId: Long = -1L
     @ApiModelProperty(value = "消息标题")
     @Column(name = "title", length = 16)
     var title: String? = null

@@ -7,7 +7,7 @@ import io.netty.util.AttributeKey
 import vip.qsos.im.lib.server.config.IMConstant
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.SendBody
-import vip.qsos.im.lib.server.model.Session
+import vip.qsos.im.lib.server.model.SessionClient
 import java.util.regex.Pattern
 
 /**
@@ -30,11 +30,11 @@ class SendBodyDecoder : ByteToMessageDecoder() {
 
     @Throws(ImException::class)
     override fun decode(context: ChannelHandlerContext, buffer: ByteBuf, queue: MutableList<Any>) {
-        when (context.channel().attr(AttributeKey.valueOf<String>(Session.CHANNEL_TYPE)).get()) {
-            Session.WEBSOCKET -> {
+        when (context.channel().attr(AttributeKey.valueOf<String>(SessionClient.CHANNEL_TYPE)).get()) {
+            SessionClient.WEBSOCKET -> {
                 webMessageDecoder.decode(context, buffer, queue)
             }
-            Session.NATIVE_APP -> {
+            SessionClient.NATIVE_APP -> {
                 appMessageDecoder.decode(context, buffer, queue)
             }
             else -> {
@@ -54,10 +54,10 @@ class SendBodyDecoder : ByteToMessageDecoder() {
         buffer.readBytes(data)
         val request = String(data)
         val secKey = getSecWebSocketKey(request)
-        val handShake = secKey != null && getUpgradeProtocol(request) == Session.WEBSOCKET
+        val handShake = secKey != null && getUpgradeProtocol(request) == SessionClient.WEBSOCKET
         if (handShake) {
             /**握手响应之后，标记当前 session 的协议为 websocket */
-            arg0.channel().attr(AttributeKey.valueOf<String>(Session.CHANNEL_TYPE)).set(Session.WEBSOCKET)
+            arg0.channel().attr(AttributeKey.valueOf<String>(SessionClient.CHANNEL_TYPE)).set(SessionClient.WEBSOCKET)
             val body = SendBody()
             body.key = IMConstant.CLIENT_HANDSHAKE
             body.timestamp = System.currentTimeMillis()
