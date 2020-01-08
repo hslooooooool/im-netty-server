@@ -9,4 +9,7 @@ interface TableFriendRepository : JpaRepository<TableFriend, Long> {
     /**获取对此用户发起的好友申请列表*/
     fun findByFriendAndAccept(friend: Long, accept: Boolean? = null): List<TableFriend>
 
+    /**获取用户的好友列表*/
+    fun findByApplicantLikeOrFriendLikeAndAccept(applicant: Long, friend: Long, accept: Boolean = true): List<TableFriend>
+
 }

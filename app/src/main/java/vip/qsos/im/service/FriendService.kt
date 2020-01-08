@@ -13,5 +13,5 @@ interface FriendService {
     fun findFriend(userId: Long, friendId: Long): TableFriend?
     fun findByFriendAndAccept(friendId: Long, accept: Boolean?): List<TableFriend>
     fun updateFriend(id: Long, accept: Boolean): TableFriend
-
+    fun findFriendList(userId: Long): List<TableFriend>
 }

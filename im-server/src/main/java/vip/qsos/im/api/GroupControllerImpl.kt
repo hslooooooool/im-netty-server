@@ -18,15 +18,6 @@ class GroupControllerImpl : GroupApi {
         return BaseResult.data(mChatGroupRepository.findByName(name, like))
     }
 
-    override fun findSingle(sender: String, receiver: String): BaseResult {
-        val friend = mChatGroupRepository.findSingle(sender, receiver)
-        return BaseResult.data(friend)
-    }
-
-    override fun findGroup(groupId: String): BaseResult {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun create(name: String, creator: String, memberList: List<String>): BaseResult {
         return BaseResult.data(mChatGroupRepository.create(name, creator, memberList))
     }

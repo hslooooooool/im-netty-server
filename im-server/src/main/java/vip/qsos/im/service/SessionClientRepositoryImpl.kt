@@ -18,14 +18,15 @@ open class SessionClientRepositoryImpl @Autowired constructor(
 
     override fun save(sessionClient: SessionClient) {
         if (sessionClient.nid != null) {
-            val client = mSessionClientRepository.findByNid(sessionClient.nid!!)
+            val client = mSessionClientRepository
+                    .findByNidOrAccount(sessionClient.nid!!, sessionClient.getAccount())
             if (client != null) {
                 sessionClient.id = client.id
             }
         } else {
             throw ImException("请设置 ChannelId")
         }
-        mSessionClientRepository.saveAndFlush(TableSessionClient.create(sessionClient))
+        mSessionClientRepository.save(TableSessionClient.create(sessionClient))
     }
 
     override fun find(account: String): SessionClient? {

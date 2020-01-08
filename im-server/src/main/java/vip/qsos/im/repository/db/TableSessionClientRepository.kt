@@ -8,7 +8,7 @@ interface TableSessionClientRepository : JpaRepository<TableSessionClient, Int> 
 
     fun findByAccount(account: String): TableSessionClient?
 
-    fun findByNid(nid: String): TableSessionClient?
+    fun findByNidOrAccount(nid: String, account: String): TableSessionClient?
 
     @Transactional
     fun deleteByAccount(account: String)

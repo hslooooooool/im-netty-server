@@ -19,7 +19,7 @@ data class TableChatSession constructor(
         @ApiModelProperty(value = "会话ID")
         var sessionId: Long = -1L,
         @Column(name = "creator", nullable = false, length = 9)
-        @ApiModelProperty(value = "创建者账号")
+        @ApiModelProperty(value = "创建者IM账号")
         var creator: String = "",
         @Column(name = "session_type", nullable = false, length = 20)
         @Enumerated(EnumType.STRING)

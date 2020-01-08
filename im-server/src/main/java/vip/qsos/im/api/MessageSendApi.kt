@@ -43,18 +43,3 @@ interface MessageSendApi {
     ): BaseResult
 
 }
-
-@Api(tags = ["消息管理"])
-@ApiSort(2)
-@RequestMapping("/api/im/message")
-interface MessageMangeApi {
-
-    @ApiOperation(value = "消息列表")
-    @GetMapping("/list")
-    fun list(
-            @RequestParam
-            @ApiParam(value = "消息类型")
-            sessionType: EnumSessionType
-    ): BaseResult
-
-}

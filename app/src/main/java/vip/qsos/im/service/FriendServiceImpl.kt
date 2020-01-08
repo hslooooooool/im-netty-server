@@ -45,4 +45,8 @@ class FriendServiceImpl : FriendService {
         }
     }
 
+    override fun findFriendList(userId: Long): List<TableFriend> {
+        return mTableFriendRepository.findByApplicantLikeOrFriendLikeAndAccept(userId, userId)
+    }
+
 }
