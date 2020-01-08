@@ -29,7 +29,7 @@ interface SessionApi {
     @GetMapping("/info.group")
     fun findGroup(
             @RequestParam
-            @ApiParam(value = "群聊ID")
+            @ApiParam(value = "群聊ID", required = true, type = "Long")
             groupId: Long
     ): BaseResult
 
