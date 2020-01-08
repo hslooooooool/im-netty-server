@@ -7,7 +7,7 @@ import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.model.BaseResult
 import vip.qsos.im.model.form.SendMessageInGroupForm
 import vip.qsos.im.model.form.SendNoticeForm
-import vip.qsos.im.model.type.ChatType
+import vip.qsos.im.model.type.EnumSessionType
 import vip.qsos.im.repository.db.TableChatSessionRepository
 import javax.annotation.Resource
 
@@ -26,8 +26,11 @@ class MessageController : MessageSendApi, MessageMangeApi {
 
     private fun send(message: SendMessageInGroupForm): BaseResult {
         var size = 0
-        when (message.chatType) {
-            ChatType.SINGLE, ChatType.GROUP -> {
+        when (message.sessionType) {
+            EnumSessionType.SINGLE -> {
+
+            }
+            EnumSessionType.GROUP -> {
                 val sessionId = message.sessionId
                 mTableChatSessionRepository.findById(sessionId).get().getAccountList().map {
                     /**给未离群的账号发送消息*/
@@ -63,8 +66,8 @@ class MessageController : MessageSendApi, MessageMangeApi {
         return BaseResult.data("发送成功 $size 条")
     }
 
-    override fun list(chatType: ChatType): BaseResult {
-        return BaseResult.data(mMessageDataComponent.list(chatType))
+    override fun list(sessionType: EnumSessionType): BaseResult {
+        return BaseResult.data(mMessageDataComponent.list(sessionType))
     }
 
 }

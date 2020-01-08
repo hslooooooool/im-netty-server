@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.model.MessageExtra
-import vip.qsos.im.model.type.ChatType
+import vip.qsos.im.model.type.EnumSessionType
 import java.time.ZoneId
 import java.util.*
 import javax.persistence.Entity
@@ -15,11 +15,11 @@ import javax.persistence.Table
 @ApiModel(value = "群聊消息表")
 class TableChatMessageOfGroup : AbsTableChatMessage() {
 
-    override val extra: MessageExtra = MessageExtra(ChatType.GROUP, sessionId)
+    override val extra: MessageExtra = MessageExtra(EnumSessionType.GROUP, sessionId)
 
     companion object {
         fun create(sessionId: Long, message: Message, timeline: Long = -1L): TableChatMessageOfGroup {
-            if (message.action != ChatType.GROUP.name) {
+            if (message.action != EnumSessionType.GROUP.name) {
                 throw ImException("消息类型错误")
             }
             val table = TableChatMessageOfGroup()

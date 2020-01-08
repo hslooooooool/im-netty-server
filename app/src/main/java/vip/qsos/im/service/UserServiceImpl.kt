@@ -3,7 +3,6 @@ package vip.qsos.im.service
 import org.springframework.stereotype.Service
 import vip.qsos.im.model.AppException
 import vip.qsos.im.model.db.TableUser
-import vip.qsos.im.repository.db.TableFriendRepository
 import vip.qsos.im.repository.db.TableUserRepository
 import javax.annotation.Resource
 
@@ -11,8 +10,6 @@ import javax.annotation.Resource
 class UserServiceImpl : UserService {
     @Resource
     private lateinit var mTableUserRepository: TableUserRepository
-    @Resource
-    private lateinit var mTableFriendRepository: TableFriendRepository
 
     override fun register(name: String, password: String): TableUser {
         if (null != this.findByName(name)) {

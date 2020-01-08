@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiSort
 import org.springframework.web.bind.annotation.*
 import vip.qsos.im.model.BaseResult
 import vip.qsos.im.model.form.SendNoticeForm
-import vip.qsos.im.model.type.ChatType
+import vip.qsos.im.model.type.EnumSessionType
 import javax.validation.constraints.NotNull
 
 @Api(tags = ["消息发送"])
@@ -54,7 +54,7 @@ interface MessageMangeApi {
     fun list(
             @RequestParam
             @ApiParam(value = "消息类型")
-            chatType: ChatType
+            sessionType: EnumSessionType
     ): BaseResult
 
 }

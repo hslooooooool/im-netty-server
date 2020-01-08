@@ -76,13 +76,6 @@ class UserManageComponentImpl : UserManageComponent {
     }
 
     override fun addFriend(userId: Long, friendId: Long): TableFriend {
-        val senderImAccount = this.findById(userId).imAccount
-        val receiverImAccount = this.findById(userId).imAccount
-        /**创建聊天关系*/
-        val group = mChatGroupRepository.findSingle(senderImAccount, receiverImAccount)
-        if (group == null) {
-            mChatGroupRepository.create(receiverImAccount, senderImAccount, arrayListOf(senderImAccount, receiverImAccount))
-        }
         val friend = mFriendService.addFriend(userId, friendId)
         // TODO 发送申请消息
         return friend

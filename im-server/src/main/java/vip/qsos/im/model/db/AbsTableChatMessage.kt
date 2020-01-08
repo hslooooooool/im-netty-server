@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModelProperty
 import jdk.nashorn.internal.ir.annotations.Ignore
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.model.MessageExtra
-import vip.qsos.im.model.type.ChatType
+import vip.qsos.im.model.type.EnumSessionType
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
@@ -32,7 +32,7 @@ abstract class AbsTableChatMessage : AbsTable() {
     @Column(name = "receiver", nullable = false, length = 16)
     @ApiModelProperty(value = "消息接收者账号", required = true)
     var receiver: String = ""
-    @Column(name = "group_id")
+    @Column(name = "session_id")
     @ApiModelProperty(value = "会话ID")
     var sessionId: Long = -1L
     @Column(name = "format", nullable = false, length = 8)
@@ -49,7 +49,7 @@ abstract class AbsTableChatMessage : AbsTable() {
     fun getMessage(): Message {
         return Message(
                 id = messageId,
-                action = ChatType.GROUP.name,
+                action = EnumSessionType.GROUP.name,
                 title = title,
                 content = content,
                 sender = sender,

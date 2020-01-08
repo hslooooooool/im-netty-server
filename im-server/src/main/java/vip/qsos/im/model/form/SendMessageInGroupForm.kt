@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.model.MessageExtra
-import vip.qsos.im.model.type.ChatType
+import vip.qsos.im.model.type.EnumSessionType
 import java.io.Serializable
 import javax.validation.constraints.NotNull
 
@@ -54,16 +54,16 @@ data class SendMessageInGroupForm constructor(
     }
 
     @JsonIgnore
-    override var chatType: ChatType = ChatType.GROUP
+    override var sessionType: EnumSessionType = EnumSessionType.GROUP
 
     @JsonIgnore
     fun getMessage(receiver: String): Message {
         return Message(
-                action = chatType.name,
+                action = sessionType.name,
                 content = getChatContent().toString(),
                 sender = this.sender,
                 receiver = receiver,
-                extra = MessageExtra(ChatType.GROUP, this.sessionId).toString(),
+                extra = MessageExtra(EnumSessionType.GROUP, this.sessionId).toString(),
                 format = Message.Format.JSON.name
         )
     }

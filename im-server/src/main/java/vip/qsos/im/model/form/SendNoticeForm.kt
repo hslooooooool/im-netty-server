@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import vip.qsos.im.lib.server.model.Message
-import vip.qsos.im.model.type.ChatType
+import vip.qsos.im.model.type.EnumSessionType
 import java.io.Serializable
 import javax.validation.constraints.NotNull
 
@@ -33,18 +33,18 @@ data class SendNoticeForm constructor(
     }
 
     @JsonIgnore
-    override var chatType: ChatType = ChatType.NOTICE
+    override var sessionType: EnumSessionType = EnumSessionType.NOTICE
 
     @JsonIgnore
     fun getMessageList(): List<Message> {
         return receiver.map {
             Message(
-                    action = ChatType.NOTICE.name,
+                    action = EnumSessionType.NOTICE.name,
                     title = "公告",
                     content = this.content,
                     sender = this.sender,
                     receiver = it,
-                    extra = this.chatType.name,
+                    extra = this.sessionType.name,
                     format = Message.Format.JSON.name
             )
         }

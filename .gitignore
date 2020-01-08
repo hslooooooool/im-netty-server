@@ -9,3 +9,6 @@ im-lib/target/
 im-server/target/
 app/lib/
 im-sdk-netty/target/
+/.settings/
+/.vscode/
+.project

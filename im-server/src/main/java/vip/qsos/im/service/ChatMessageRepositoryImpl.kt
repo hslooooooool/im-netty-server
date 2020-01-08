@@ -12,9 +12,9 @@ import vip.qsos.im.repository.db.TableChatMessageRepository
  * 消息存储
  */
 @Repository
-open class MessageRepositoryImpl @Autowired constructor(
+open class ChatMessageRepositoryImpl @Autowired constructor(
         private val mMessageRepository: TableChatMessageRepository
-) : MessageRepository {
+) : ChatMessageRepository {
 
     override fun save(message: Message) {
         mMessageRepository.save(TableChatMessage.create(message))

@@ -3,8 +3,8 @@ package vip.qsos.im.component
 import org.springframework.stereotype.Component
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Message
-import vip.qsos.im.model.type.ChatType
-import vip.qsos.im.service.MessageOfGroupRepository
+import vip.qsos.im.model.type.EnumSessionType
+import vip.qsos.im.service.ChatMessageOfGroupRepository
 import javax.annotation.Resource
 
 /**
@@ -14,39 +14,41 @@ import javax.annotation.Resource
 @Component
 class MessageDataComponent {
     @Resource
-    private lateinit var mMessageOfGroupRepository: MessageOfGroupRepository
+    private lateinit var mChatMessageOfGroupRepository: ChatMessageOfGroupRepository
 
     fun save(sessionId: Long, message: Message) {
         when (message.action) {
-            ChatType.GROUP.name -> {
-                mMessageOfGroupRepository.save(sessionId, message)
+            EnumSessionType.GROUP.name -> {
+                mChatMessageOfGroupRepository.save(sessionId, message)
             }
             else -> throw ImException("消息类型不支持")
         }
     }
 
-    fun find(chatType: ChatType, messageId: Long): Message? {
-        return when (chatType) {
-            ChatType.GROUP -> {
-                mMessageOfGroupRepository.find(messageId)
+    fun find(sessionType: EnumSessionType, messageId: Long): Message? {
+        return when (sessionType) {
+            EnumSessionType.GROUP -> {
+                mChatMessageOfGroupRepository.find(messageId)?.getMessage()
             }
             else -> throw ImException("消息类型不支持")
         }
     }
 
-    fun remove(chatType: ChatType, messageId: Long) {
-        when (chatType) {
-            ChatType.GROUP -> {
-                mMessageOfGroupRepository.remove(messageId)
+    fun remove(sessionType: EnumSessionType, messageId: Long) {
+        when (sessionType) {
+            EnumSessionType.GROUP -> {
+                mChatMessageOfGroupRepository.remove(messageId)
             }
             else -> throw ImException("消息类型不支持")
         }
     }
 
-    fun list(chatType: ChatType): List<Message> {
-        return when (chatType) {
-            ChatType.GROUP -> {
-                mMessageOfGroupRepository.list()
+    fun list(sessionType: EnumSessionType): List<Message> {
+        return when (sessionType) {
+            EnumSessionType.GROUP -> {
+                mChatMessageOfGroupRepository.list().map {
+                    it.getMessage()
+                }
             }
             else -> throw ImException("消息类型不支持")
         }

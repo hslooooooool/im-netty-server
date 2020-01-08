@@ -1,7 +1,7 @@
 package vip.qsos.im.model.form
 
-import vip.qsos.im.model.type.ChatType
+import vip.qsos.im.model.type.EnumSessionType
 
 interface ISendForm {
-    var chatType: ChatType
+    var sessionType: EnumSessionType
 }

@@ -8,17 +8,17 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "table_chat_group_last_record")
-@ApiModel(value = "群组最后的消息记录表")
-data class TableChatGroupOfLastRecord constructor(
+@Table(name = "table_chat_group_info")
+@ApiModel(value = "群聊信息拓展表")
+data class TableChatGroupInfo constructor(
         @Id
         @Column(name = "id")
         @ApiModelProperty(value = "群号")
         var groupId: Long = -1L,
+        @Column(name = "avatar")
+        @ApiModelProperty(value = "群聊封面")
+        var avatar: String? = null,
         @Column(name = "last_message_id")
         @ApiModelProperty(value = "最后一条消息ID")
-        var lastMessageId: Long? = null,
-        @Column(name = "last_message_timeline")
-        @ApiModelProperty(value = "最后一条消息时序")
-        var lastMessageTimeline: Long? = null
+        var lastMessageId: Long? = null
 ) : AbsTable()

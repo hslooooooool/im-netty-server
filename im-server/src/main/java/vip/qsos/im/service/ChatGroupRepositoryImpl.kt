@@ -3,12 +3,12 @@ package vip.qsos.im.service
 import org.springframework.stereotype.Repository
 import org.springframework.util.StringUtils
 import vip.qsos.im.lib.server.model.ImException
-import vip.qsos.im.model.ChatGroupBo
+import vip.qsos.im.model.ChatGroup
 import vip.qsos.im.model.db.TableChatGroup
-import vip.qsos.im.model.db.TableChatGroupOfLastRecord
+import vip.qsos.im.model.db.TableChatGroupInfo
 import vip.qsos.im.model.db.TableChatSession
-import vip.qsos.im.model.type.ChatType
-import vip.qsos.im.repository.db.TableChatGroupOfLastRecordRepository
+import vip.qsos.im.model.type.EnumSessionType
+import vip.qsos.im.repository.db.TableChatGroupInfoRepository
 import vip.qsos.im.repository.db.TableChatGroupRepository
 import vip.qsos.im.repository.db.TableChatSessionRepository
 import javax.annotation.Resource
@@ -20,29 +20,28 @@ import javax.annotation.Resource
 @Repository
 class ChatGroupRepositoryImpl : ChatGroupRepository {
     @Resource
-    private lateinit var mSessionRepository: TableChatSessionRepository
-    @Resource
     private lateinit var mGroupRepository: TableChatGroupRepository
     @Resource
-    private lateinit var mGroupOfLastRecordRepository: TableChatGroupOfLastRecordRepository
+    private lateinit var mSessionRepository: TableChatSessionRepository
     @Resource
     private lateinit var mChatAccountRepository: ChatAccountRepository
+    @Resource
+    private lateinit var mGroupInfoRepository: TableChatGroupInfoRepository
 
-    override fun findSingle(sender: String, receiver: String): ChatGroupBo? {
+    override fun findSingle(sender: String, receiver: String): ChatGroup? {
         var members = ""
         arrayListOf(sender, receiver).toSet().sorted().forEach {
             members += "0$it"
         }
         return mSessionRepository
-                .findByChatTypeAndMember(ChatType.SINGLE, members)
-                ?.let {
+                .findBySessionTypeAndMember(EnumSessionType.SINGLE, members)?.let {
                     mGroupRepository.findBySessionId(it.sessionId)?.let { group ->
-                        ChatGroupBo.getBo(it, group).addLastRecord(this.findGroupOfLastRecord(group.groupId))
+                        ChatGroup.getBo(it, group).setInfo(this.findGroupInfo(group.groupId))
                     }
                 }
     }
 
-    override fun create(name: String, creatorImAccount: String, memberList: List<String>): ChatGroupBo {
+    override fun create(name: String, creatorImAccount: String, memberList: List<String>): ChatGroup {
         val members = memberList.toSet().sorted()
         /**较验账号是否授权*/
         members.forEach {
@@ -51,9 +50,9 @@ class ChatGroupRepositoryImpl : ChatGroupRepository {
                 throw ImException("账号 $it 未授权")
             }
         }
-        var chatType: ChatType = ChatType.SINGLE
+        var sessionType: EnumSessionType = EnumSessionType.SINGLE
         if (members.size > 2) {
-            chatType = ChatType.GROUP
+            sessionType = EnumSessionType.GROUP
         }
         when {
             StringUtils.isEmpty(name) -> throw ImException("群名称不能为空")
@@ -65,11 +64,11 @@ class ChatGroupRepositoryImpl : ChatGroupRepository {
         var session = mSessionRepository.findByMember(memberString)
         if (session == null) {
             session = mSessionRepository.saveAndFlush(TableChatSession(
-                    creator = creatorImAccount, member = memberString, chatType = chatType
+                    creator = creatorImAccount, member = memberString, sessionType = sessionType
             ))
             session!!
             group = mGroupRepository.saveAndFlush(TableChatGroup(
-                    name = name, sessionId = session.sessionId
+                    sessionId = session.sessionId, name = name
             ))
             group!!
         } else {
@@ -77,11 +76,11 @@ class ChatGroupRepositoryImpl : ChatGroupRepository {
                     ?: throw ImException("消息群数据错误")
         }
 
-        val record = mGroupOfLastRecordRepository.saveAndFlush(TableChatGroupOfLastRecord(groupId = group.groupId))
-        return ChatGroupBo.getBo(session, group).addLastRecord(record)
+        val info = mGroupInfoRepository.saveAndFlush(TableChatGroupInfo(groupId = group.groupId))
+        return ChatGroup.getBo(session, group).setInfo(info)
     }
 
-    override fun findGroup(sessionId: Long): ChatGroupBo {
+    override fun findGroup(sessionId: Long): ChatGroup {
         val session: TableChatSession
         try {
             session = mSessionRepository.findById(sessionId).get()
@@ -90,12 +89,8 @@ class ChatGroupRepositoryImpl : ChatGroupRepository {
         }
         return mSessionRepository.findById(sessionId).get().let {
             findByGroupId(sessionId).let {
-                var record = mGroupOfLastRecordRepository.findByGroupId(it.groupId)
-                if (record == null) {
-                    record = mGroupOfLastRecordRepository.saveAndFlush(TableChatGroupOfLastRecord(it.groupId))
-                    record!!
-                }
-                ChatGroupBo.getBo(session, it).addLastRecord(record)
+                val info = mGroupInfoRepository.findByGroupId(it.groupId)
+                ChatGroup.getBo(session, it).setInfo(info)
             }
         }
     }
@@ -118,18 +113,19 @@ class ChatGroupRepositoryImpl : ChatGroupRepository {
         }
     }
 
-    override fun list(): List<ChatGroupBo> {
+    override fun list(): List<ChatGroup> {
         return mSessionRepository.findAll().map { session ->
             mGroupRepository.findBySessionId(session.sessionId)!!.let { group ->
-                ChatGroupBo.getBo(session, group).addLastRecord(this.findGroupOfLastRecord(group.groupId))
+                val sRecord = this.findGroupInfo(group.groupId)
+                ChatGroup.getBo(session, group).setInfo(sRecord)
             }
         }
     }
 
-    override fun listLikeMember(member: String): List<ChatGroupBo> {
+    override fun listLikeMember(member: String): List<ChatGroup> {
         return mSessionRepository.findByMemberLike(member).map { session ->
             mGroupRepository.findBySessionId(session.sessionId)!!.let { group ->
-                ChatGroupBo.getBo(session, group).addLastRecord(this.findGroupOfLastRecord(group.groupId))
+                ChatGroup.getBo(session, group).setInfo(this.findGroupInfo(group.groupId))
             }
         }
     }
@@ -168,9 +164,9 @@ class ChatGroupRepositoryImpl : ChatGroupRepository {
         mGroupRepository.deleteById(groupId)
     }
 
-    override fun findGroupOfLastRecord(groupId: Long): TableChatGroupOfLastRecord {
+    override fun findGroupInfo(groupId: Long): TableChatGroupInfo {
         try {
-            return mGroupOfLastRecordRepository.findById(groupId).get()
+            return mGroupInfoRepository.findById(groupId).get()
         } catch (e: Exception) {
             throw ImException("群信息缺失")
         }
