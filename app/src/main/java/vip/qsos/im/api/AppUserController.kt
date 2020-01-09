@@ -4,8 +4,13 @@ import org.springframework.web.bind.annotation.RestController
 import vip.qsos.im.component.UserManageComponent
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.model.BaseResult
+import vip.qsos.im.model.ChatSessionBo
+import vip.qsos.im.model.db.TableChatMessageOfGroup
 import vip.qsos.im.model.db.TableChatSession
 import vip.qsos.im.model.type.EnumSessionType
+import vip.qsos.im.repository.db.TableChatGroupInfoRepository
+import vip.qsos.im.repository.db.TableChatGroupRepository
+import vip.qsos.im.repository.db.TableChatMessageOfGroupRepository
 import vip.qsos.im.repository.db.TableChatSessionRepository
 import vip.qsos.im.service.ChatGroupRepository
 import vip.qsos.im.service.FriendService
@@ -25,6 +30,12 @@ class AppUserController : AppUserApi {
     private lateinit var mChatGroupRepository: ChatGroupRepository
     @Resource
     private lateinit var mSessionRepository: TableChatSessionRepository
+    @Resource
+    private lateinit var mGroupRepository: TableChatGroupRepository
+    @Resource
+    private lateinit var mGroupInfoRepository: TableChatGroupInfoRepository
+    @Resource
+    private lateinit var mMessageOfGroupRepository: TableChatMessageOfGroupRepository
 
     override fun findInfo(userId: Long): BaseResult {
         val user = mUserManageComponent.findById(userId)
@@ -62,6 +73,17 @@ class AppUserController : AppUserApi {
         val session = mSessionRepository
                 .findBySessionTypeAndMember(EnumSessionType.SINGLE, memberString)
                 ?: throw ImException("会话不存在")
-        return BaseResult.data(session)
+        val sessionInfo = mGroupRepository.findBySessionId(session.sessionId)!!.let { group ->
+            mGroupInfoRepository.findByGroupId(group.groupId).let { info ->
+                var message: TableChatMessageOfGroup? = null
+                info.lastMessageId?.let { lastMessageId ->
+                    mMessageOfGroupRepository.findById(lastMessageId).get().let { msg ->
+                        message = msg
+                    }
+                }
+                ChatSessionBo.group(session, group, info, message)
+            }
+        }
+        return BaseResult.data(sessionInfo)
     }
 }

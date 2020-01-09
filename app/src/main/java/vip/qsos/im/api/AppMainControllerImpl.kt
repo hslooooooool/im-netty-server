@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RestController
 import vip.qsos.im.component.UserManageComponent
 import vip.qsos.im.model.AppUser
 import vip.qsos.im.model.BaseResult
-import vip.qsos.im.model.ChatGroupBo
+import vip.qsos.im.model.ChatSessionBo
 import vip.qsos.im.model.db.TableChatMessageOfGroup
 import vip.qsos.im.repository.db.*
 import vip.qsos.im.service.FriendService
@@ -19,8 +19,6 @@ class AppMainControllerImpl : AppMainApi {
     @Resource
     private lateinit var mGroupInfoRepository: TableChatGroupInfoRepository
     @Resource
-    private lateinit var mUserRepository: TableUserRepository
-    @Resource
     private lateinit var mMessageOfGroupRepository: TableChatMessageOfGroupRepository
     @Resource
     private lateinit var mFriendService: FriendService
@@ -28,25 +26,22 @@ class AppMainControllerImpl : AppMainApi {
     private lateinit var mUserManageComponent: UserManageComponent
 
     override fun sessionList(userId: Long): BaseResult {
-        // TODO 待修改对应用户的会话列表
-        val groups = mSessionRepository.findAll().map { session ->
+
+        val sessions = mSessionRepository.findAll().map { session ->
+            // TODO 待修改对应用户的会话列表,判断 SessionType
             mGroupRepository.findBySessionId(session.sessionId)!!.let { group ->
                 mGroupInfoRepository.findByGroupId(group.groupId).let { info ->
-                    var user: AppUser? = null
                     var message: TableChatMessageOfGroup? = null
                     info.lastMessageId?.let { lastMessageId ->
                         mMessageOfGroupRepository.findById(lastMessageId).get().let { msg ->
                             message = msg
-                            mUserRepository.findByImAccount(msg.sender)?.let {
-                                user = AppUser(it.userId, it.name, it.imAccount, it.avatar)
-                            }
                         }
                     }
-                    ChatGroupBo.create(session, group, info, message, user)
+                    ChatSessionBo.group(session, group, info, message)
                 }
             }
         }
-        return BaseResult.data(groups)
+        return BaseResult.data(sessions)
     }
 
     override fun friendList(userId: Long): BaseResult {
