@@ -16,10 +16,14 @@ class FriendServiceImpl : FriendService {
         arrayListOf(userId, friendId).sorted().forEach {
             hashCode += it
         }
-        val mTableFriend = findFriend(userId, friendId)
-        return mTableFriend ?: mTableFriendRepository.saveAndFlush(TableFriend(
-                applicant = userId, friend = friendId, hashCode = hashCode
+        var mTableFriend = findFriend(userId, friendId)
+
+        mTableFriend = mTableFriendRepository.saveAndFlush(TableFriend(
+                id = mTableFriend?.id ?: -1L,
+                applicant = userId, friend = friendId,
+                hashCode = hashCode, accept = null
         ))
+        return mTableFriend
     }
 
     override fun findFriend(userId: Long, friendId: Long): TableFriend? {

@@ -16,9 +16,9 @@ class MessageDataComponent {
     @Resource
     private lateinit var mChatMessageOfGroupRepository: ChatMessageOfGroupRepository
 
-    fun save(sessionId: Long, message: Message) {
-        when (message.action) {
-            EnumSessionType.GROUP.name -> {
+    fun save(sessionId: Long, sessionType: EnumSessionType, message: Message) {
+        when (sessionType) {
+            EnumSessionType.GROUP -> {
                 mChatMessageOfGroupRepository.save(sessionId, message)
             }
             else -> throw ImException("消息类型不支持")

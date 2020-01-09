@@ -2,14 +2,18 @@ package vip.qsos.im.api
 
 import org.springframework.web.bind.annotation.RestController
 import vip.qsos.im.component.UserManageComponent
+import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.model.BaseResult
+import vip.qsos.im.model.db.TableChatSession
+import vip.qsos.im.model.type.EnumSessionType
+import vip.qsos.im.repository.db.TableChatSessionRepository
 import vip.qsos.im.service.ChatGroupRepository
 import vip.qsos.im.service.FriendService
 import vip.qsos.im.service.UserService
 import javax.annotation.Resource
 
 @RestController
-class FriendController : FriendApi {
+class AppUserController : AppUserApi {
 
     @Resource
     private lateinit var mFriendService: FriendService
@@ -19,13 +23,20 @@ class FriendController : FriendApi {
     private lateinit var mUserManageComponent: UserManageComponent
     @Resource
     private lateinit var mChatGroupRepository: ChatGroupRepository
+    @Resource
+    private lateinit var mSessionRepository: TableChatSessionRepository
 
-    override fun add(userId: Long, friendId: Long): BaseResult {
+    override fun findInfo(userId: Long): BaseResult {
+        val user = mUserManageComponent.findById(userId)
+        return BaseResult.data(user)
+    }
+
+    override fun addFriend(userId: Long, friendId: Long): BaseResult {
         val friend = mUserManageComponent.addFriend(userId, friendId)
         return BaseResult.data(friend)
     }
 
-    override fun find(userId: Long, friendId: Long): BaseResult {
+    override fun findFriend(userId: Long, friendId: Long): BaseResult {
         val friend = mFriendService.findFriend(userId, friendId)
         return BaseResult.data(friend)
     }
@@ -44,5 +55,13 @@ class FriendController : FriendApi {
             mChatGroupRepository.create("单聊$id", imAccount1, arrayListOf(imAccount1, imAccount2))
         }
         return BaseResult.data(friend)
+    }
+
+    override fun findSingle(sender: String, receiver: String): BaseResult {
+        val memberString = TableChatSession.addMember(arrayListOf(sender, receiver))
+        val session = mSessionRepository
+                .findBySessionTypeAndMember(EnumSessionType.SINGLE, memberString)
+                ?: throw ImException("会话不存在")
+        return BaseResult.data(session)
     }
 }

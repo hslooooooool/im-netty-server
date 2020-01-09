@@ -11,7 +11,7 @@ import vip.qsos.im.service.FriendService
 import javax.annotation.Resource
 
 @RestController
-class Biz1ControllerImpl : Biz1Api {
+class AppMainControllerImpl : AppMainApi {
     @Resource
     private lateinit var mSessionRepository: TableChatSessionRepository
     @Resource

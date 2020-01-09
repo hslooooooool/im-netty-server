@@ -4,19 +4,20 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
 import io.swagger.annotations.ApiSort
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import vip.qsos.im.model.BaseResult
-import vip.qsos.im.model.form.SendNoticeForm
-import vip.qsos.im.model.type.EnumSessionType
 import javax.validation.constraints.NotNull
 
-@Api(tags = ["消息发送"])
-@ApiSort(1)
-@RequestMapping("/api/im/send")
-interface MessageSendApi {
+@Api(tags = ["单聊页"])
+@ApiSort(4)
+@RequestMapping("/api/app/session/single")
+interface AppSessionOfSingleApi {
+
     @ApiOperation(value = "发送消息")
-    @PostMapping("/message")
-    fun sendToGroup(
+    @PostMapping("/message/send")
+    fun sendMessage(
             @RequestParam
             @ApiParam(value = "消息会话ID")
             @NotNull(message = "消息会话ID不能为空")
@@ -33,13 +34,6 @@ interface MessageSendApi {
             @ApiParam(value = "消息发送者账号")
             @NotNull(message = "发送账号不能为空")
             sender: String
-    ): BaseResult
-
-    @ApiOperation(value = "发送通知")
-    @PostMapping("/notice")
-    fun notice(
-            @RequestBody
-            notice: SendNoticeForm
     ): BaseResult
 
 }

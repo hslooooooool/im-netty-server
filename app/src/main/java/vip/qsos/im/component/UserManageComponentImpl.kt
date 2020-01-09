@@ -5,7 +5,6 @@ import vip.qsos.im.model.AppUser
 import vip.qsos.im.model.db.TableFriend
 import vip.qsos.im.model.db.TableUser
 import vip.qsos.im.service.ChatAccountRepository
-import vip.qsos.im.service.ChatGroupRepository
 import vip.qsos.im.service.FriendService
 import vip.qsos.im.service.UserService
 import javax.annotation.Resource
@@ -23,8 +22,6 @@ class UserManageComponentImpl : UserManageComponent {
     private lateinit var mFriendService: FriendService
     @Resource
     private lateinit var mChatAccountRepository: ChatAccountRepository
-    @Resource
-    private lateinit var mChatGroupRepository: ChatGroupRepository
 
     override fun register(name: String, password: String): TableUser {
         return assignImAccount(mUserService.register(name, password))

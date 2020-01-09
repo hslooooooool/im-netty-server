@@ -6,7 +6,7 @@ import vip.qsos.im.model.BaseResult
 import javax.annotation.Resource
 
 @RestController
-class UserController : UserApi {
+class AppLoginController : AppLoginApi {
 
     @Resource
     private lateinit var mUserManageComponent: UserManageComponent
@@ -21,13 +21,4 @@ class UserController : UserApi {
         return BaseResult.data(user)
     }
 
-    override fun list(): BaseResult {
-        val user = mUserManageComponent.findAll()
-        return BaseResult.data(user)
-    }
-
-    override fun findByUserId(userId: Long): BaseResult {
-        val user = mUserManageComponent.findById(userId)
-        return BaseResult.data(user)
-    }
 }

@@ -15,7 +15,7 @@ import vip.qsos.im.lib.server.config.IMConstant
 data class Message constructor(
         @ApiModelProperty(value = "消息ID")
         var id: Long = -1L,
-        @ApiModelProperty(value = "消息类型")
+        @ApiModelProperty(value = "指令码")
         var action: String,
         @ApiModelProperty(value = "消息标题")
         var title: String? = null,

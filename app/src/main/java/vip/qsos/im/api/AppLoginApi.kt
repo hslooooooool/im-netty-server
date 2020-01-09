@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import vip.qsos.im.model.BaseResult
 
-@Api(tags = ["用户管理"])
+@Api(tags = ["登录页"])
 @ApiSort(1)
-@RequestMapping("/api/app/user")
-interface UserApi {
+@RequestMapping("/api/app/login")
+interface AppLoginApi {
 
     @ApiOperation(value = "用户注册")
     @PostMapping("/register")
@@ -35,17 +35,5 @@ interface UserApi {
             @RequestParam
             @ApiParam(value = "密码", required = true)
             password: String
-    ): BaseResult
-
-    @ApiOperation(value = "用户列表")
-    @GetMapping("/list")
-    fun list(): BaseResult
-
-    @ApiOperation(value = "获取用户信息")
-    @GetMapping("/info")
-    fun findByUserId(
-            @RequestParam
-            @ApiParam(value = "用户ID", required = true)
-            userId: Long
     ): BaseResult
 }

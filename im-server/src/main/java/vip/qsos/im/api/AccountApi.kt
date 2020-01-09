@@ -14,6 +14,7 @@ import vip.qsos.im.model.BaseResult
 @ApiSort(1)
 @RequestMapping("/api/im/account")
 interface AccountApi {
+
     @ApiOperation(value = "分配账号")
     @GetMapping("/assign")
     fun assign(): BaseResult

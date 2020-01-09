@@ -5,14 +5,14 @@ import vip.qsos.im.component.MessageDataComponent
 import vip.qsos.im.component.MessagePusher
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.model.BaseResult
+import vip.qsos.im.model.db.TableChatSession
 import vip.qsos.im.model.form.SendMessageInGroupForm
-import vip.qsos.im.model.form.SendNoticeForm
 import vip.qsos.im.model.type.EnumSessionType
 import vip.qsos.im.repository.db.TableChatSessionRepository
 import javax.annotation.Resource
 
 @RestController
-class MessageController : MessageSendApi, MessageMangeApi {
+class AppSessionOfSingleControllerImpl : AppSessionOfSingleApi {
     @Resource
     private lateinit var messagePusher: MessagePusher
     @Resource
@@ -20,7 +20,7 @@ class MessageController : MessageSendApi, MessageMangeApi {
     @Resource
     private lateinit var mTableChatSessionRepository: TableChatSessionRepository
 
-    override fun sendToGroup(sessionId: Long, contentType: Int, content: String, sender: String): BaseResult {
+    override fun sendMessage(sessionId: Long, contentType: Int, content: String, sender: String): BaseResult {
         return this.send(SendMessageInGroupForm(sessionId, contentType, content, sender))
     }
 
@@ -32,14 +32,20 @@ class MessageController : MessageSendApi, MessageMangeApi {
             }
             EnumSessionType.GROUP -> {
                 val sessionId = message.sessionId
-                mTableChatSessionRepository.findById(sessionId).get().getAccountList().map {
+                val mTableChatSession: TableChatSession
+                try {
+                    mTableChatSession = mTableChatSessionRepository.findById(sessionId).get()
+                } catch (e: Exception) {
+                    throw ImException("会话不存在")
+                }
+                mTableChatSession.getAccountList().map {
                     /**给未离群的账号发送消息*/
                     if (!it.leave && it.account != message.sender) {
                         try {
                             size++
                             val msg = message.getMessage(it.account)
                             messagePusher.push(msg)
-                            mMessageDataComponent.save(sessionId, msg)
+                            mMessageDataComponent.save(sessionId, message.sessionType, msg)
                         } catch (ignore: Exception) {
                             size--
                         }
@@ -51,23 +57,6 @@ class MessageController : MessageSendApi, MessageMangeApi {
             }
         }
         return BaseResult.data("发送成功 $size 条")
-    }
-
-    override fun notice(notice: SendNoticeForm): BaseResult {
-        var size = 0
-        notice.getMessageList().forEach { msg ->
-            try {
-                size++
-                messagePusher.push(msg)
-            } catch (ignore: Exception) {
-                size--
-            }
-        }
-        return BaseResult.data("发送成功 $size 条")
-    }
-
-    override fun list(sessionType: EnumSessionType): BaseResult {
-        return BaseResult.data(mMessageDataComponent.list(sessionType))
     }
 
 }

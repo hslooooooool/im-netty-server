@@ -11,6 +11,7 @@ interface UserManageComponent {
 
     fun register(name: String, password: String): TableUser
     fun login(name: String, password: String): TableUser
+
     fun findAll(): List<AppUser>
     fun findByName(name: String): AppUser?
     fun findById(userId: Long): AppUser
@@ -21,6 +22,7 @@ interface UserManageComponent {
     @Throws(AppException::class)
     fun assignImAccount(user: TableUser): TableUser
 
+    /**添加好友*/
     fun addFriend(userId: Long, friendId: Long): TableFriend
 
 }

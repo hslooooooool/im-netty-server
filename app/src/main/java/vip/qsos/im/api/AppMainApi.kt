@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import vip.qsos.im.model.BaseResult
 
-@Api(tags = ["APP主页"])
+@Api(tags = ["主页"])
 @ApiSort(3)
-@RequestMapping("/api/app/biz1")
-interface Biz1Api {
+@RequestMapping("/api/app/main")
+interface AppMainApi {
 
     @ApiOperation(value = "会话列表")
     @GetMapping("/list.session")
