@@ -1,7 +1,6 @@
 package vip.qsos.im.model.db
 
 import io.swagger.annotations.ApiModel
-import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.model.MessageExtra
 import vip.qsos.im.model.type.EnumSessionType
@@ -19,9 +18,6 @@ class TableChatMessageOfGroup : AbsTableChatMessage() {
 
     companion object {
         fun create(sessionId: Long, message: Message, timeline: Long = -1L): TableChatMessageOfGroup {
-            if (message.action != EnumSessionType.GROUP.name) {
-                throw ImException("消息类型错误")
-            }
             val table = TableChatMessageOfGroup()
             table.messageId = message.id
             table.timeline = timeline

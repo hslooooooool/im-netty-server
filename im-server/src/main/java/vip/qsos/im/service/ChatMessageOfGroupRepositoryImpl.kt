@@ -21,14 +21,14 @@ open class ChatMessageOfGroupRepositoryImpl @Autowired constructor(
         private val mGroupInfoRepository: TableChatGroupInfoRepository
 ) : ChatMessageOfGroupRepository {
 
-    override fun save(sessionId: Long, message: Message) {
+    override fun save(sessionId: Long, message: Message): TableChatMessageOfGroup {
         val group = mGroupRepository.findBySessionId(sessionId)
                 ?: throw ImException("聊天群不存在")
-        val msg = mMessageRepository
-                .saveAndFlush(TableChatMessageOfGroup.create(sessionId, message))
+        val msg = mMessageRepository.saveAndFlush(TableChatMessageOfGroup.create(sessionId, message))
         val info = mGroupInfoRepository.findByGroupId(group.groupId)
         info.lastMessageId = msg.messageId
         mGroupInfoRepository.save(info)
+        return msg
     }
 
     override fun find(messageId: Long): TableChatMessageOfGroup? {

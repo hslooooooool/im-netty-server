@@ -3,6 +3,7 @@ package vip.qsos.im.component
 import org.springframework.stereotype.Component
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Message
+import vip.qsos.im.model.db.AbsTableChatMessage
 import vip.qsos.im.model.type.EnumSessionType
 import vip.qsos.im.service.ChatMessageOfGroupRepository
 import javax.annotation.Resource
@@ -16,8 +17,8 @@ class MessageDataComponent {
     @Resource
     private lateinit var mChatMessageOfGroupRepository: ChatMessageOfGroupRepository
 
-    fun save(sessionId: Long, sessionType: EnumSessionType, message: Message) {
-        when (sessionType) {
+    fun save(sessionId: Long, sessionType: EnumSessionType, message: Message): AbsTableChatMessage {
+        return when (sessionType) {
             EnumSessionType.GROUP -> {
                 mChatMessageOfGroupRepository.save(sessionId, message)
             }

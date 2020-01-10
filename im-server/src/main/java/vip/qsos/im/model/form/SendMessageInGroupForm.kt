@@ -59,11 +59,11 @@ data class SendMessageInGroupForm constructor(
     @JsonIgnore
     fun getMessage(receiver: String): Message {
         return Message(
-                action = sessionType.name,
+                action = "0",
                 content = getChatContent().toString(),
                 sender = this.sender,
                 receiver = receiver,
-                extra = MessageExtra(EnumSessionType.GROUP, this.sessionId).toString(),
+                extra = MessageExtra(this.sessionType, this.sessionId).toString(),
                 format = Message.Format.JSON.name
         )
     }

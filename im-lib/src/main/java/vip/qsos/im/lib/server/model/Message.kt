@@ -23,7 +23,7 @@ data class Message constructor(
         var content: String,
         @ApiModelProperty(value = "消息发送者账号", required = true)
         var sender: String,
-        @ApiModelProperty(value = "消息接收者账号", required = true)
+        @ApiModelProperty(value = "消息接收者账号,此系统设计中为会话ID,通过会话ID寻找成员账号后群发", required = true)
         var receiver: String,
         @ApiModelProperty(value = "消息数据格式", dataType = "Enum")
         var format: String = Format.PROTOBUF.name,
