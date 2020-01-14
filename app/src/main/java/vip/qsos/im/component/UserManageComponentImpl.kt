@@ -2,6 +2,7 @@ package vip.qsos.im.component
 
 import org.springframework.stereotype.Component
 import vip.qsos.im.model.AppUser
+import vip.qsos.im.model.LoginUser
 import vip.qsos.im.model.db.TableFriend
 import vip.qsos.im.model.db.TableUser
 import vip.qsos.im.service.ChatAccountRepository
@@ -23,10 +24,6 @@ class UserManageComponentImpl : UserManageComponent {
     @Resource
     private lateinit var mChatAccountRepository: ChatAccountRepository
 
-    override fun register(name: String, password: String): TableUser {
-        return assignImAccount(mUserService.register(name, password))
-    }
-
     override fun assignImAccount(user: TableUser): TableUser {
         val account = mChatAccountRepository.assign()
         assert(account.length == 9)
@@ -34,8 +31,16 @@ class UserManageComponentImpl : UserManageComponent {
         return mUserService.updateUser(user)
     }
 
-    override fun login(name: String, password: String): TableUser {
-        return mUserService.login(name, password)
+    override fun register(name: String, password: String): LoginUser {
+        return assignImAccount(mUserService.register(name, password)).let {
+            LoginUser.getBo(it)
+        }
+    }
+
+    override fun login(name: String, password: String): LoginUser {
+        return mUserService.login(name, password).let {
+            LoginUser.getBo(it)
+        }
     }
 
     override fun findById(userId: Long): AppUser {
@@ -44,8 +49,10 @@ class UserManageComponentImpl : UserManageComponent {
         }
     }
 
-    override fun findMine(userId: Long): TableUser {
-        return mUserService.findById(userId)
+    override fun findMine(userId: Long): AppUser {
+        return mUserService.findById(userId).let {
+            AppUser(it.userId, it.name, it.imAccount, it.avatar)
+        }
     }
 
     override fun findAll(): List<AppUser> {

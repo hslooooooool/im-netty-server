@@ -38,9 +38,9 @@ class MessagePusher constructor(
                     session.write(msg)
                 }
                 else -> {
-                    throw ImException("消息发送失败，消息通道已关闭")
+                    throw ImException("消息发送失败，终端未上线或推送机制未识别")
                 }
             }
-        } ?: throw ImException("消息发送失败，接收账号未上线")
+        } ?: throw ImException("消息发送结束，接收账号未上线")
     }
 }

@@ -14,8 +14,8 @@ import javax.validation.constraints.NotNull
  * @author : 华清松
  * 发送基本消息实体
  */
-@ApiModel(description = "发送群聊消息")
-data class SendMessageInGroupForm constructor(
+@ApiModel(description = "发送单聊消息")
+data class SendMessageInSingleForm constructor(
         @ApiModelProperty(value = "消息会话ID", required = true)
         @NotNull(message = "消息会话ID不能为空")
         var sessionId: Long,
@@ -54,7 +54,7 @@ data class SendMessageInGroupForm constructor(
     }
 
     @JsonIgnore
-    override var sessionType: EnumSessionType = EnumSessionType.GROUP
+    override var sessionType: EnumSessionType = EnumSessionType.SINGLE
 
     @JsonIgnore
     fun getMessage(receiver: String): Message {

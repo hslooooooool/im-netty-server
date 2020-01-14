@@ -7,13 +7,13 @@ import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.model.BaseResult
 import vip.qsos.im.model.db.AbsTableChatMessage
 import vip.qsos.im.model.db.TableChatSession
-import vip.qsos.im.model.form.SendMessageInSingleForm
+import vip.qsos.im.model.form.SendMessageInGroupForm
 import vip.qsos.im.model.type.EnumSessionType
 import vip.qsos.im.repository.db.TableChatSessionRepository
 import javax.annotation.Resource
 
 @RestController
-class AppSessionOfSingleControllerImpl : AppSessionOfSingleApi {
+class AppSessionOfGroupControllerImpl : AppSessionOfGroupApi {
     @Resource
     private lateinit var messagePusher: MessagePusher
     @Resource
@@ -22,10 +22,10 @@ class AppSessionOfSingleControllerImpl : AppSessionOfSingleApi {
     private lateinit var mTableChatSessionRepository: TableChatSessionRepository
 
     override fun sendMessage(sessionId: Long, contentType: Int, content: String, sender: String): BaseResult {
-        return this.send(SendMessageInSingleForm(sessionId, contentType, content, sender))
+        return this.send(SendMessageInGroupForm(sessionId, contentType, content, sender))
     }
 
-    private fun send(message: SendMessageInSingleForm): BaseResult {
+    private fun send(message: SendMessageInGroupForm): BaseResult {
         /**验证会话*/
         val sessionId = message.sessionId
         val mTableChatSession: TableChatSession
@@ -38,7 +38,7 @@ class AppSessionOfSingleControllerImpl : AppSessionOfSingleApi {
         /**识别会话类型*/
         val sMessage: AbsTableChatMessage?
         when (message.sessionType) {
-            EnumSessionType.SINGLE -> {
+            EnumSessionType.GROUP -> {
                 mTableChatSession.getAccountList().map {
                     // 仅给未离群的账号发送消息
                     if (!it.leave && it.account != message.sender) {
