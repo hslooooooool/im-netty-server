@@ -9,11 +9,13 @@ import java.io.Serializable
  * 消息附加信息实体
  * @param sessionType 聊天类型
  * @param sessionId 聊天会话ID
+ * @param timeline 消息时序
  * 当前版本 1
  */
 data class MessageExtra constructor(
         var sessionType: EnumSessionType,
-        var sessionId: Long
+        var sessionId: Long,
+        var timeline: Long = -1L
 ) : Serializable {
     companion object {
         private const val serialVersionUID = 1L

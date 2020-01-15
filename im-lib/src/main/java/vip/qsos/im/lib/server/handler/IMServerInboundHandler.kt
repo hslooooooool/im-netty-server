@@ -18,7 +18,7 @@ import vip.qsos.im.lib.server.filter.SendBodyEncoder
 import vip.qsos.im.lib.server.model.HeartbeatRequest
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.SendBody
-import vip.qsos.im.lib.server.model.SessionClient
+import vip.qsos.im.lib.server.model.SessionClientBo
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -100,7 +100,7 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
     }
 
     override fun channelRead0(ctx: ChannelHandlerContext, body: SendBody) {
-        val session = SessionClient().create(ctx.channel())
+        val session = SessionClientBo().create(ctx.channel())
         this.mHandlerMap[body.key]?.process(session, body)
         this.mHandlerMap[IMConstant.CLIENT_APP_CUSTOM]?.process(session, body)
     }
@@ -111,7 +111,7 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
 
     override fun channelInactive(ctx: ChannelHandlerContext) {
         this.mChannelGroup.remove(ctx.channel().id().asShortText())
-        val session = SessionClient().create(ctx.channel())
+        val session = SessionClientBo().create(ctx.channel())
         val body = SendBody()
         body.key = IMConstant.CLIENT_CLOSED
         this.mHandlerMap[IMConstant.CLIENT_APP_CUSTOM]?.process(session, body)

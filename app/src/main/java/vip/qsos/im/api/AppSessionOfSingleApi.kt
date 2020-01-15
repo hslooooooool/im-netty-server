@@ -20,20 +20,31 @@ interface AppSessionOfSingleApi {
     fun sendMessage(
             @RequestParam
             @ApiParam(value = "消息会话ID")
-            @NotNull(message = "消息会话ID不能为空")
-            sessionId: Long,
+            @NotNull(message = "消息会话ID不能为空") sessionId: Long,
             @RequestParam
             @ApiParam(value = "消息类型")
-            @NotNull(message = "消息类型不能为空")
-            contentType: Int,
+            @NotNull(message = "消息类型不能为空") contentType: Int,
             @RequestParam
             @ApiParam(value = "消息内容")
-            @NotNull(message = "消息内容不能为空")
-            content: String,
+            @NotNull(message = "消息内容不能为空") content: String,
             @RequestParam
             @ApiParam(value = "消息发送者账号")
-            @NotNull(message = "发送账号不能为空")
-            sender: String
+            @NotNull(message = "发送账号不能为空") sender: String
+    ): BaseResult
+
+    @ApiOperation(value = "消息列表")
+    @PostMapping("/message/list")
+    fun getMessageListByTimeline(
+            @RequestParam
+            @ApiParam(value = "会话ID")
+            @NotNull(message = "会话ID不能为空") sessionId: Long,
+            @RequestParam
+            @ApiParam(value = "消息时序")
+            @NotNull(message = "消息时序不能为空") timeline: Long,
+            @RequestParam(required = false)
+            @ApiParam(value = "消息条数") size: Int = 10,
+            @RequestParam(required = false)
+            @ApiParam(value = "上一页") previous: Boolean = true
     ): BaseResult
 
 }

@@ -1,15 +1,16 @@
 package vip.qsos.im.service
 
 import org.springframework.stereotype.Repository
+import org.springframework.stereotype.Service
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.model.db.TableChatAccount
 import vip.qsos.im.repository.db.TableChatAccountRepository
 import javax.annotation.Resource
 
-@Repository
-class ChatAccountRepositoryImpl constructor(
+@Service
+class ChatAccountServiceImpl constructor(
         @Resource private val mAccountRepository: TableChatAccountRepository
-) : ChatAccountRepository {
+) : ChatAccountService {
 
     override fun assign(): String {
         val account = mAccountRepository.findTopByUsed(false)

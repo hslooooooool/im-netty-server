@@ -7,7 +7,7 @@ import io.netty.util.AttributeKey
 import vip.qsos.im.lib.server.config.IMConstant
 import vip.qsos.im.lib.server.model.IProtobufAble
 import vip.qsos.im.lib.server.model.ImException
-import vip.qsos.im.lib.server.model.SessionClient
+import vip.qsos.im.lib.server.model.SessionClientBo
 import vip.qsos.im.lib.server.model.WebSocketResponse
 
 /**
@@ -18,15 +18,15 @@ class SendBodyEncoder : MessageToByteEncoder<Any>() {
     @Throws(ImException::class)
     override fun encode(ctx: ChannelHandlerContext, any: Any, out: ByteBuf) {
         val chanelType = ctx.channel()
-                .attr(AttributeKey.valueOf<String>(SessionClient.CHANNEL_TYPE))
+                .attr(AttributeKey.valueOf<String>(SessionClientBo.CHANNEL_TYPE))
                 .get()
         when {
             /** Websocket 握手数据*/
-            SessionClient.WEBSOCKET == chanelType && any is WebSocketResponse -> {
+            SessionClientBo.WEBSOCKET == chanelType && any is WebSocketResponse -> {
                 out.writeBytes(any.toString().toByteArray())
             }
             /** Websocket 业务数据*/
-            SessionClient.WEBSOCKET == chanelType && any is IProtobufAble -> {
+            SessionClientBo.WEBSOCKET == chanelType && any is IProtobufAble -> {
                 val body = any.byteArray
                 val header = createHeader(any.type, body.size)
                 val protobuf = ByteArray(body.size + IMConstant.DATA_HEADER_LENGTH)
@@ -36,7 +36,7 @@ class SendBodyEncoder : MessageToByteEncoder<Any>() {
                 out.writeBytes(binaryFrame)
             }
             /** Protobuf 业务数据*/
-            SessionClient.NATIVE_APP == chanelType && any is IProtobufAble -> {
+            SessionClientBo.NATIVE_APP == chanelType && any is IProtobufAble -> {
                 val body = any.byteArray
                 val header = createHeader(any.type, body.size)
                 out.writeBytes(header)

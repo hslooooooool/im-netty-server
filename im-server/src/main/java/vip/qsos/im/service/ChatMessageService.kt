@@ -5,7 +5,7 @@ import vip.qsos.im.lib.server.model.Message
 /**
  * @author : 华清松
  */
-interface ChatMessageRepository {
+interface ChatMessageService {
     fun save(message: Message)
     fun find(messageId: Long): Message?
     fun remove(messageId: Long)

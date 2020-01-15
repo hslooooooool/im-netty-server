@@ -7,7 +7,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "table_chat_group")
 @ApiModel(value = "群聊表")
-data class TableChatGroup constructor(
+data class TableChatSessionOfGroup constructor(
         @Id
         @Column(name = "id")
         @GeneratedValue(strategy = GenerationType.IDENTITY)

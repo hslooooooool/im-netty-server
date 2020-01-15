@@ -1,6 +1,12 @@
 package vip.qsos.im.repository.db
 
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Repository
 import vip.qsos.im.model.db.TableChatMessageOfSingle
 
-interface TableChatMessageOfSingleRepository : JpaRepository<TableChatMessageOfSingle, Long>
+@Repository
+interface TableChatMessageOfSingleRepository : JpaRepository<TableChatMessageOfSingle, Long> {
+
+    fun findBySessionIdAndTimelineBetween(sessionId: Long, startTimeline: Long, endTimeline: Long): List<TableChatMessageOfSingle>
+
+}

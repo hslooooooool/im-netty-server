@@ -1,17 +1,17 @@
 package vip.qsos.im.handler
 
 import org.springframework.stereotype.Component
-import vip.qsos.im.component.IMessagePusher
+import vip.qsos.im.dispense.MessagePusher
 import vip.qsos.im.config.AppConstant
 import vip.qsos.im.config.AppProperties
 import vip.qsos.im.lib.server.handler.IMRequestHandler
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.ReplyBody
 import vip.qsos.im.lib.server.model.SendBody
-import vip.qsos.im.lib.server.model.SessionClient
+import vip.qsos.im.lib.server.model.SessionClientBo
 import vip.qsos.im.model.form.SendMessageInActionForm
-import vip.qsos.im.service.ChatAccountRepository
-import vip.qsos.im.service.SessionClientManager
+import vip.qsos.im.service.ChatAccountService
+import vip.qsos.im.service.SessionClientService
 import java.time.LocalDateTime
 import javax.annotation.Resource
 
@@ -20,13 +20,17 @@ import javax.annotation.Resource
  * 账号绑定实现
  */
 @Component
-class BindAccountRequestHandler constructor(
-        @Resource private val mProperties: AppProperties,
-        @Resource private val mSessionManager: SessionClientManager,
-        @Resource private val mMessagePusher: IMessagePusher,
-        @Resource private val mChatAccountRepository: ChatAccountRepository
-) : IMRequestHandler {
-    override fun process(sessionClient: SessionClient, message: SendBody) {
+class BindAccountRequestHandler : IMRequestHandler {
+    @Resource
+    private lateinit var mProperties: AppProperties
+    @Resource
+    private lateinit var mSessionService: SessionClientService
+    @Resource
+    private lateinit var mMessagePusher: MessagePusher
+    @Resource
+    private lateinit var mChatAccountService: ChatAccountService
+
+    override fun process(sessionClient: SessionClientBo, message: SendBody) {
         val reply = ReplyBody()
         reply.key = message.key
         reply.code = "200"
@@ -34,7 +38,7 @@ class BindAccountRequestHandler constructor(
         reply.message = "账号绑定成功"
         try {
             val account = message.find("account") ?: throw ImException("账号不能为空")
-            mChatAccountRepository.findByAccount(account) ?: throw ImException("账号未经授权")
+            mChatAccountService.findByAccount(account) ?: throw ImException("账号未经授权")
 
             sessionClient.setAccount(account)
             sessionClient.deviceId = message.find("deviceId")
@@ -55,9 +59,9 @@ class BindAccountRequestHandler constructor(
         sessionClient.write(reply)
     }
 
-    private fun dellSession(sessionClient: SessionClient) {
+    private fun dellSession(sessionClient: SessionClientBo) {
         /**由于客户端断线服务端可能会无法获知的情况，客户端重连时，需要关闭旧的连接*/
-        mSessionManager.find(sessionClient.getAccount())?.let { oldSession ->
+        mSessionService.find(sessionClient.getAccount())?.let { oldSession ->
             if (sameDeice(oldSession, sessionClient)) {
                 /**同一个设备重复连接，如果会话通道不变则替换旧连接，否则将关闭旧链接，添加新连接*/
                 if (oldSession.nid != sessionClient.nid && oldSession.isConnected) {
@@ -78,11 +82,11 @@ class BindAccountRequestHandler constructor(
             }
         }
         /**将当前连接置入存储*/
-        mSessionManager.save(sessionClient)
+        mSessionService.save(sessionClient)
     }
 
     /**判断设备ID是否一致，表示同一设备*/
-    private fun sameDeice(oldSessionClient: SessionClient?, newSessionClient: SessionClient): Boolean {
+    private fun sameDeice(oldSessionClient: SessionClientBo?, newSessionClient: SessionClientBo): Boolean {
         return oldSessionClient?.deviceId == newSessionClient.deviceId
     }
 }

@@ -1,7 +1,7 @@
 package vip.qsos.im.model.db
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import io.swagger.annotations.ApiModelProperty
-import jdk.nashorn.internal.ir.annotations.Ignore
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.model.MessageExtra
 import vip.qsos.im.model.type.EnumSessionType
@@ -42,10 +42,9 @@ abstract class AbsTableChatMessage : AbsTable() {
     @ApiModelProperty(value = "消息发送时间")
     var timestamp: LocalDateTime = LocalDateTime.now()
 
-    @Ignore
     protected abstract val extra: MessageExtra
 
-    @Ignore
+    @JsonIgnore
     fun getMessage(): Message {
         return Message(
                 id = messageId,

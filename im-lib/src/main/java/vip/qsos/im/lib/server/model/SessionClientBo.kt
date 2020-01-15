@@ -19,7 +19,7 @@ import java.util.*
  * 消息会话实体
  */
 @ApiModel(description = "建立会话的终端信息实体")
-data class SessionClient(
+data class SessionClientBo(
         @ApiModelProperty(value = "数据库主键ID")
         var id: Long = -1L,
         @ApiModelProperty(value = "channel ID")
@@ -80,7 +80,7 @@ data class SessionClient(
     @JsonIgnore
     var channel: Channel? = null
 
-    fun create(channel: Channel): SessionClient {
+    fun create(channel: Channel): SessionClientBo {
         this.channel = channel
         this.nid = channel.id().asShortText()
         return this
@@ -149,7 +149,7 @@ data class SessionClient(
     }
 
     override fun equals(other: Any?): Boolean {
-        return if (other is SessionClient) {
+        return if (other is SessionClientBo) {
             (other.deviceId == deviceId && other.nid == nid && other.host == host)
         } else false
     }

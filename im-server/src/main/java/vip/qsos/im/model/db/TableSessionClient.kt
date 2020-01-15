@@ -3,7 +3,7 @@ package vip.qsos.im.model.db
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import vip.qsos.im.lib.server.model.SessionClient
+import vip.qsos.im.lib.server.model.SessionClientBo
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -66,8 +66,8 @@ data class TableSessionClient constructor(
 ) : AbsTable() {
 
     @JsonIgnore
-    fun getSession(): SessionClient {
-        return SessionClient(
+    fun getBo(): SessionClientBo {
+        return SessionClientBo(
                 id = id, nid = nid, host = host, account = account, deviceId = deviceId, deviceModel = deviceModel,
                 deviceType = deviceType, clientVersion = clientVersion,
                 systemVersion = systemVersion, bindTime = bindTime, apns = apns, state = state,
@@ -76,7 +76,7 @@ data class TableSessionClient constructor(
     }
 
     companion object {
-        fun create(sessionClient: SessionClient): TableSessionClient {
+        fun create(sessionClient: SessionClientBo): TableSessionClient {
             return TableSessionClient(
                     id = sessionClient.id,
                     nid = sessionClient.nid,

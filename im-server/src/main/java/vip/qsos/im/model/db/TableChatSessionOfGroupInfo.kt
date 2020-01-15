@@ -10,7 +10,7 @@ import javax.persistence.Table
 @Entity
 @Table(name = "table_chat_group_info")
 @ApiModel(value = "群聊信息拓展表")
-data class TableChatGroupInfo constructor(
+data class TableChatSessionOfGroupInfo constructor(
         @Id
         @Column(name = "id")
         @ApiModelProperty(value = "群号")

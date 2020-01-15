@@ -10,9 +10,9 @@ import vip.qsos.im.model.ApnsPayloadCompat
 import javax.annotation.Resource
 
 @Service
-class ApnsPusherImpl constructor(
+class ApnsServiceImpl constructor(
         @Resource private val mProperties: AppProperties
-) : ApnsPusher {
+) : ApnsService {
     override fun push(message: Message, deviceToken: String) {
         mProperties.apnsP12File?.let { path ->
             val stream = javaClass.getResourceAsStream(path)

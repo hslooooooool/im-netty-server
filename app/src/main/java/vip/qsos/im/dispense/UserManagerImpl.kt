@@ -1,31 +1,30 @@
-package vip.qsos.im.component
+package vip.qsos.im.dispense
 
 import org.springframework.stereotype.Component
-import vip.qsos.im.model.AppUser
+import vip.qsos.im.model.AppUserBo
 import vip.qsos.im.model.LoginUser
 import vip.qsos.im.model.db.TableFriend
 import vip.qsos.im.model.db.TableUser
-import vip.qsos.im.service.ChatAccountRepository
+import vip.qsos.im.service.ChatAccountService
 import vip.qsos.im.service.FriendService
 import vip.qsos.im.service.UserService
 import javax.annotation.Resource
 
 /**
  * @author : 华清松
- * 用户管理
  */
 @Component
-class UserManageComponentImpl : UserManageComponent {
+class UserManagerImpl : UserManager {
 
     @Resource
     private lateinit var mUserService: UserService
     @Resource
     private lateinit var mFriendService: FriendService
     @Resource
-    private lateinit var mChatAccountRepository: ChatAccountRepository
+    private lateinit var mChatAccountService: ChatAccountService
 
     override fun assignImAccount(user: TableUser): TableUser {
-        val account = mChatAccountRepository.assign()
+        val account = mChatAccountService.assign()
         assert(account.length == 9)
         user.imAccount = account
         return mUserService.updateUser(user)
@@ -43,39 +42,39 @@ class UserManageComponentImpl : UserManageComponent {
         }
     }
 
-    override fun findById(userId: Long): AppUser {
+    override fun findById(userId: Long): AppUserBo {
         return mUserService.findById(userId).let {
-            AppUser(it.userId, it.name, it.imAccount, it.avatar)
+            AppUserBo(it.userId, it.name, it.imAccount, it.avatar)
         }
     }
 
-    override fun findMine(userId: Long): AppUser {
+    override fun findMine(userId: Long): AppUserBo {
         return mUserService.findById(userId).let {
-            AppUser(it.userId, it.name, it.imAccount, it.avatar)
+            AppUserBo(it.userId, it.name, it.imAccount, it.avatar)
         }
     }
 
-    override fun findAll(): List<AppUser> {
+    override fun findAll(): List<AppUserBo> {
         return mUserService.findAll().map {
-            AppUser(it.userId, it.name, it.imAccount, it.avatar)
+            AppUserBo(it.userId, it.name, it.imAccount, it.avatar)
         }
     }
 
-    override fun findByName(name: String): AppUser? {
+    override fun findByName(name: String): AppUserBo? {
         return mUserService.findByName(name)?.let {
-            AppUser(it.userId, it.name, it.imAccount, it.avatar)
+            AppUserBo(it.userId, it.name, it.imAccount, it.avatar)
         }
     }
 
-    override fun findByNameLike(name: String): List<AppUser> {
+    override fun findByNameLike(name: String): List<AppUserBo> {
         return mUserService.findByNameLike(name).map {
-            AppUser(it.userId, it.name, it.imAccount, it.avatar)
+            AppUserBo(it.userId, it.name, it.imAccount, it.avatar)
         }
     }
 
-    override fun findByImAccount(account: String): AppUser? {
+    override fun findByImAccount(account: String): AppUserBo? {
         return mUserService.findByImAccount(account)?.let {
-            AppUser(it.userId, it.name, it.imAccount, it.avatar)
+            AppUserBo(it.userId, it.name, it.imAccount, it.avatar)
         }
     }
 

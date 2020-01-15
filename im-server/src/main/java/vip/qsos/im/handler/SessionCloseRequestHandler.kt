@@ -4,8 +4,8 @@ import org.springframework.stereotype.Component
 import vip.qsos.im.lib.server.config.IMConstant
 import vip.qsos.im.lib.server.handler.IMRequestHandler
 import vip.qsos.im.lib.server.model.SendBody
-import vip.qsos.im.lib.server.model.SessionClient
-import vip.qsos.im.service.SessionClientManager
+import vip.qsos.im.lib.server.model.SessionClientBo
+import vip.qsos.im.service.SessionClientService
 import javax.annotation.Resource
 
 /**
@@ -14,13 +14,13 @@ import javax.annotation.Resource
  */
 @Component
 class SessionCloseRequestHandler constructor(
-        @Resource private val sessionManager: SessionClientManager
+        @Resource private val sessionService: SessionClientService
 ) : IMRequestHandler {
-    override fun process(sessionClient: SessionClient, message: SendBody) {
+    override fun process(sessionClient: SessionClientBo, message: SendBody) {
         sessionClient.getAttribute<String>(IMConstant.KEY_ACCOUNT)?.let { account ->
-            sessionManager.find(account)?.let {
+            sessionService.find(account)?.let {
                 if (!it.isApnsOpen) {
-                    sessionManager.remove(account)
+                    sessionService.remove(account)
                 }
             }
         }

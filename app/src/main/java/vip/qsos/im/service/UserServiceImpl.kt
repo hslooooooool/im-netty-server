@@ -35,7 +35,7 @@ class UserServiceImpl : UserService {
         try {
             return mTableUserRepository.findById(userId).get()
         } catch (e: Exception) {
-            throw AppException("账号不存在")
+            throw AppException("用户 $userId 不存在")
         }
     }
 

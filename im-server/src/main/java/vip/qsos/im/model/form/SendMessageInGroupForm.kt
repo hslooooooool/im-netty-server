@@ -5,7 +5,6 @@ import com.google.gson.Gson
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import vip.qsos.im.lib.server.model.Message
-import vip.qsos.im.model.MessageExtra
 import vip.qsos.im.model.type.EnumSessionType
 import java.io.Serializable
 import javax.validation.constraints.NotNull
@@ -63,7 +62,6 @@ data class SendMessageInGroupForm constructor(
                 content = getChatContent().toString(),
                 sender = this.sender,
                 receiver = receiver,
-                extra = MessageExtra(this.sessionType, this.sessionId).toString(),
                 format = Message.Format.JSON.name
         )
     }

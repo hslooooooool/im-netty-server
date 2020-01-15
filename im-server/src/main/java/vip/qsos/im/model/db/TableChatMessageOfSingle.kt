@@ -14,10 +14,11 @@ import javax.persistence.Table
 @ApiModel(value = "单聊消息表")
 class TableChatMessageOfSingle : AbsTableChatMessage() {
 
-    override val extra: MessageExtra = MessageExtra(EnumSessionType.SINGLE, sessionId)
+    override val extra: MessageExtra
+        get() = MessageExtra(EnumSessionType.SINGLE, sessionId, timeline)
 
     companion object {
-        fun create(sessionId: Long, message: Message, timeline: Long = -1L): TableChatMessageOfSingle {
+        fun create(sessionId: Long, message: Message, timeline: Long): TableChatMessageOfSingle {
             val table = TableChatMessageOfSingle()
             table.messageId = message.id
             table.timeline = timeline

@@ -1,11 +1,11 @@
-package vip.qsos.im.component
+package vip.qsos.im.dispense
 
 import org.springframework.stereotype.Component
 import vip.qsos.im.config.AppProperties
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Message
-import vip.qsos.im.service.ApnsPusher
-import vip.qsos.im.service.SessionClientManager
+import vip.qsos.im.service.ApnsService
+import vip.qsos.im.service.SessionClientService
 import javax.annotation.Resource
 
 /**
@@ -13,19 +13,22 @@ import javax.annotation.Resource
  * 消息发送实现类
  */
 @Component
-class MessagePusher constructor(
-        @Resource private val mProperties: AppProperties,
-        @Resource private val mSessionClientManager: SessionClientManager,
-        @Resource private val mApnsPusher: ApnsPusher
-) : IMessagePusher {
+class MessagePusherImpl : MessagePusher {
+    @Resource
+    private lateinit var mProperties: AppProperties
+    @Resource
+    private lateinit var mSessionClientService: SessionClientService
+    @Resource
+    private lateinit var mApnsService: ApnsService
+
     override fun push(msg: Message) {
         //TODO 设计发送失败的处理机制
-        mSessionClientManager.find(msg.receiver)?.let { session ->
+        mSessionClientService.find(msg.receiver)?.let { session ->
             when {
                 session.isIOSChannel && session.isApnsOpen -> {
                     /**IOS设备，如果开启了apns，则使用apns推送*/
                     session.deviceId?.let { token ->
-                        mApnsPusher.push(msg, token)
+                        mApnsService.push(msg, token)
                     } ?: throw ImException("消息发送失败，苹果DEVICE TOKEN不存在")
                 }
                 session.isConnected && mProperties.hostIp != session.host -> {

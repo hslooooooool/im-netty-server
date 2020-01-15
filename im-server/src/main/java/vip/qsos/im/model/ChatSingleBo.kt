@@ -2,13 +2,13 @@ package vip.qsos.im.model
 
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import vip.qsos.im.model.db.TableChatGroup
-import vip.qsos.im.model.db.TableChatGroupInfo
 import vip.qsos.im.model.db.TableChatSession
+import vip.qsos.im.model.db.TableChatSessionOfSingle
+import vip.qsos.im.model.db.TableChatSessionOfSingleInfo
 import vip.qsos.im.model.type.EnumSessionType
 
-@ApiModel(value = "群聊实体")
-data class ChatGroup constructor(
+@ApiModel(value = "单聊实体")
+data class ChatSingleBo constructor(
         @ApiModelProperty(value = "群号")
         var id: Long,
         @ApiModelProperty(value = "群名称")
@@ -23,10 +23,11 @@ data class ChatGroup constructor(
         var lastMessageId: Long? = null
 ) {
     companion object {
-        fun getBo(session: TableChatSession, group: TableChatGroup): ChatGroup {
-            return ChatGroup(
-                    id = group.groupId,
-                    name = group.name,
+
+        fun getBo(session: TableChatSession, group: TableChatSessionOfSingle): ChatSingleBo {
+            return ChatSingleBo(
+                    id = group.singleId,
+                    name = "单聊${group.singleId}",
                     creator = session.creator,
                     member = session.getAccountList().map { it.account },
                     sessionType = session.sessionType
@@ -34,7 +35,7 @@ data class ChatGroup constructor(
         }
     }
 
-    fun setInfo(info: TableChatGroupInfo): ChatGroup {
+    fun setInfo(info: TableChatSessionOfSingleInfo): ChatSingleBo {
         this.lastMessageId = info.lastMessageId
         return this
     }

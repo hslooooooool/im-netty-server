@@ -6,9 +6,9 @@ import vip.qsos.im.model.db.TableChatMessageOfGroup
 /**
  * @author : 华清松
  */
-interface ChatMessageOfGroupRepository {
+interface ChatMessageOfGroupService {
     fun save(sessionId: Long, message: Message): TableChatMessageOfGroup
     fun find(messageId: Long): TableChatMessageOfGroup?
     fun remove(messageId: Long)
-    fun list(): List<TableChatMessageOfGroup>
+    fun list(sessionId: Long, timeline: Long, size: Int, previous: Boolean): List<TableChatMessageOfGroup>
 }

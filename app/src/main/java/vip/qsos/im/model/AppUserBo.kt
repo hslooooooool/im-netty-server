@@ -7,7 +7,7 @@ import vip.qsos.im.model.db.TableUser
  * @author : 华清松
  * APP用户
  */
-data class AppUser(
+data class AppUserBo(
         @ApiModelProperty(value = "用户ID")
         var id: Long,
         @ApiModelProperty(value = "用户名称")
@@ -18,8 +18,8 @@ data class AppUser(
         var avatar: String? = null
 ) {
     companion object {
-        fun getBo(table: TableUser): AppUser {
-            return AppUser(table.userId, table.name, table.imAccount, table.avatar)
+        fun getBo(table: TableUser): AppUserBo {
+            return AppUserBo(table.userId, table.name, table.imAccount, table.avatar)
         }
     }
 }

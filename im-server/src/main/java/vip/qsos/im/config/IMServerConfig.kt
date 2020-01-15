@@ -11,7 +11,7 @@ import vip.qsos.im.lib.server.config.IMConstant
 import vip.qsos.im.lib.server.handler.IMRequestHandler
 import vip.qsos.im.lib.server.handler.IMServerInboundHandler
 import vip.qsos.im.lib.server.model.SendBody
-import vip.qsos.im.lib.server.model.SessionClient
+import vip.qsos.im.lib.server.model.SessionClientBo
 import java.util.*
 import javax.annotation.PostConstruct
 import javax.annotation.Resource
@@ -47,7 +47,7 @@ open class IMServerConfig constructor(
         mApplicationContext.getBean(IMServerInboundHandler::class.java).start()
     }
 
-    override fun process(sessionClient: SessionClient, message: SendBody) {
+    override fun process(sessionClient: SessionClientBo, message: SendBody) {
         mAppHandlerMap[message.key]?.let {
             mApplicationContext.getBean(it).process(sessionClient, message)
         }

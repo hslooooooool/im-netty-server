@@ -1,8 +1,8 @@
 package vip.qsos.im.api
 
 import org.springframework.web.bind.annotation.RestController
-import vip.qsos.im.component.MessageDataComponent
-import vip.qsos.im.component.MessagePusher
+import vip.qsos.im.dispense.MessageManager
+import vip.qsos.im.dispense.MessagePusherImpl
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.model.BaseResult
 import vip.qsos.im.model.db.AbsTableChatMessage
@@ -15,9 +15,9 @@ import javax.annotation.Resource
 @RestController
 class AppSessionOfGroupControllerImpl : AppSessionOfGroupApi {
     @Resource
-    private lateinit var messagePusher: MessagePusher
+    private lateinit var messagePusher: MessagePusherImpl
     @Resource
-    private lateinit var mMessageDataComponent: MessageDataComponent
+    private lateinit var mMessageManager: MessageManager
     @Resource
     private lateinit var mTableChatSessionRepository: TableChatSessionRepository
 
@@ -50,7 +50,7 @@ class AppSessionOfGroupControllerImpl : AppSessionOfGroupApi {
                         }
                     }
                 }
-                sMessage = mMessageDataComponent.save(sessionId, message.sessionType, message.getMessage("${message.sessionId}"))
+                sMessage = mMessageManager.save(sessionId, message.sessionType, message.getMessage("${message.sessionId}"))
             }
             else -> {
                 throw ImException("发送失败，此接口不支持此聊天类型的发送处理")

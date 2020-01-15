@@ -14,7 +14,8 @@ import javax.persistence.Table
 @ApiModel(value = "群聊消息表")
 class TableChatMessageOfGroup : AbsTableChatMessage() {
 
-    override val extra: MessageExtra = MessageExtra(EnumSessionType.GROUP, sessionId)
+    override val extra: MessageExtra
+        get() = MessageExtra(EnumSessionType.GROUP, sessionId, timeline)
 
     companion object {
         fun create(sessionId: Long, message: Message, timeline: Long = -1L): TableChatMessageOfGroup {
