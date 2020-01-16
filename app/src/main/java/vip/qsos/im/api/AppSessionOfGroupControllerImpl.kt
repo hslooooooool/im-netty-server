@@ -5,7 +5,6 @@ import vip.qsos.im.dispense.MessageManager
 import vip.qsos.im.dispense.MessagePusherImpl
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.model.BaseResult
-import vip.qsos.im.model.db.AbsTableChatMessage
 import vip.qsos.im.model.db.TableChatSession
 import vip.qsos.im.model.form.SendMessageInGroupForm
 import vip.qsos.im.model.type.EnumSessionType
@@ -28,9 +27,9 @@ class AppSessionOfGroupControllerImpl : AppSessionOfGroupApi {
         return this.send(SendMessageInGroupForm(sessionId, contentType, content, sender))
     }
 
-    private fun send(message: SendMessageInGroupForm): BaseResult {
+    private fun send(form: SendMessageInGroupForm): BaseResult {
         /**验证会话*/
-        val sessionId = message.sessionId
+        val sessionId = form.sessionId
         val mTableChatSession: TableChatSession
         try {
             mTableChatSession = mTableChatSessionRepository.findById(sessionId).get()
@@ -39,22 +38,25 @@ class AppSessionOfGroupControllerImpl : AppSessionOfGroupApi {
         }
 
         /**识别会话类型*/
-        val sMessage: AbsTableChatMessage?
-        if (EnumSessionType.GROUP == message.sessionType) {
-            val senderUser = userService.findByImAccount(message.sender) ?: throw ImException("用户不存在")
+        if (EnumSessionType.GROUP == form.sessionType) {
+            val senderUser = userService.findByImAccount(form.sender) ?: throw ImException("用户不存在")
+            val msg = form.getMessage("${form.sessionId}", senderUser)
+            val message = mMessageManager.save(
+                    sessionId, form.sessionType, msg
+            )
+            msg.id = message.messageId
             mTableChatSession.getAccountList().map {
                 // 仅给未离群的账号发送消息
                 if (!it.leave && it.account != message.sender) {
                     try {
-                        val msg = message.getMessage(it.account, senderUser)
+                        msg.receiver = it.account
                         messagePusher.push(msg)
                     } catch (ignore: Exception) {
                         // 忽略未接收的消息用户
                     }
                 }
             }
-            sMessage = mMessageManager.save(sessionId, message.sessionType, message.getMessage("${message.sessionId}", senderUser))
-            return BaseResult.data(sMessage, "发送成功")
+            return BaseResult.data(message, "发送成功")
         } else {
             throw ImException("发送失败，此接口不支持此聊天类型的发送处理")
 

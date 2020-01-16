@@ -38,18 +38,23 @@ class SessionOfSingleServiceImpl : SessionOfSingleService {
         /**识别会话类型*/
         if (EnumSessionType.SINGLE == form.sessionType) {
             val senderUser = userService.findByImAccount(sender) ?: throw ImException("用户不存在")
+            val msg = form.getMessage("${form.sessionId}", senderUser)
+            val message = mMessageManager.save(
+                    sessionId, form.sessionType, msg
+            )
+            msg.id = message.messageId
             mTableChatSession.getAccountList().map {
                 // 仅给未离群的账号发送消息
                 if (!it.leave && it.account != form.sender) {
                     try {
-                        val msg = form.getMessage(it.account, senderUser)
+                        msg.receiver = it.account
                         messagePusher.push(msg)
                     } catch (ignore: Exception) {
                         // 忽略未接收的消息用户,可以做消息缓存队列,延迟重新推送
                     }
                 }
             }
-            return mMessageManager.save(sessionId, form.sessionType, form.getMessage("${form.sessionId}", senderUser))
+            return message
         } else {
             throw ImException("发送失败，此接口不支持此聊天类型的发送处理")
         }

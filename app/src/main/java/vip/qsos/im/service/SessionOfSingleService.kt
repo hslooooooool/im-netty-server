@@ -1,6 +1,5 @@
 package vip.qsos.im.service
 
-import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.model.ChatMessageBo
 import vip.qsos.im.model.db.AbsTableChatMessage
 
