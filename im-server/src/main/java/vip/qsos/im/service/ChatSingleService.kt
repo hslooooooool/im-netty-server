@@ -14,12 +14,12 @@ interface ChatSingleService : AbsService<Long, TableChatSessionOfSingle> {
     fun findBySessionId(sessionId: Long): TableChatSessionOfSingle?
     fun findSingle(sender: String, receiver: String): ChatSingleBo?
     fun create( creator: String, receiver: String): ChatSingleBo
-    fun findGroup(sessionId: Long): ChatSingleBo
-    fun findByGroupId(groupId: Long): TableChatSessionOfSingle
+    fun find(sessionId: Long): ChatSingleBo
+    fun findBySingleId(id: Long): TableChatSessionOfSingle
     fun list(): List<ChatSingleBo>
     fun listLikeMember(member: String): List<ChatSingleBo>
-    fun joinGroup(groupId: Long, member: String)
-    fun leaveGroup(groupId: Long, member: String)
-    fun deleteGroup(groupId: Long)
-    fun findGroupInfo(groupId: Long): TableChatSessionOfSingleInfo
+    fun join(id: Long, member: String)
+    fun leave(id: Long, member: String)
+    fun delete(id: Long)
+    fun info(id: Long): TableChatSessionOfSingleInfo
 }

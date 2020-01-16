@@ -4,6 +4,7 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
 import io.swagger.annotations.ApiSort
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -33,7 +34,7 @@ interface AppSessionOfSingleApi {
     ): BaseResult
 
     @ApiOperation(value = "消息列表")
-    @PostMapping("/message/list")
+    @GetMapping("/message/list")
     fun getMessageListByTimeline(
             @RequestParam
             @ApiParam(value = "会话ID")

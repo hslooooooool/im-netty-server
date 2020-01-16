@@ -1,6 +1,7 @@
 package vip.qsos.im.service
 
 import vip.qsos.im.lib.server.model.Message
+import vip.qsos.im.model.ChatMessageBo
 import vip.qsos.im.model.db.AbsTableChatMessage
 
 /**
@@ -25,6 +26,6 @@ interface SessionOfSingleService {
      * @param previous 是否从起始时序向上查询
      * @return 消息列表
      * */
-    fun getMessageListByTimeline(sessionId: Long, timeline: Long, size: Int = 10, previous: Boolean = true): List<Message>
+    fun getMessageListByTimeline(sessionId: Long, timeline: Long, size: Int = 10, previous: Boolean = true): List<ChatMessageBo>
 
 }

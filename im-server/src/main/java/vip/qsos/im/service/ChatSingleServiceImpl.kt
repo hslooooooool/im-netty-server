@@ -46,7 +46,7 @@ class ChatSingleServiceImpl : ChatSingleService {
         }
         return mSessionRepository.findBySessionTypeAndMember(EnumSessionType.SINGLE, members)?.let {
             mSingleRepository.findBySessionId(it.sessionId)?.let { group ->
-                ChatSingleBo.getBo(it, group).setInfo(this.findGroupInfo(group.singleId))
+                ChatSingleBo.getBo(it, group).setInfo(this.info(group.singleId))
             }
         }
     }
@@ -82,7 +82,7 @@ class ChatSingleServiceImpl : ChatSingleService {
         return ChatSingleBo.getBo(session, single).setInfo(info)
     }
 
-    override fun findGroup(sessionId: Long): ChatSingleBo {
+    override fun find(sessionId: Long): ChatSingleBo {
         val session: TableChatSession
         try {
             session = mSessionRepository.findById(sessionId).get()
@@ -90,17 +90,17 @@ class ChatSingleServiceImpl : ChatSingleService {
             throw ImException("消息群不存在")
         }
         return mSessionRepository.findById(sessionId).get().let {
-            findByGroupId(sessionId).let {
+            findBySingleId(sessionId).let {
                 val info = mSingleInfoRepository.findById(it.singleId).get()
                 ChatSingleBo.getBo(session, it).setInfo(info)
             }
         }
     }
 
-    override fun findByGroupId(groupId: Long): TableChatSessionOfSingle {
+    override fun findBySingleId(id: Long): TableChatSessionOfSingle {
         val group: TableChatSessionOfSingle
         try {
-            group = mSingleRepository.findById(groupId).get()
+            group = mSingleRepository.findById(id).get()
         } catch (e: Exception) {
             throw ImException("单聊不存在")
         }
@@ -110,7 +110,7 @@ class ChatSingleServiceImpl : ChatSingleService {
     override fun list(): List<ChatSingleBo> {
         return mSessionRepository.findAll().map { session ->
             mSingleRepository.findBySessionId(session.sessionId)!!.let { group ->
-                val sRecord = this.findGroupInfo(group.singleId)
+                val sRecord = this.info(group.singleId)
                 ChatSingleBo.getBo(session, group).setInfo(sRecord)
             }
         }
@@ -119,13 +119,13 @@ class ChatSingleServiceImpl : ChatSingleService {
     override fun listLikeMember(member: String): List<ChatSingleBo> {
         return mSessionRepository.findByMemberLike(member).map { session ->
             mSingleRepository.findBySessionId(session.sessionId)!!.let { group ->
-                ChatSingleBo.getBo(session, group).setInfo(this.findGroupInfo(group.singleId))
+                ChatSingleBo.getBo(session, group).setInfo(this.info(group.singleId))
             }
         }
     }
 
-    override fun joinGroup(groupId: Long, member: String) {
-        val group: TableChatSessionOfSingle = findByGroupId(groupId)
+    override fun join(id: Long, member: String) {
+        val group: TableChatSessionOfSingle = findBySingleId(id)
         val session = mSessionRepository.findById(group.sessionId).get()
         assert(member.length == 9)
         val joined = session.member.indexOf(member) > 0
@@ -138,8 +138,8 @@ class ChatSingleServiceImpl : ChatSingleService {
         mSessionRepository.saveAndFlush(session)
     }
 
-    override fun leaveGroup(groupId: Long, member: String) {
-        val group: TableChatSessionOfSingle = findByGroupId(groupId)
+    override fun leave(id: Long, member: String) {
+        val group: TableChatSessionOfSingle = findBySingleId(id)
         val session = mSessionRepository.findById(group.sessionId).get()
         assert(member.length == 9)
         val memberStart = session.member.indexOf(member)
@@ -152,15 +152,15 @@ class ChatSingleServiceImpl : ChatSingleService {
         }
     }
 
-    override fun deleteGroup(groupId: Long) {
-        val group: TableChatSessionOfSingle = findByGroupId(groupId)
+    override fun delete(id: Long) {
+        val group: TableChatSessionOfSingle = findBySingleId(id)
         mSessionRepository.deleteById(group.sessionId)
-        mSingleRepository.deleteById(groupId)
+        mSingleRepository.deleteById(id)
     }
 
-    override fun findGroupInfo(groupId: Long): TableChatSessionOfSingleInfo {
+    override fun info(id: Long): TableChatSessionOfSingleInfo {
         try {
-            return mSingleInfoRepository.findById(groupId).get()
+            return mSingleInfoRepository.findById(id).get()
         } catch (e: Exception) {
             throw ImException("群信息缺失")
         }

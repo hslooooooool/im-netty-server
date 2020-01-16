@@ -62,17 +62,17 @@ open class ChatMessageOfSingleServiceImpl : ChatMessageOfSingleService {
         var startTimeline: Long
         val endTimeline: Long
         if (previous) {
+            endTimeline = timeline
+            startTimeline = endTimeline - size
+            if (startTimeline < 0) {
+                startTimeline = 1
+            }
+        } else {
             startTimeline = timeline
             endTimeline = try {
                 startTimeline + size
             } catch (e: Exception) {
                 Long.MAX_VALUE
-            }
-        } else {
-            endTimeline = timeline
-            startTimeline = endTimeline - size
-            if (startTimeline < 0) {
-                startTimeline = 1
             }
         }
         return mMessageOfSingleRepository.findBySessionIdAndTimelineBetween(sessionId, startTimeline, endTimeline)

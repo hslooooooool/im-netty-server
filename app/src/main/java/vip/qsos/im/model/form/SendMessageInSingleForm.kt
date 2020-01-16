@@ -5,7 +5,9 @@ import com.google.gson.Gson
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import vip.qsos.im.lib.server.model.Message
+import vip.qsos.im.model.AppUserBo
 import vip.qsos.im.model.MessageExtra
+import vip.qsos.im.model.db.TableUser
 import vip.qsos.im.model.type.EnumSessionType
 import java.io.Serializable
 import javax.validation.constraints.NotNull
@@ -57,13 +59,15 @@ data class SendMessageInSingleForm constructor(
     override var sessionType: EnumSessionType = EnumSessionType.SINGLE
 
     @JsonIgnore
-    fun getMessage(receiver: String): Message {
+    fun getMessage(receiver: String, senderUser: TableUser): Message {
         return Message(
                 action = "0",
                 content = getChatContent().toString(),
                 sender = this.sender,
                 receiver = receiver,
-                extra = MessageExtra(this.sessionType, this.sessionId).toString(),
+                extra = MessageExtra(this.sessionType, this.sessionId)
+                        .add("sender", AppUserBo.getBo(senderUser))
+                        .toString(),
                 format = Message.Format.JSON.name
         )
     }

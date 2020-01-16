@@ -16,9 +16,21 @@ data class MessageExtra constructor(
         var sessionType: EnumSessionType,
         var sessionId: Long,
         var timeline: Long = -1L
-) : Serializable {
+) : HashMap<String, Any?>(), Serializable {
+
     companion object {
         private const val serialVersionUID = 1L
+    }
+
+    init {
+        add("sessionType", sessionType)
+        add("sessionId", sessionId)
+        add("timeline", timeline)
+    }
+
+    fun add(key: String, value: Any?): MessageExtra {
+        put(key, value)
+        return this
     }
 
     override fun toString(): String {
