@@ -10,7 +10,7 @@ server:
 spring:
   # NOTICE 配置环境 dev|pro
   profiles:
-    active: dev
+    active: im,file
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss

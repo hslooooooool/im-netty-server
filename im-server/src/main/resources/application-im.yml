@@ -1,4 +1,5 @@
 spring:
+  profiles: im
   datasource:
     url: jdbc:mysql://localhost:3306/im_server?useSSL=false&useUnicode=true&characterEncoding=utf8
     username: root
