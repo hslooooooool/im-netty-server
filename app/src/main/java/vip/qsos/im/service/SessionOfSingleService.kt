@@ -11,12 +11,12 @@ interface SessionOfSingleService {
 
     /**发送单聊消息
      * @param sessionId 会话ID
-     * @param contentType 消息类型
-     * @param content 消息内容
+     * @param type 消息类型
+     * @param data 消息内容
      * @param sender 发送人消息账号
      * @return 发送后的消息
      * */
-    fun sendMessage(sessionId: Long, contentType: Int, content: String, sender: String): AbsTableChatMessage
+    fun sendMessage(sessionId: Long, type: Int, data: String, sender: String): AbsTableChatMessage
 
     /**获取消息列表
      * @param sessionId 会话ID

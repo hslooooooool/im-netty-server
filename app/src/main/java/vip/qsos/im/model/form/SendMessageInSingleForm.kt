@@ -23,10 +23,10 @@ data class SendMessageInSingleForm constructor(
         var sessionId: Long,
         @ApiModelProperty(value = "消息类型", required = true)
         @NotNull(message = "消息类型不能为空")
-        var contentType: Int = 0,
+        var type: Int = 0,
         @ApiModelProperty(value = "消息内容", required = true)
         @NotNull(message = "消息内容不能为空")
-        var content: String,
+        var data: String,
         @ApiModelProperty(value = "消息发送者账号", required = true)
         @NotNull(message = "发送账号不能为空")
         var sender: String
@@ -47,10 +47,11 @@ data class SendMessageInSingleForm constructor(
     @JsonIgnore
     fun getChatContent(): ChatContent {
         val sChatContent = ChatContent()
-        sChatContent.fields["content"] = content
-        sChatContent.fields["contentType"] = contentType
-        sChatContent.fields["contentDesc"] = if (content.length < 20) content else {
-            content.substring(0, 20) + "..."
+        sChatContent.fields["type"] = type
+        // TODO 根据Type识别Content以及ContentDesc
+        sChatContent.fields["data"] = data
+        sChatContent.fields["desc"] = if (data.length < 20) data else {
+            data.substring(0, 20) + "..."
         }
         return sChatContent
     }

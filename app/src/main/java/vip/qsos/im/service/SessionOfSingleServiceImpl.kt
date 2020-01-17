@@ -25,8 +25,8 @@ class SessionOfSingleServiceImpl : SessionOfSingleService {
     @Resource
     private lateinit var userService: UserService
 
-    override fun sendMessage(sessionId: Long, contentType: Int, content: String, sender: String): AbsTableChatMessage {
-        val form = SendMessageInSingleForm(sessionId, contentType, content, sender)
+    override fun sendMessage(sessionId: Long, type: Int, data: String, sender: String): AbsTableChatMessage {
+        val form = SendMessageInSingleForm(sessionId, type, data, sender)
         /**验证会话*/
         val mTableChatSession: TableChatSession
         try {

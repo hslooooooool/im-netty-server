@@ -10,8 +10,8 @@ class AppSessionOfSingleControllerImpl : AppSessionOfSingleApi {
     @Resource
     private lateinit var mSessionOfSingleService: SessionOfSingleService
 
-    override fun sendMessage(sessionId: Long, contentType: Int, content: String, sender: String): BaseResult {
-        val message = mSessionOfSingleService.sendMessage(sessionId, contentType, content, sender)
+    override fun sendMessage(sessionId: Long, type: Int, data: String, sender: String): BaseResult {
+        val message = mSessionOfSingleService.sendMessage(sessionId, type, data, sender)
         return BaseResult.data(message, "发送成功")
     }
 

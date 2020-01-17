@@ -24,10 +24,10 @@ interface AppSessionOfSingleApi {
             @NotNull(message = "消息会话ID不能为空") sessionId: Long,
             @RequestParam
             @ApiParam(value = "消息类型")
-            @NotNull(message = "消息类型不能为空") contentType: Int,
+            @NotNull(message = "消息类型不能为空") type: Int,
             @RequestParam
             @ApiParam(value = "消息内容")
-            @NotNull(message = "消息内容不能为空") content: String,
+            @NotNull(message = "消息内容不能为空") data: String,
             @RequestParam
             @ApiParam(value = "消息发送者账号")
             @NotNull(message = "发送账号不能为空") sender: String
