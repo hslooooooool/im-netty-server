@@ -12,3 +12,5 @@ im-sdk-netty/target/
 /.settings/
 /.vscode/
 .project
+file-server/src/test/
+file-server/target/
