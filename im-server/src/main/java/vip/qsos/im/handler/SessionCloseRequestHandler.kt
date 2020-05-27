@@ -13,9 +13,10 @@ import javax.annotation.Resource
  * 连接断开处理器
  */
 @Component
-class SessionCloseRequestHandler constructor(
-        @Resource private val sessionService: SessionClientService
-) : IMRequestHandler {
+class SessionCloseRequestHandler : IMRequestHandler {
+    @Resource
+    private lateinit var sessionService: SessionClientService
+
     override fun process(sessionClient: SessionClientBo, message: SendBody) {
         sessionClient.getAttribute<String>(IMConstant.KEY_ACCOUNT)?.let { account ->
             sessionService.find(account)?.let {

@@ -1,4 +1,4 @@
-package vip.qsos.im.service
+package vip.qsos.im.data_jpa.server
 
 import cn.teaey.apns4j.Apns4j
 import cn.teaey.apns4j.network.ApnsGateway
@@ -7,12 +7,14 @@ import vip.qsos.im.config.AppProperties
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.model.ApnsPayloadCompat
+import vip.qsos.im.service.ApnsService
 import javax.annotation.Resource
 
 @Service
-class ApnsServiceImpl constructor(
-        @Resource private val mProperties: AppProperties
-) : ApnsService {
+class ApnsServiceImpl : ApnsService {
+    @Resource
+    private lateinit var mProperties: AppProperties
+
     override fun push(message: Message, deviceToken: String) {
         mProperties.apnsP12File?.let { path ->
             val stream = javaClass.getResourceAsStream(path)

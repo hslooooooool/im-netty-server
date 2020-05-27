@@ -1,7 +1,8 @@
-package vip.qsos.im.dispense
+package vip.qsos.im.data_jpa.server
 
 import org.springframework.stereotype.Component
 import vip.qsos.im.config.AppProperties
+import vip.qsos.im.dispense.MessagePusher
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.service.ApnsService

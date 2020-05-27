@@ -1,16 +1,18 @@
-package vip.qsos.im.service
+package vip.qsos.im.data_jpa.server
 
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
+import vip.qsos.im.data_jpa.repository.db.TableChatGroupInfoRepository
+import vip.qsos.im.data_jpa.repository.db.TableChatGroupRepository
+import vip.qsos.im.data_jpa.repository.db.TableChatSessionRepository
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.model.ChatGroupBo
 import vip.qsos.im.model.db.TableChatSession
 import vip.qsos.im.model.db.TableChatSessionOfGroup
 import vip.qsos.im.model.db.TableChatSessionOfGroupInfo
 import vip.qsos.im.model.type.EnumSessionType
-import vip.qsos.im.repository.db.TableChatGroupInfoRepository
-import vip.qsos.im.repository.db.TableChatGroupRepository
-import vip.qsos.im.repository.db.TableChatSessionRepository
+import vip.qsos.im.service.ChatAccountService
+import vip.qsos.im.service.ChatGroupService
 import javax.annotation.Resource
 
 /**
@@ -21,10 +23,13 @@ import javax.annotation.Resource
 class ChatGroupServiceImpl : ChatGroupService {
     @Resource
     private lateinit var mGroupRepository: TableChatGroupRepository
+
     @Resource
     private lateinit var mSessionRepository: TableChatSessionRepository
+
     @Resource
     private lateinit var mChatAccountService: ChatAccountService
+
     @Resource
     private lateinit var mGroupInfoRepository: TableChatGroupInfoRepository
 

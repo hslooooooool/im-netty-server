@@ -23,10 +23,13 @@ import javax.annotation.Resource
 class BindAccountRequestHandler : IMRequestHandler {
     @Resource
     private lateinit var mProperties: AppProperties
+
     @Resource
     private lateinit var mSessionService: SessionClientService
+
     @Resource
     private lateinit var mMessagePusher: MessagePusher
+
     @Resource
     private lateinit var mChatAccountService: ChatAccountService
 

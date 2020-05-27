@@ -1,6 +1,7 @@
 package vip.qsos.im.api
 
 import org.springframework.web.bind.annotation.RestController
+import vip.qsos.im.data_jpa.repository.db.*
 import vip.qsos.im.dispense.UserManager
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.model.AppException

@@ -1,21 +1,20 @@
-package vip.qsos.im.service
+package vip.qsos.im.data_jpa.server
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
+import vip.qsos.im.data_jpa.repository.db.TableChatMessageRepository
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.model.db.TableChatMessage
-import vip.qsos.im.repository.db.TableChatMessageRepository
-
+import vip.qsos.im.service.ChatMessageService
+import javax.annotation.Resource
 
 /**
  * @author : 华清松
  * 消息存储
  */
 @Service
-open class ChatMessageServiceImpl @Autowired constructor(
-        private val mMessageRepository: TableChatMessageRepository
-) : ChatMessageService {
+open class ChatMessageServiceImpl : ChatMessageService {
+    @Resource
+    private lateinit var mMessageRepository: TableChatMessageRepository
 
     override fun save(message: Message) {
         mMessageRepository.save(TableChatMessage.create(message))

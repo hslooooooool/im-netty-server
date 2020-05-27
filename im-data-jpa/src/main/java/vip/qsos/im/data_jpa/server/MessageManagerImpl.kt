@@ -1,26 +1,25 @@
-package vip.qsos.im.dispense
+package vip.qsos.im.data_jpa.server
 
 import org.springframework.stereotype.Component
+import vip.qsos.im.data_jpa.repository.db.TableChatSessionRepository
+import vip.qsos.im.dispense.MessageManager
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.model.db.AbsTableChatMessage
 import vip.qsos.im.model.db.TableChatSession
 import vip.qsos.im.model.type.EnumSessionType
-import vip.qsos.im.repository.db.TableChatSessionRepository
 import vip.qsos.im.service.ChatMessageOfGroupService
 import vip.qsos.im.service.ChatMessageOfSingleService
 import javax.annotation.Resource
 
-/**
- * @author : 华清松
- * 消息存储
- */
 @Component
 class MessageManagerImpl : MessageManager {
     @Resource
     private lateinit var mSessionRepository: TableChatSessionRepository
+
     @Resource
     private lateinit var mChatMessageOfSingleService: ChatMessageOfSingleService
+
     @Resource
     private lateinit var mChatMessageOfGroupService: ChatMessageOfGroupService
 

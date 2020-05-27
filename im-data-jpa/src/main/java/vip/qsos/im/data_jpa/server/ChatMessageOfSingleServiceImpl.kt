@@ -1,17 +1,18 @@
-package vip.qsos.im.service
+package vip.qsos.im.data_jpa.server
 
 import org.springframework.stereotype.Service
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.model.db.TableChatMessageOfSingle
-import vip.qsos.im.repository.db.TableChatMessageOfSingleRepository
-import vip.qsos.im.repository.db.TableChatSingleInfoRepository
-import vip.qsos.im.repository.db.TableChatSingleRepository
+import vip.qsos.im.data_jpa.repository.db.TableChatMessageOfSingleRepository
+import vip.qsos.im.data_jpa.repository.db.TableChatSingleInfoRepository
+import vip.qsos.im.data_jpa.repository.db.TableChatSingleRepository
+import vip.qsos.im.service.ChatMessageOfSingleService
 import javax.annotation.Resource
 
 /**
  * @author : 华清松
- * 消息存储
+ * 单聊消息存储
  */
 @Service
 open class ChatMessageOfSingleServiceImpl : ChatMessageOfSingleService {

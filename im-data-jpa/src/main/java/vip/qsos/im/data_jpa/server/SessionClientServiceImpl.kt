@@ -1,18 +1,21 @@
-package vip.qsos.im.service
+package vip.qsos.im.data_jpa.server
 
 import org.springframework.stereotype.Service
+import vip.qsos.im.data_jpa.repository.db.TableSessionClientRepository
 import vip.qsos.im.lib.server.handler.IMServerInboundHandler
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.SessionClientBo
 import vip.qsos.im.model.db.TableSessionClient
-import vip.qsos.im.repository.db.TableSessionClientRepository
+import vip.qsos.im.service.SessionClientService
 import javax.annotation.Resource
 
 @Service
-class SessionClientServiceImpl(
-        @Resource private val mImServerInboundHandler: IMServerInboundHandler,
-        @Resource private val mSessionClientRepository: TableSessionClientRepository
-) : SessionClientService {
+class SessionClientServiceImpl : SessionClientService {
+    @Resource
+    private lateinit var mImServerInboundHandler: IMServerInboundHandler
+
+    @Resource
+    private lateinit var mSessionClientRepository: TableSessionClientRepository
 
     override fun save(sessionClient: SessionClientBo) {
         if (sessionClient.nid != null) {

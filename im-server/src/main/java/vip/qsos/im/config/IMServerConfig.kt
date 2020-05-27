@@ -4,10 +4,7 @@ import org.springframework.boot.context.event.ApplicationStartedEvent
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationListener
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import vip.qsos.im.handler.BindAccountRequestHandler
 import vip.qsos.im.handler.NullHandler
-import vip.qsos.im.handler.SessionCloseRequestHandler
 import vip.qsos.im.lib.server.config.IMConstant
 import vip.qsos.im.lib.server.handler.IMRequestHandler
 import vip.qsos.im.lib.server.handler.IMServerInboundHandler
@@ -18,22 +15,23 @@ import java.util.*
 import javax.annotation.PostConstruct
 import javax.annotation.Resource
 
-@Configuration
-open class IMServerConfig constructor(
-        @Resource private val mProperties: AppProperties,
-        @Resource private val mApplicationContext: ApplicationContext
-) : IMRequestHandler, ApplicationListener<ApplicationStartedEvent> {
+abstract class IMServerConfig : IMRequestHandler, ApplicationListener<ApplicationStartedEvent> {
+    @Resource
+    lateinit var mApplicationContext: ApplicationContext
+
+    @Resource
+    lateinit var mProperties: AppProperties
 
     private val mAppHandlerMap = HashMap<String, Class<out IMRequestHandler>>()
 
+    /**添加消息处理器*/
+    abstract fun addHandler(handlerMap: HashMap<String, Class<out IMRequestHandler>>)
+
     @PostConstruct
     private fun initHandler() {
-        /**账号绑定handler*/
-        mAppHandlerMap[IMConstant.CLIENT_BIND] = BindAccountRequestHandler::class.java
-        /**连接关闭handler*/
-        mAppHandlerMap[IMConstant.CLIENT_CLOSED] = SessionCloseRequestHandler::class.java
         /**无处理器handler*/
         mAppHandlerMap[IMConstant.CLIENT_NULL_HANDLER] = NullHandler::class.java
+        addHandler(mAppHandlerMap)
     }
 
     @Bean(destroyMethod = "destroy")

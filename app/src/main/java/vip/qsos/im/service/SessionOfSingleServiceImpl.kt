@@ -1,8 +1,9 @@
 package vip.qsos.im.service
 
 import org.springframework.stereotype.Service
+import vip.qsos.im.data_jpa.repository.db.TableChatSessionRepository
+import vip.qsos.im.data_jpa.server.MessagePusherImpl
 import vip.qsos.im.dispense.MessageManager
-import vip.qsos.im.dispense.MessagePusherImpl
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.model.AppException
 import vip.qsos.im.model.AppUserBo
@@ -11,22 +12,25 @@ import vip.qsos.im.model.db.AbsTableChatMessage
 import vip.qsos.im.model.db.TableChatSession
 import vip.qsos.im.model.form.SendMessageInSingleForm
 import vip.qsos.im.model.type.EnumSessionType
-import vip.qsos.im.repository.db.TableChatSessionRepository
 import javax.annotation.Resource
 
 @Service
 class SessionOfSingleServiceImpl : SessionOfSingleService {
     @Resource
     private lateinit var messagePusher: MessagePusherImpl
+
     @Resource
     private lateinit var mMessageManager: MessageManager
+
     @Resource
     private lateinit var mTableChatSessionRepository: TableChatSessionRepository
+
     @Resource
     private lateinit var userService: UserService
 
     override fun sendMessage(sessionId: Long, type: Int, data: String, sender: String): AbsTableChatMessage {
         val form = SendMessageInSingleForm(sessionId, type, data, sender)
+
         /**验证会话*/
         val mTableChatSession: TableChatSession
         try {

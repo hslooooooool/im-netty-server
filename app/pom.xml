@@ -16,7 +16,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>vip.qsos.im</groupId>
-			<artifactId>im-server</artifactId>
+			<artifactId>im-data-jpa</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 		<dependency>

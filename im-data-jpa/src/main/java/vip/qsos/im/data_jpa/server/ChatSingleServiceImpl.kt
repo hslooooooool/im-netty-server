@@ -1,29 +1,31 @@
-package vip.qsos.im.service
+package vip.qsos.im.data_jpa.server
 
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
+import vip.qsos.im.data_jpa.repository.db.TableChatSessionRepository
+import vip.qsos.im.data_jpa.repository.db.TableChatSingleInfoRepository
+import vip.qsos.im.data_jpa.repository.db.TableChatSingleRepository
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.model.ChatSingleBo
 import vip.qsos.im.model.db.TableChatSession
 import vip.qsos.im.model.db.TableChatSessionOfSingle
 import vip.qsos.im.model.db.TableChatSessionOfSingleInfo
 import vip.qsos.im.model.type.EnumSessionType
-import vip.qsos.im.repository.db.TableChatSessionRepository
-import vip.qsos.im.repository.db.TableChatSingleInfoRepository
-import vip.qsos.im.repository.db.TableChatSingleRepository
+import vip.qsos.im.service.ChatAccountService
+import vip.qsos.im.service.ChatSingleService
 import javax.annotation.Resource
 
-/**
- * @author : 华清松
- */
 @Service
 class ChatSingleServiceImpl : ChatSingleService {
     @Resource
     private lateinit var mSingleRepository: TableChatSingleRepository
+
     @Resource
     private lateinit var mSessionRepository: TableChatSessionRepository
+
     @Resource
     private lateinit var mChatAccountService: ChatAccountService
+
     @Resource
     private lateinit var mSingleInfoRepository: TableChatSingleInfoRepository
 

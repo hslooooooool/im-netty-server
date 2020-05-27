@@ -3,17 +3,17 @@
     {
       "name": "im.server.host-ip",
       "type": "java.lang.String",
-      "description": "Description for im.server.host-ip."
+      "description": "服务器IP地址配置."
     },
     {
       "name": "im.server.host-name",
       "type": "java.lang.String",
-      "description": "Description for im.server.host-name."
+      "description": "服务器名称配置."
     },
     {
       "name": "im.server.port",
       "type": "java.lang.Integer",
-      "description": "Description for im.server.port."
+      "description": "服务器IP端口配置."
     },
     {
       "name": "im.server.apns-debug",
