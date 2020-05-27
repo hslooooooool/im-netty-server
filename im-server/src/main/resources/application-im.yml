@@ -1,6 +1,6 @@
 im:
   server:
-    host-ip: 192.168.3.137
+    host-ip: 192.168.3.131
     host-name: 测试服务器A
     port: 23456
     apns-debug: true

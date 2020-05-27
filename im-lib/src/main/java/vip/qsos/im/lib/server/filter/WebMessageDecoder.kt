@@ -3,6 +3,7 @@ package vip.qsos.im.lib.server.filter
 import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.ByteToMessageDecoder
+import org.springframework.stereotype.Component
 import vip.qsos.im.lib.model.proto.SendBodyProto
 import vip.qsos.im.lib.server.config.IMConstant
 import vip.qsos.im.lib.server.model.ImException

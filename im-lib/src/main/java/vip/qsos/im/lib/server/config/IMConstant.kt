@@ -51,13 +51,14 @@ interface IMConstant {
         /**【定义】连接关闭*/
         const val CLIENT_CLOSED = "client_closed"
 
-        /**【定义】无消息处理器*/
-        const val CLIENT_NULL_HANDLER = "client_null_handler"
+        /**【定义】连接在线*/
+        const val CLIENT_ACTIVE = "client_active"
 
         /**【定义】Websocket 握手*/
         const val CLIENT_HANDSHAKE = "client_websocket_handshake"
 
-        /**【定义】APP 业务处理*/
-        const val CLIENT_APP_CUSTOM = "client_app_custom"
+        /**【定义】无消息处理器*/
+        const val CLIENT_NULL_HANDLER = "client_null_handler"
+
     }
 }

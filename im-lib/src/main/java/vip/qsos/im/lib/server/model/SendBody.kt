@@ -17,13 +17,20 @@ class SendBody : IProtobufAble {
 
     /**请求key，即指令类型*/
     var key: String? = null
+
     /**发送时间*/
     var timestamp: Long = 0L
+
     /**发送数据集合*/
     private val data: Hashtable<String, String> = Hashtable()
 
     init {
         timestamp = System.currentTimeMillis()
+    }
+
+    constructor()
+    constructor(key: String) {
+        this.key = key
     }
 
     private val keySet: Set<String>

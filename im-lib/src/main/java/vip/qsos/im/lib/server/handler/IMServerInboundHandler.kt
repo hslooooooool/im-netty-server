@@ -19,12 +19,10 @@ import vip.qsos.im.lib.server.model.HeartbeatRequest
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.SendBody
 import vip.qsos.im.lib.server.model.SessionClientBo
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
-/**
+/**消息服务管理与消息接收处理器
  * @author : 华清松
- * 消息服务管理与消息接收处理器，接收的消息都将被解码为 SendBody
  * @see SendBody
  */
 @Sharable
@@ -36,7 +34,7 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
     private var mHeartbeatPingTime = 30
 
     /**自定义消息处理接口*/
-    private val mHandlerMap = HashMap<String, IMRequestHandler>()
+    private var mHandler: IMRequestHandler? = null
 
     /**已连接客户端 Channel 集合*/
     private val mChannelGroup = ConcurrentHashMap<String, Channel>()
@@ -49,14 +47,12 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
         this.mReadIdleTime = builder.mReadIdleTime
         this.mWriteIdleTime = builder.mWriteIdleTime
         this.mHeartbeatPingTime = builder.mHeartbeatPingTime
-        this.mHandlerMap[IMConstant.CLIENT_APP_CUSTOM] = builder.mAppHandler
+        this.mHandler = builder.mHandler
         return this
     }
 
     /**启动IM消息服务*/
     fun start() {
-        mHandlerMap[IMConstant.CLIENT_HEARTBEAT] = HeartbeatHandler()
-        mHandlerMap[IMConstant.CLIENT_HANDSHAKE] = WebsocketHandler()
         val bootstrap = ServerBootstrap()
         mParentGroup = NioEventLoopGroup()
         mChildGroup = NioEventLoopGroup()
@@ -101,21 +97,17 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
     }
 
     override fun channelRead0(ctx: ChannelHandlerContext, body: SendBody) {
-        val session = SessionClientBo().create(ctx.channel())
-        this.mHandlerMap[body.key]?.process(session, body)
-        this.mHandlerMap[IMConstant.CLIENT_APP_CUSTOM]?.process(session, body)
+        this.mHandler?.process(SessionClientBo().create(ctx.channel()), body)
     }
 
     override fun channelActive(ctx: ChannelHandlerContext) {
         this.mChannelGroup[ctx.channel().id().asShortText()] = ctx.channel()
+        this.mHandler?.process(SessionClientBo().create(ctx.channel()), SendBody(IMConstant.CLIENT_ACTIVE))
     }
 
     override fun channelInactive(ctx: ChannelHandlerContext) {
         this.mChannelGroup.remove(ctx.channel().id().asShortText())
-        val session = SessionClientBo().create(ctx.channel())
-        val body = SendBody()
-        body.key = IMConstant.CLIENT_CLOSED
-        this.mHandlerMap[IMConstant.CLIENT_APP_CUSTOM]?.process(session, body)
+        this.mHandler?.process(SessionClientBo().create(ctx.channel()), SendBody(IMConstant.CLIENT_CLOSED))
     }
 
     @Throws(ImException::class)
@@ -145,9 +137,10 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
         return channelId?.let { mChannelGroup[it] }
     }
 
+    /**消息服务参数配置*/
     data class Builder(
-            /**应用层消息处理器*/
-            var mAppHandler: IMRequestHandler,
+            /**消息处理器*/
+            var mHandler: IMRequestHandler,
             /**消息服务端口号*/
             var mPort: Int = 0,
             /**心跳响应超时时间，秒*/

@@ -3,7 +3,7 @@ package vip.qsos.im.data_jpa.server
 import cn.teaey.apns4j.Apns4j
 import cn.teaey.apns4j.network.ApnsGateway
 import org.springframework.stereotype.Service
-import vip.qsos.im.config.AppProperties
+import vip.qsos.im.config.IMProperties
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Message
 import vip.qsos.im.model.ApnsPayloadCompat
@@ -13,7 +13,7 @@ import javax.annotation.Resource
 @Service
 class ApnsServiceImpl : ApnsService {
     @Resource
-    private lateinit var mProperties: AppProperties
+    private lateinit var mProperties: IMProperties
 
     override fun push(message: Message, deviceToken: String) {
         mProperties.apnsP12File?.let { path ->

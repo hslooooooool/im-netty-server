@@ -1,6 +1,6 @@
 package vip.qsos.im.config
 
-interface AppConstant {
+interface IMConstant {
 
     interface IMMessageAction {
         companion object {

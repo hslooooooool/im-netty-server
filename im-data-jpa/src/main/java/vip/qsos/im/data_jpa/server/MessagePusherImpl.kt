@@ -1,7 +1,7 @@
 package vip.qsos.im.data_jpa.server
 
 import org.springframework.stereotype.Component
-import vip.qsos.im.config.AppProperties
+import vip.qsos.im.config.IMProperties
 import vip.qsos.im.dispense.MessagePusher
 import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.Message
@@ -16,7 +16,7 @@ import javax.annotation.Resource
 @Component
 class MessagePusherImpl : MessagePusher {
     @Resource
-    private lateinit var mProperties: AppProperties
+    private lateinit var mProperties: IMProperties
     @Resource
     private lateinit var mSessionClientService: SessionClientService
     @Resource

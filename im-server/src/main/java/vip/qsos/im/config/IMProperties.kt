@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @ConfigurationProperties(prefix = "im.server")
-open class AppProperties {
+open class IMProperties {
     lateinit var hostIp: String
     lateinit var hostName: String
     var port: Int = 23456

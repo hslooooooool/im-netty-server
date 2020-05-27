@@ -1,4 +1,4 @@
-package vip.qsos.im.config
+package vip.qsos.im.handler
 
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -15,7 +15,7 @@ class ImExceptionHandler {
     @ExceptionHandler(ImException::class)
     fun handleRRException(e: ImException): BaseResult {
         e.printStackTrace()
-        return BaseResult.error(e.code, e.message ?: "服务器异常：${e.message}")
+        return BaseResult.error(e.code, e.message ?: "IM服务器异常：${e.message}")
     }
 
 }

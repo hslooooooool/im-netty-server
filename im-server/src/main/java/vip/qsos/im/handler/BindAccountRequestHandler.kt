@@ -1,8 +1,8 @@
 package vip.qsos.im.handler
 
 import org.springframework.stereotype.Component
-import vip.qsos.im.config.AppConstant
-import vip.qsos.im.config.AppProperties
+import vip.qsos.im.config.IMConstant
+import vip.qsos.im.config.IMProperties
 import vip.qsos.im.dispense.MessagePusher
 import vip.qsos.im.lib.server.handler.IMRequestHandler
 import vip.qsos.im.lib.server.model.ImException
@@ -22,7 +22,7 @@ import javax.annotation.Resource
 @Component
 class BindAccountRequestHandler : IMRequestHandler {
     @Resource
-    private lateinit var mProperties: AppProperties
+    private lateinit var mProperties: IMProperties
 
     @Resource
     private lateinit var mSessionService: SessionClientService
@@ -74,7 +74,7 @@ class BindAccountRequestHandler : IMRequestHandler {
                 /**不同设备连接，则关闭另一个终端连接，添加新连接*/
                 if (oldSession.nid != sessionClient.nid && oldSession.isConnected) {
                     val msg = SendMessageInActionForm(
-                            action = AppConstant.IMMessageAction.ACTION_999,
+                            action = IMConstant.IMMessageAction.ACTION_999,
                             receiver = sessionClient.getAccount(),
                             sender = mProperties.hostName,
                             content = "您的账号在其它地方登录"
