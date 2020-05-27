@@ -17,12 +17,16 @@ class ReplyBody : IProtobufAble {
 
     /**请求key*/
     var key: String? = null
+
     /**返回码*/
     var code: String = "200"
+
     /**返回说明*/
     var message: String? = null
+
     /**返回时间*/
     var timestamp: Long = 0L
+
     /**返回数据集合*/
     private val data: Hashtable<String, String> = Hashtable()
 
@@ -73,6 +77,7 @@ class ReplyBody : IProtobufAble {
         buffer.append("\n#ReplyBody#")
         buffer.append("\nkey:$key")
         buffer.append("\ntimestamp:$timestamp")
+        buffer.append("\nmessage:$message")
         buffer.append("\ncode:$code")
         buffer.append("\ndata{")
         if (!data.isEmpty) {

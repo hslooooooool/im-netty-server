@@ -15,6 +15,7 @@ import vip.qsos.im.lib.server.model.WebSocketResponse
  * 服务端发送指令编码
  */
 class SendBodyEncoder : MessageToByteEncoder<Any>() {
+
     @Throws(ImException::class)
     override fun encode(ctx: ChannelHandlerContext, any: Any, out: ByteBuf) {
         val chanelType = ctx.channel()

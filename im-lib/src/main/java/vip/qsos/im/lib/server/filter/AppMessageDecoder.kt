@@ -63,8 +63,8 @@ class AppMessageDecoder : ByteToMessageDecoder() {
             IMConstant.ProtobufType.SEND_BODY -> {
                 SendBodyProto.Model.parseFrom(array).let { model ->
                     SendBody().also {
-                        it.key = IMConstant.CLIENT_BIND
-                        it.timestamp = System.currentTimeMillis()
+                        it.key = model.key
+                        it.timestamp = model.timestamp
                         it.putAll(model.dataMap)
                     }
                 }

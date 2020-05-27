@@ -43,7 +43,7 @@ spring:
 
 im:
   server:
-    host-ip: 192.168.1.103
+    host-ip: 192.168.3.137
     host-name: 测试服务器
     port: 23456
     apns-debug: true

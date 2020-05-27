@@ -6,10 +6,12 @@ import org.springframework.context.ApplicationListener
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import vip.qsos.im.handler.BindAccountRequestHandler
+import vip.qsos.im.handler.NullHandler
 import vip.qsos.im.handler.SessionCloseRequestHandler
 import vip.qsos.im.lib.server.config.IMConstant
 import vip.qsos.im.lib.server.handler.IMRequestHandler
 import vip.qsos.im.lib.server.handler.IMServerInboundHandler
+import vip.qsos.im.lib.server.model.ImException
 import vip.qsos.im.lib.server.model.SendBody
 import vip.qsos.im.lib.server.model.SessionClientBo
 import java.util.*
@@ -30,6 +32,8 @@ open class IMServerConfig constructor(
         mAppHandlerMap[IMConstant.CLIENT_BIND] = BindAccountRequestHandler::class.java
         /**连接关闭handler*/
         mAppHandlerMap[IMConstant.CLIENT_CLOSED] = SessionCloseRequestHandler::class.java
+        /**无处理器handler*/
+        mAppHandlerMap[IMConstant.CLIENT_NULL_HANDLER] = NullHandler::class.java
     }
 
     @Bean(destroyMethod = "destroy")
@@ -50,6 +54,9 @@ open class IMServerConfig constructor(
     override fun process(sessionClient: SessionClientBo, message: SendBody) {
         mAppHandlerMap[message.key]?.let {
             mApplicationContext.getBean(it).process(sessionClient, message)
-        }
+        } ?: mAppHandlerMap[IMConstant.CLIENT_NULL_HANDLER]?.let {
+            mApplicationContext.getBean(it).process(sessionClient, message)
+        } ?: throw ImException("无法处理[${message.key}]消息类型")
     }
+
 }

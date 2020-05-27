@@ -37,6 +37,7 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
 
     /**自定义消息处理接口*/
     private val mHandlerMap = HashMap<String, IMRequestHandler>()
+
     /**已连接客户端 Channel 集合*/
     private val mChannelGroup = ConcurrentHashMap<String, Channel>()
 
