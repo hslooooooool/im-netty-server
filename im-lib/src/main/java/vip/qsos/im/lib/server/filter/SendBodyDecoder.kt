@@ -5,9 +5,9 @@ import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.ByteToMessageDecoder
 import io.netty.util.AttributeKey
 import vip.qsos.im.lib.server.config.IMConstant
-import vip.qsos.im.lib.server.model.ImException
+import vip.qsos.im.lib.server.model.IMException
 import vip.qsos.im.lib.server.model.SendBody
-import vip.qsos.im.lib.server.model.SessionClientBo
+import vip.qsos.im.lib.server.model.IMSession
 import java.util.regex.Pattern
 
 /**
@@ -28,13 +28,13 @@ class SendBodyDecoder : ByteToMessageDecoder() {
     /**APP消息解析器*/
     private val appMessageDecoder: AppMessageDecoder = AppMessageDecoder()
 
-    @Throws(ImException::class)
+    @Throws(IMException::class)
     override fun decode(context: ChannelHandlerContext, buffer: ByteBuf, queue: MutableList<Any>) {
-        when (context.channel().attr(AttributeKey.valueOf<String>(SessionClientBo.CHANNEL_TYPE)).get()) {
-            SessionClientBo.WEBSOCKET -> {
+        when (context.channel().attr(AttributeKey.valueOf<String>(IMSession.CHANNEL_TYPE)).get()) {
+            IMSession.WEBSOCKET -> {
                 webMessageDecoder.decode(context, buffer, queue)
             }
-            SessionClientBo.NATIVE_APP -> {
+            IMSession.NATIVE_APP -> {
                 appMessageDecoder.decode(context, buffer, queue)
             }
             else -> {
@@ -47,17 +47,17 @@ class SendBodyDecoder : ByteToMessageDecoder() {
     }
 
     /**尝试解析为 web 消息，失败后解析为 app 消息*/
-    @Throws(ImException::class)
+    @Throws(IMException::class)
     private fun tryWebsocketHandleHandshake(arg0: ChannelHandlerContext, buffer: ByteBuf, queue: MutableList<Any>): Boolean {
         buffer.markReaderIndex()
         val data = ByteArray(buffer.readableBytes())
         buffer.readBytes(data)
         val request = String(data)
         val secKey = getSecWebSocketKey(request)
-        val handShake = secKey != null && getUpgradeProtocol(request) == SessionClientBo.WEBSOCKET
+        val handShake = secKey != null && getUpgradeProtocol(request) == IMSession.WEBSOCKET
         if (handShake) {
             /**握手响应之后，标记当前 session 的协议为 websocket */
-            arg0.channel().attr(AttributeKey.valueOf<String>(SessionClientBo.CHANNEL_TYPE)).set(SessionClientBo.WEBSOCKET)
+            arg0.channel().attr(AttributeKey.valueOf<String>(IMSession.CHANNEL_TYPE)).set(IMSession.WEBSOCKET)
             val body = SendBody()
             body.key = IMConstant.CLIENT_HANDSHAKE
             body.timestamp = System.currentTimeMillis()

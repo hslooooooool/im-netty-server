@@ -2,9 +2,8 @@ package vip.qsos.im.lib.server.model
 
 import vip.qsos.im.lib.server.config.IMConstant
 
-/**
+/**客户端心跳响应实体
  * @author : 华清松
- * 客户端心跳响应实体
  */
 class HeartbeatResponse private constructor() : IProtobufAble {
 

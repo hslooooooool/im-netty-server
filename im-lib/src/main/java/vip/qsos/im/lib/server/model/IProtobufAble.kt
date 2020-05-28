@@ -2,9 +2,8 @@ package vip.qsos.im.lib.server.model
 
 import java.io.Serializable
 
-/**
+/**Protobuf消息体接口
  * @author : 华清松
- * 消息体接口
  */
 interface IProtobufAble : Serializable {
 

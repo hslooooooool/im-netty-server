@@ -2,18 +2,15 @@ package vip.qsos.im.data_jpa.server
 
 import org.springframework.stereotype.Component
 import vip.qsos.im.data_jpa.repository.db.TableChatSessionRepository
-import vip.qsos.im.dispense.MessageManager
-import vip.qsos.im.lib.server.model.ImException
-import vip.qsos.im.lib.server.model.Message
-import vip.qsos.im.model.db.AbsTableChatMessage
+import vip.qsos.im.lib.server.model.IMException
+import vip.qsos.im.lib.server.model.IMMessage
 import vip.qsos.im.model.db.TableChatSession
 import vip.qsos.im.model.type.EnumSessionType
-import vip.qsos.im.service.ChatMessageOfGroupService
-import vip.qsos.im.service.ChatMessageOfSingleService
+import vip.qsos.im.service.IMMessageManager
 import javax.annotation.Resource
 
 @Component
-class MessageManagerImpl : MessageManager {
+class IMMessageManagerImpl : IMMessageManager {
     @Resource
     private lateinit var mSessionRepository: TableChatSessionRepository
 
@@ -23,7 +20,7 @@ class MessageManagerImpl : MessageManager {
     @Resource
     private lateinit var mChatMessageOfGroupService: ChatMessageOfGroupService
 
-    override fun save(sessionId: Long, sessionType: EnumSessionType, message: Message): AbsTableChatMessage {
+    override fun save(sessionId: Long, sessionType: EnumSessionType, message: IMMessage): IMMessage {
         return when (sessionType) {
             EnumSessionType.SINGLE -> {
                 mChatMessageOfSingleService.save(sessionId, message)
@@ -31,19 +28,19 @@ class MessageManagerImpl : MessageManager {
             EnumSessionType.GROUP -> {
                 mChatMessageOfGroupService.save(sessionId, message)
             }
-            else -> throw ImException("消息类型不支持")
+            else -> throw IMException("消息类型不支持")
         }
     }
 
-    override fun find(sessionType: EnumSessionType, messageId: Long): Message? {
+    override fun find(sessionType: EnumSessionType, messageId: Long): IMMessage? {
         return when (sessionType) {
             EnumSessionType.SINGLE -> {
-                mChatMessageOfSingleService.find(messageId)?.getMessage()
+                mChatMessageOfSingleService.find(messageId)
             }
             EnumSessionType.GROUP -> {
-                mChatMessageOfGroupService.find(messageId)?.getMessage()
+                mChatMessageOfGroupService.find(messageId)
             }
-            else -> throw ImException("消息类型不支持")
+            else -> throw IMException("消息类型不支持")
         }
     }
 
@@ -55,16 +52,16 @@ class MessageManagerImpl : MessageManager {
             EnumSessionType.GROUP -> {
                 mChatMessageOfGroupService.remove(messageId)
             }
-            else -> throw ImException("消息类型不支持")
+            else -> throw IMException("消息类型不支持")
         }
     }
 
-    override fun list(sessionId: Long, timeline: Long, size: Int, previous: Boolean): List<Message> {
+    override fun list(sessionId: Long, timeline: Long, size: Int, previous: Boolean): List<IMMessage> {
         val session: TableChatSession
         try {
             session = mSessionRepository.findById(sessionId).get()
         } catch (e: Exception) {
-            throw ImException("会话 $sessionId 不存在")
+            throw IMException("会话 $sessionId 不存在")
         }
         session.let {
             return when (it.sessionType) {
@@ -78,7 +75,7 @@ class MessageManagerImpl : MessageManager {
                         group.getMessage()
                     }
                 }
-                else -> throw ImException("消息类型不支持")
+                else -> throw IMException("消息类型不支持")
             }
         }
     }

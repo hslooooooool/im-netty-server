@@ -3,10 +3,9 @@ package vip.qsos.im.lib.server.filter
 import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.ByteToMessageDecoder
-import org.springframework.stereotype.Component
 import vip.qsos.im.lib.model.proto.SendBodyProto
 import vip.qsos.im.lib.server.config.IMConstant
-import vip.qsos.im.lib.server.model.ImException
+import vip.qsos.im.lib.server.model.IMException
 import vip.qsos.im.lib.server.model.SendBody
 import vip.qsos.im.lib.server.utils.DataUtils
 import kotlin.experimental.xor
@@ -16,7 +15,7 @@ import kotlin.experimental.xor
  * 客户端发送的消息解码 WebSocket 版本
  */
 class WebMessageDecoder : ByteToMessageDecoder() {
-    @Throws(ImException::class)
+    @Throws(IMException::class)
     public override fun decode(arg0: ChannelHandlerContext, buffer: ByteBuf, queue: MutableList<Any>) {
         buffer.markReaderIndex()
         /**判断 fin 标志位是否是1 如果是0 则等待消息接收完成*/
@@ -91,7 +90,7 @@ class WebMessageDecoder : ByteToMessageDecoder() {
     }
 
     /**客户端发送的消息*/
-    @Throws(ImException::class)
+    @Throws(IMException::class)
     fun handleMessage(data: ByteArray, queue: MutableList<Any>) {
         when (data[0]) {
             IMConstant.ProtobufType.HEART_CR -> {

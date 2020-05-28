@@ -3,14 +3,14 @@ package vip.qsos.im.model.db
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import vip.qsos.im.lib.server.model.SessionClientBo
+import vip.qsos.im.lib.server.model.IMSession
 import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
-@Table(name = "table_session_client")
-@ApiModel(value = "客户端会话连接表")
-data class TableSessionClient constructor(
+@Table(name = "table_im_session")
+@ApiModel(value = "消息会话连接表")
+data class TableIMSession constructor(
         @Id
         @Column(name = "id")
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,18 +66,19 @@ data class TableSessionClient constructor(
 ) : AbsTable() {
 
     @JsonIgnore
-    fun getBo(): SessionClientBo {
-        return SessionClientBo(
-                id = id, nid = nid, host = host, account = account, deviceId = deviceId, deviceModel = deviceModel,
-                deviceType = deviceType, clientVersion = clientVersion,
-                systemVersion = systemVersion, bindTime = bindTime, apns = apns, state = state,
+    fun getBo(): IMSession {
+        return IMSession(
+                id = id, nid = nid, host = host, account = account,
+                deviceId = deviceId, deviceModel = deviceModel, deviceType = deviceType,
+                clientVersion = clientVersion, systemVersion = systemVersion,
+                bindTime = bindTime, apns = apns, state = state,
                 longitude = longitude, latitude = latitude, location = location
         )
     }
 
     companion object {
-        fun create(sessionClient: SessionClientBo): TableSessionClient {
-            return TableSessionClient(
+        fun create(sessionClient: IMSession): TableIMSession {
+            return TableIMSession(
                     id = sessionClient.id,
                     nid = sessionClient.nid,
                     host = sessionClient.host,

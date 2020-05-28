@@ -1,8 +1,7 @@
 package vip.qsos.im.lib.server.utils
 
-/**
+/**数据处理工具
  * @author : 华清松
- * 数据处理工具
  */
 object DataUtils {
 

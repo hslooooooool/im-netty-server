@@ -5,9 +5,9 @@ import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.MessageToByteEncoder
 import io.netty.util.AttributeKey
 import vip.qsos.im.lib.server.config.IMConstant
+import vip.qsos.im.lib.server.model.IMSession
 import vip.qsos.im.lib.server.model.IProtobufAble
-import vip.qsos.im.lib.server.model.ImException
-import vip.qsos.im.lib.server.model.SessionClientBo
+import vip.qsos.im.lib.server.model.IMException
 import vip.qsos.im.lib.server.model.WebSocketResponse
 
 /**
@@ -16,18 +16,18 @@ import vip.qsos.im.lib.server.model.WebSocketResponse
  */
 class SendBodyEncoder : MessageToByteEncoder<Any>() {
 
-    @Throws(ImException::class)
+    @Throws(IMException::class)
     override fun encode(ctx: ChannelHandlerContext, any: Any, out: ByteBuf) {
         val chanelType = ctx.channel()
-                .attr(AttributeKey.valueOf<String>(SessionClientBo.CHANNEL_TYPE))
+                .attr(AttributeKey.valueOf<String>(IMSession.CHANNEL_TYPE))
                 .get()
         when {
             /** Websocket 握手数据*/
-            SessionClientBo.WEBSOCKET == chanelType && any is WebSocketResponse -> {
+            IMSession.WEBSOCKET == chanelType && any is WebSocketResponse -> {
                 out.writeBytes(any.toString().toByteArray())
             }
             /** Websocket 业务数据*/
-            SessionClientBo.WEBSOCKET == chanelType && any is IProtobufAble -> {
+            IMSession.WEBSOCKET == chanelType && any is IProtobufAble -> {
                 val body = any.byteArray
                 val header = createHeader(any.type, body.size)
                 val protobuf = ByteArray(body.size + IMConstant.DATA_HEADER_LENGTH)
@@ -37,14 +37,14 @@ class SendBodyEncoder : MessageToByteEncoder<Any>() {
                 out.writeBytes(binaryFrame)
             }
             /** Protobuf 业务数据*/
-            SessionClientBo.NATIVE_APP == chanelType && any is IProtobufAble -> {
+            IMSession.NATIVE_APP == chanelType && any is IProtobufAble -> {
                 val body = any.byteArray
                 val header = createHeader(any.type, body.size)
                 out.writeBytes(header)
                 out.writeBytes(body)
             }
             else -> {
-                throw ImException("未识别消息类型")
+                throw IMException("未识别消息类型")
             }
         }
     }
@@ -59,7 +59,7 @@ class SendBodyEncoder : MessageToByteEncoder<Any>() {
 
     companion object {
         /**发送到 Websocket 的数据需要进行相关格式转换，对传入数据进行无掩码转换*/
-        @Throws(ImException::class)
+        @Throws(IMException::class)
         fun encodeDataFrame(data: ByteArray): ByteArray {
             // 掩码开始位置
             var maskIndex = 2

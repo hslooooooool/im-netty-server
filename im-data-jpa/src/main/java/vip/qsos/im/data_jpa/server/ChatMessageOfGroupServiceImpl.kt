@@ -1,13 +1,12 @@
 package vip.qsos.im.data_jpa.server
 
 import org.springframework.stereotype.Service
+import vip.qsos.im.data_jpa.model.table.TableChatMessageOfGroup
 import vip.qsos.im.data_jpa.repository.db.TableChatGroupInfoRepository
 import vip.qsos.im.data_jpa.repository.db.TableChatGroupRepository
 import vip.qsos.im.data_jpa.repository.db.TableChatMessageOfGroupRepository
-import vip.qsos.im.lib.server.model.ImException
-import vip.qsos.im.lib.server.model.Message
-import vip.qsos.im.model.db.TableChatMessageOfGroup
-import vip.qsos.im.service.ChatMessageOfGroupService
+import vip.qsos.im.lib.server.model.IMException
+import vip.qsos.im.lib.server.model.IMMessage
 import javax.annotation.Resource
 
 /**
@@ -25,14 +24,14 @@ open class ChatMessageOfGroupServiceImpl : ChatMessageOfGroupService {
     @Resource
     private lateinit var mGroupInfoRepository: TableChatGroupInfoRepository
 
-    override fun save(sessionId: Long, message: Message): TableChatMessageOfGroup {
+    override fun save(sessionId: Long, message: IMMessage): IMMessage {
         val group = mGroupRepository.findBySessionId(sessionId)
-                ?: throw ImException("会话不存在")
+                ?: throw IMException("会话不存在")
         val msg = mMessageRepository.saveAndFlush(TableChatMessageOfGroup.create(sessionId, message))
         val info = mGroupInfoRepository.findByGroupId(group.groupId)
         info.lastMessageId = msg.messageId
         mGroupInfoRepository.save(info)
-        return msg
+        return msg.getMessage()
     }
 
     override fun find(messageId: Long): TableChatMessageOfGroup? {

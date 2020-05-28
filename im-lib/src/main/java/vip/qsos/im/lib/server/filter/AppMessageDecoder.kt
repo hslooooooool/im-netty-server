@@ -6,18 +6,18 @@ import io.netty.handler.codec.ByteToMessageDecoder
 import io.netty.util.AttributeKey
 import vip.qsos.im.lib.model.proto.SendBodyProto
 import vip.qsos.im.lib.server.config.IMConstant
-import vip.qsos.im.lib.server.model.ImException
+import vip.qsos.im.lib.server.model.IMException
 import vip.qsos.im.lib.server.model.SendBody
-import vip.qsos.im.lib.server.model.SessionClientBo
+import vip.qsos.im.lib.server.model.IMSession
 
 /**
  * @author : 华清松
  * 服务端接收来自应用的消息解码 Socket 版本
  */
 class AppMessageDecoder : ByteToMessageDecoder() {
-    @Throws(ImException::class)
+    @Throws(IMException::class)
     public override fun decode(arg0: ChannelHandlerContext, buffer: ByteBuf, queue: MutableList<Any>) {
-        arg0.channel().attr(AttributeKey.valueOf<String>(SessionClientBo.CHANNEL_TYPE)).set(SessionClientBo.NATIVE_APP)
+        arg0.channel().attr(AttributeKey.valueOf<String>(IMSession.CHANNEL_TYPE)).set(IMSession.NATIVE_APP)
         while (buffer.readableBytes() > IMConstant.DATA_HEADER_LENGTH) {
             buffer.markReaderIndex()
             // 获取类型
@@ -51,7 +51,7 @@ class AppMessageDecoder : ByteToMessageDecoder() {
     }
 
     /**解析消息内容*/
-    @Throws(ImException::class)
+    @Throws(IMException::class)
     fun decodeBody(type: Byte, array: ByteArray): SendBody {
         return when (type) {
             IMConstant.ProtobufType.HEART_CR -> {
@@ -69,7 +69,7 @@ class AppMessageDecoder : ByteToMessageDecoder() {
                     }
                 }
             }
-            else -> throw ImException("无法解析的消息")
+            else -> throw IMException("无法解析的消息")
         }
     }
 

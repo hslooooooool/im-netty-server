@@ -1,7 +1,7 @@
 package vip.qsos.im.service
 
+import vip.qsos.im.data_jpa.model.table.IMMessage
 import vip.qsos.im.model.ChatMessageBo
-import vip.qsos.im.model.db.AbsTableChatMessage
 
 /**
  * @author 华清松
@@ -16,7 +16,7 @@ interface SessionOfSingleService {
      * @param sender 发送人消息账号
      * @return 发送后的消息
      * */
-    fun sendMessage(sessionId: Long, type: Int, data: String, sender: String): AbsTableChatMessage
+    fun sendMessage(sessionId: Long, type: Int, data: String, sender: String): IMMessage
 
     /**获取消息列表
      * @param sessionId 会话ID

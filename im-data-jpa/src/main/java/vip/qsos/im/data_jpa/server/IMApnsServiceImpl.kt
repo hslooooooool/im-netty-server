@@ -4,18 +4,18 @@ import cn.teaey.apns4j.Apns4j
 import cn.teaey.apns4j.network.ApnsGateway
 import org.springframework.stereotype.Service
 import vip.qsos.im.config.IMProperties
-import vip.qsos.im.lib.server.model.ImException
-import vip.qsos.im.lib.server.model.Message
+import vip.qsos.im.lib.server.model.IMException
+import vip.qsos.im.lib.server.model.IMMessage
 import vip.qsos.im.model.ApnsPayloadCompat
-import vip.qsos.im.service.ApnsService
+import vip.qsos.im.service.IMApnsService
 import javax.annotation.Resource
 
 @Service
-class ApnsServiceImpl : ApnsService {
+class IMApnsServiceImpl : IMApnsService {
     @Resource
     private lateinit var mProperties: IMProperties
 
-    override fun push(message: Message, deviceToken: String) {
+    override fun push(message: IMMessage, deviceToken: String) {
         mProperties.apnsP12File?.let { path ->
             val stream = javaClass.getResourceAsStream(path)
             val channel = Apns4j.newChannelFactoryBuilder()
@@ -45,6 +45,6 @@ class ApnsServiceImpl : ApnsService {
                 apnsChannel.close()
                 stream.close()
             }
-        } ?: throw ImException("消息发送失败，苹果证书不存在")
+        } ?: throw IMException("消息发送失败，苹果证书不存在")
     }
 }

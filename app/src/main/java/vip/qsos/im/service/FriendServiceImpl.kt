@@ -1,7 +1,7 @@
 package vip.qsos.im.service
 
 import org.springframework.stereotype.Service
-import vip.qsos.im.lib.server.model.ImException
+import vip.qsos.im.lib.server.model.IMException
 import vip.qsos.im.model.db.TableFriend
 import vip.qsos.im.repository.db.TableFriendRepository
 import javax.annotation.Resource
@@ -45,7 +45,7 @@ class FriendServiceImpl : FriendService {
                 mTableFriendRepository.saveAndFlush(it)
             }
         } catch (e: Exception) {
-            throw ImException("好友关系不存在")
+            throw IMException("好友关系不存在")
         }
     }
 

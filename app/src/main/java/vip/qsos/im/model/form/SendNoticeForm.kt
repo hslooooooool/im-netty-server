@@ -3,7 +3,7 @@ package vip.qsos.im.model.form
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import vip.qsos.im.lib.server.model.Message
+import vip.qsos.im.lib.server.model.IMMessage
 import vip.qsos.im.model.type.EnumSessionType
 import java.io.Serializable
 import javax.validation.constraints.NotNull
@@ -36,16 +36,16 @@ data class SendNoticeForm constructor(
     override var sessionType: EnumSessionType = EnumSessionType.NOTICE
 
     @JsonIgnore
-    fun getMessageList(): List<Message> {
+    fun getMessageList(): List<IMMessage> {
         return receiver.map {
-            Message(
+            IMMessage(
                     action = EnumSessionType.NOTICE.name,
                     title = "公告",
                     content = this.content,
                     sender = this.sender,
                     receiver = it,
                     extra = this.sessionType.name,
-                    format = Message.Format.JSON.name
+                    format = IMMessage.Format.JSON.name
             )
         }
 

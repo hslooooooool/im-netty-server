@@ -1,15 +1,15 @@
 package vip.qsos.im.lib.server.model
 
-/**
+/**消息服务异常
  * @author : 华清松
- * 消息服务异常
  */
-class ImException : RuntimeException {
+class IMException : RuntimeException {
 
     var msg: String = "消息服务异常"
     var code = 500
 
     constructor(msg: String) : super(msg) {
+        this.code = 500
         this.msg = msg
     }
 

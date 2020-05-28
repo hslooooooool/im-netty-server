@@ -2,9 +2,8 @@ package vip.qsos.im.lib.server.model
 
 import vip.qsos.im.lib.server.config.IMConstant
 
-/**
+/**服务端心跳请求实体,客户端应发送一条心跳消息给服务器
  * @author : 华清松
- * 服务端心跳请求实体,客户端应发送一条心跳消息给服务器
  */
 class HeartbeatRequest private constructor() : IProtobufAble {
 

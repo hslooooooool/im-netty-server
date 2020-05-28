@@ -2,7 +2,7 @@ package vip.qsos.im.lib.server.handler
 
 import org.springframework.stereotype.Component
 import vip.qsos.im.lib.server.model.SendBody
-import vip.qsos.im.lib.server.model.SessionClientBo
+import vip.qsos.im.lib.server.model.IMSession
 import vip.qsos.im.lib.server.model.WebSocketResponse
 import java.security.MessageDigest
 import java.util.*
@@ -17,8 +17,8 @@ class WebsocketHandShakeHandler : IMRequestHandler {
         private const val GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
     }
 
-    override fun process(sessionClient: SessionClientBo, message: SendBody) {
-        sessionClient.deviceType = SessionClientBo.CHANNEL_BROWSER
+    override fun process(sessionClient: IMSession, message: SendBody) {
+        sessionClient.deviceType = IMSession.CHANNEL_BROWSER
         var secKey = message.find("key") + GUID
         try {
             val md = MessageDigest.getInstance("SHA-1")

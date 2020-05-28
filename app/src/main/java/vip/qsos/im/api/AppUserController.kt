@@ -3,15 +3,14 @@ package vip.qsos.im.api
 import org.springframework.web.bind.annotation.RestController
 import vip.qsos.im.data_jpa.repository.db.*
 import vip.qsos.im.dispense.UserManager
-import vip.qsos.im.lib.server.model.ImException
+import vip.qsos.im.lib.server.model.IMException
 import vip.qsos.im.model.AppException
 import vip.qsos.im.model.BaseResult
 import vip.qsos.im.model.ChatSessionBo
-import vip.qsos.im.model.db.TableChatMessageOfSingle
+import vip.qsos.im.data_jpa.model.table.TableChatMessageOfSingle
 import vip.qsos.im.model.db.TableChatSession
 import vip.qsos.im.model.type.EnumSessionType
-import vip.qsos.im.repository.db.*
-import vip.qsos.im.service.ChatSingleService
+import vip.qsos.im.data_jpa.server.ChatSingleService
 import vip.qsos.im.service.FriendService
 import vip.qsos.im.service.UserService
 import javax.annotation.Resource
@@ -78,7 +77,7 @@ class AppUserController : AppUserApi {
             val memberString = TableChatSession.addMember(arrayListOf(sender, receiver))
             val session = mSessionRepository
                     .findBySessionTypeAndMember(EnumSessionType.SINGLE, memberString)
-                    ?: throw ImException("会话不存在")
+                    ?: throw IMException("会话不存在")
             val sessionInfo = mSingleRepository.findBySessionId(session.sessionId)!!.let { group ->
                 mSingleInfoRepository.findById(group.singleId).get().let { info ->
                     var message: TableChatMessageOfSingle? = null

@@ -14,12 +14,11 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
 
-/**
+/**建立会话的终端信息实体
  * @author : 华清松
- * 消息会话实体
  */
 @ApiModel(description = "建立会话的终端信息实体")
-data class SessionClientBo(
+data class IMSession(
         @ApiModelProperty(value = "数据库主键ID")
         var id: Long = -1L,
         @ApiModelProperty(value = "channel ID")
@@ -80,7 +79,7 @@ data class SessionClientBo(
     @JsonIgnore
     var channel: Channel? = null
 
-    fun create(channel: Channel): SessionClientBo {
+    fun create(channel: Channel): IMSession {
         this.channel = channel
         this.nid = channel.id().asShortText()
         return this
@@ -149,7 +148,7 @@ data class SessionClientBo(
     }
 
     override fun equals(other: Any?): Boolean {
-        return if (other is SessionClientBo) {
+        return if (other is IMSession) {
             (other.deviceId == deviceId && other.nid == nid && other.host == host)
         } else false
     }
@@ -160,7 +159,7 @@ data class SessionClientBo(
         @Throws(InvalidProtocolBufferException::class)
         get() {
             val builder = SessionProto.Model.newBuilder()
-            id?.let { builder.id = it }
+            builder.id = id
             builder.account = account
             builder.nid = nid
             builder.deviceId = deviceId

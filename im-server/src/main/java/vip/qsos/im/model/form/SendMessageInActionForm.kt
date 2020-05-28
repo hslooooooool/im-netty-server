@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.google.gson.Gson
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import vip.qsos.im.lib.server.model.Message
+import vip.qsos.im.lib.server.model.IMMessage
 import vip.qsos.im.model.type.EnumSessionType
 import java.io.Serializable
 import javax.validation.constraints.NotNull
@@ -61,14 +61,14 @@ data class SendMessageInActionForm constructor(
     override var sessionType: EnumSessionType = EnumSessionType.GROUP
 
     @JsonIgnore
-    fun getMessage(receiver: String? = null): Message {
-        return Message(
+    fun getMessage(receiver: String? = null): IMMessage {
+        return IMMessage(
                 action = sessionType.name,
                 content = getChatContent().toString(),
                 sender = this.sender,
                 receiver = receiver ?: this.receiver,
                 extra = extra,
-                format = Message.Format.JSON.name
+                format = IMMessage.Format.JSON.name
         )
     }
 

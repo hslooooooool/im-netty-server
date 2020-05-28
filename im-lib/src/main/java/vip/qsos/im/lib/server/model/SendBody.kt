@@ -5,9 +5,8 @@ import vip.qsos.im.lib.model.proto.SendBodyProto
 import vip.qsos.im.lib.server.config.IMConstant
 import java.util.*
 
-/**
+/**客户端发送的消息
  * @author : 华清松
- * 客户端发送的消息
  */
 class SendBody : IProtobufAble {
 

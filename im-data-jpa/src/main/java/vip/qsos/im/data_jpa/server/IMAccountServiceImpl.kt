@@ -1,43 +1,48 @@
 package vip.qsos.im.data_jpa.server
 
 import org.springframework.stereotype.Service
-import vip.qsos.im.lib.server.model.ImException
-import vip.qsos.im.model.db.TableChatAccount
-import vip.qsos.im.data_jpa.repository.db.TableChatAccountRepository
-import vip.qsos.im.service.ChatAccountService
+import vip.qsos.im.data_jpa.repository.db.TableIMAccountRepository
+import vip.qsos.im.lib.server.model.IMAccount
+import vip.qsos.im.lib.server.model.IMException
+import vip.qsos.im.model.db.TableIMAccount
+import vip.qsos.im.service.IMAccountService
 import javax.annotation.Resource
 
 @Service
-class ChatAccountServiceImpl : ChatAccountService {
+class IMAccountServiceImpl : IMAccountService {
     @Resource
-    private lateinit var mAccountRepository: TableChatAccountRepository
+    private lateinit var mAccountRepository: TableIMAccountRepository
 
     override fun assign(): String {
         val account = mAccountRepository.findTopByUsed(false)
-                ?: throw ImException("无可用消息账号")
+                ?: throw IMException("无可用消息账号")
         account.used = true
         mAccountRepository.save(account)
         return account.account
     }
 
-    override fun findByAccount(account: String): TableChatAccount? {
+    override fun findById(id: Int): IMAccount {
+        return mAccountRepository.findById(id).get()
+    }
+
+    override fun findByAccount(account: String): IMAccount? {
         return mAccountRepository.findByAccount(account)
     }
 
-    override fun list(used: Boolean?): List<TableChatAccount> {
+    override fun list(used: Boolean?): List<IMAccount> {
         return used?.let {
             mAccountRepository.findAllByUsed(used)
         } ?: mAccountRepository.findAll()
     }
 
-    override fun init(size: Int): List<TableChatAccount> {
+    override fun create(size: Int): List<IMAccount> {
         val mAccountList = arrayListOf<String>()
         val accounts = mAccountRepository.findAll()
         if (accounts.isEmpty()) {
             for (i in 1..size) {
                 var account = i.toString()
                 if (account.length > 9) {
-                    throw ImException("账号数已达上限")
+                    throw IMException("账号数已达上限")
                 } else {
                     val b = 999999999 - i
                     if (b > 0) {
@@ -63,7 +68,7 @@ class ChatAccountServiceImpl : ChatAccountService {
             for (i in 1..size) {
                 val b = a + i
                 if (b > 999999999) {
-                    throw ImException("账号数已达上限")
+                    throw IMException("账号数已达上限")
                 }
                 var account = b.toString()
                 val prefixLength = 9 - account.length
@@ -74,7 +79,8 @@ class ChatAccountServiceImpl : ChatAccountService {
             }
         }
         return mAccountList.map {
-            mAccountRepository.saveAndFlush(TableChatAccount(account = it, used = false))
+            mAccountRepository.saveAndFlush(TableIMAccount(account = it, used = false))
         }
     }
+
 }

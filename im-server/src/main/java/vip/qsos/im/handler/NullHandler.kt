@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component
 import vip.qsos.im.lib.server.handler.IMRequestHandler
 import vip.qsos.im.lib.server.model.ReplyBody
 import vip.qsos.im.lib.server.model.SendBody
-import vip.qsos.im.lib.server.model.SessionClientBo
+import vip.qsos.im.lib.server.model.IMSession
 
 /**
  * @author : 华清松
@@ -13,7 +13,7 @@ import vip.qsos.im.lib.server.model.SessionClientBo
 @Component
 class NullHandler : IMRequestHandler {
 
-    override fun process(sessionClient: SessionClientBo, message: SendBody) {
+    override fun process(sessionClient: IMSession, message: SendBody) {
         val reply = ReplyBody()
         reply.key = message.key
         reply.code = "500"

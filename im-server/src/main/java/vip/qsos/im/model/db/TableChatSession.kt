@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import org.springframework.util.StringUtils
-import vip.qsos.im.lib.server.model.ImException
+import vip.qsos.im.lib.server.model.IMException
 import vip.qsos.im.model.type.EnumSessionType
 import javax.persistence.*
 
@@ -81,7 +81,7 @@ data class TableChatSession constructor(
                 list.add(str)
             }
             else -> {
-                throw ImException("账号较验失败，长度不符合要求")
+                throw IMException("账号较验失败，长度不符合要求")
             }
         }
         return list

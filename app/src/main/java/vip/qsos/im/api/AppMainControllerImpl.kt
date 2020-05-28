@@ -6,10 +6,9 @@ import vip.qsos.im.dispense.UserManager
 import vip.qsos.im.model.AppUserBo
 import vip.qsos.im.model.BaseResult
 import vip.qsos.im.model.ChatSessionBo
-import vip.qsos.im.model.db.TableChatMessageOfGroup
-import vip.qsos.im.model.db.TableChatMessageOfSingle
+import vip.qsos.im.data_jpa.model.table.TableChatMessageOfGroup
+import vip.qsos.im.data_jpa.model.table.TableChatMessageOfSingle
 import vip.qsos.im.model.type.EnumSessionType
-import vip.qsos.im.repository.db.*
 import vip.qsos.im.service.FriendService
 import vip.qsos.im.service.UserService
 import javax.annotation.Resource

@@ -5,9 +5,8 @@ import vip.qsos.im.lib.model.proto.ReplyBodyProto
 import vip.qsos.im.lib.server.config.IMConstant
 import java.util.*
 
-/**
+/**服务器应答对象，客户端主动请求服务器后收到的回执消息
  * @author : 华清松
- * 服务器应答对象，客户端主动请求服务器后收到的回执消息
  */
 class ReplyBody : IProtobufAble {
 

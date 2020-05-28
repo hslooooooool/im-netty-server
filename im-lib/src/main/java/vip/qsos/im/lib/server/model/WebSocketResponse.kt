@@ -2,9 +2,8 @@ package vip.qsos.im.lib.server.model
 
 import vip.qsos.im.lib.server.config.IMConstant
 
-/**
+/**Websocket 响应结果实体
  * @author : 华清松
- * Websocket 响应结果实体
  */
 class WebSocketResponse(private val token: String) : IProtobufAble {
 

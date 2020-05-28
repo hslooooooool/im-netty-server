@@ -4,9 +4,8 @@ import com.google.gson.Gson
 import vip.qsos.im.model.type.EnumSessionType
 import java.io.Serializable
 
-/**
+/**消息附加信息实体
  * @author : 华清松
- * 消息附加信息实体
  * @param sessionType 聊天类型
  * @param sessionId 聊天会话ID
  * @param timeline 消息时序

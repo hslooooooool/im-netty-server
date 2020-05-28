@@ -1,8 +1,9 @@
-package vip.qsos.im.service
+package vip.qsos.im.data_jpa.server
 
 import vip.qsos.im.model.ChatSingleBo
 import vip.qsos.im.model.db.TableChatSessionOfSingle
 import vip.qsos.im.model.db.TableChatSessionOfSingleInfo
+import vip.qsos.im.service.AbsService
 import javax.transaction.Transactional
 
 /**

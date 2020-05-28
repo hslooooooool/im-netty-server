@@ -1,7 +1,7 @@
 package vip.qsos.im.config
 
 import org.springframework.context.annotation.Configuration
-import vip.qsos.im.data_jpa.handler.HeartbeatHandler
+import vip.qsos.im.handler.HeartbeatHandler
 import vip.qsos.im.handler.BindAccountRequestHandler
 import vip.qsos.im.handler.SessionCloseRequestHandler
 import vip.qsos.im.lib.server.handler.IMRequestHandler

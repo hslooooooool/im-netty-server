@@ -1,7 +1,7 @@
-package vip.qsos.im.model.db
+package vip.qsos.im.data_jpa.model.table
 
 import io.swagger.annotations.ApiModel
-import vip.qsos.im.lib.server.model.Message
+import vip.qsos.im.lib.server.model.IMMessage
 import vip.qsos.im.model.MessageExtra
 import vip.qsos.im.model.type.EnumSessionType
 import java.time.ZoneId
@@ -12,13 +12,13 @@ import javax.persistence.Table
 @Entity
 @Table(name = "table_chat_message_single")
 @ApiModel(value = "单聊消息表")
-class TableChatMessageOfSingle : AbsTableChatMessage() {
+class TableChatMessageOfSingle : IMMessage() {
 
     override val extra: MessageExtra
         get() = MessageExtra(EnumSessionType.SINGLE, sessionId, timeline)
 
     companion object {
-        fun create(sessionId: Long, message: Message, timeline: Long): TableChatMessageOfSingle {
+        fun create(sessionId: Long, message: IMMessage, timeline: Long): TableChatMessageOfSingle {
             val table = TableChatMessageOfSingle()
             table.messageId = message.id
             table.timeline = timeline
@@ -27,7 +27,7 @@ class TableChatMessageOfSingle : AbsTableChatMessage() {
             table.sender = message.sender
             table.receiver = message.receiver
             table.sessionId = sessionId
-            table.format = Message.Format.JSON
+            table.format = IMMessage.Format.JSON
             table.timestamp = Date(message.timestamp).toInstant()
                     .atZone(ZoneId.systemDefault())
                     .toLocalDateTime()

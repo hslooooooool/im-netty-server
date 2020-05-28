@@ -1,4 +1,4 @@
-package vip.qsos.im.service
+package vip.qsos.im.data_jpa.server
 
 import vip.qsos.im.model.ChatGroupBo
 import vip.qsos.im.model.db.TableChatSessionOfGroup

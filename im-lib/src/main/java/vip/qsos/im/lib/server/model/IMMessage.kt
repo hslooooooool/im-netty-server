@@ -7,12 +7,11 @@ import io.swagger.annotations.ApiModelProperty
 import vip.qsos.im.lib.model.proto.MessageProto
 import vip.qsos.im.lib.server.config.IMConstant
 
-/**
+/**自定义消息对象
  * @author : 华清松
- * 自定义消息对象
  */
 @ApiModel(description = "消息实体")
-data class Message constructor(
+data class IMMessage constructor(
         @ApiModelProperty(value = "消息ID")
         var id: Long = -1L,
         @ApiModelProperty(value = "指令码")
@@ -30,7 +29,7 @@ data class Message constructor(
         @ApiModelProperty(value = "附加内容")
         var extra: String? = null,
         @ApiModelProperty(value = "消息发送时间")
-        var timestamp: Long = 0
+        var timestamp: Long = 0L
 ) : IProtobufAble {
 
     companion object {
@@ -49,7 +48,7 @@ data class Message constructor(
         @Throws(InvalidProtocolBufferException::class)
         get() {
             val builder = MessageProto.Model.newBuilder()
-            builder.id = id ?: -1L
+            builder.id = id
             builder.action = action
             builder.title = title ?: "新消息"
             builder.content = content

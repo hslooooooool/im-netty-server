@@ -2,15 +2,15 @@ package vip.qsos.im.data_jpa.repository.db
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
-import vip.qsos.im.model.db.TableSessionClient
+import vip.qsos.im.model.db.TableIMSession
 import javax.transaction.Transactional
 
 @Repository
-interface TableSessionClientRepository : JpaRepository<TableSessionClient, Int> {
+interface TableSessionClientRepository : JpaRepository<TableIMSession, Int> {
 
-    fun findByAccount(account: String): TableSessionClient?
+    fun findByAccount(account: String): TableIMSession?
 
-    fun findByNidOrAccount(nid: String, account: String): TableSessionClient?
+    fun findByNidOrAccount(nid: String, account: String): TableIMSession?
 
     @Transactional
     fun deleteByAccount(account: String)

@@ -1,13 +1,12 @@
 package vip.qsos.im.data_jpa.server
 
 import org.springframework.stereotype.Service
-import vip.qsos.im.lib.server.model.ImException
-import vip.qsos.im.lib.server.model.Message
-import vip.qsos.im.model.db.TableChatMessageOfSingle
+import vip.qsos.im.data_jpa.model.table.TableChatMessageOfSingle
 import vip.qsos.im.data_jpa.repository.db.TableChatMessageOfSingleRepository
 import vip.qsos.im.data_jpa.repository.db.TableChatSingleInfoRepository
 import vip.qsos.im.data_jpa.repository.db.TableChatSingleRepository
-import vip.qsos.im.service.ChatMessageOfSingleService
+import vip.qsos.im.lib.server.model.IMException
+import vip.qsos.im.lib.server.model.IMMessage
 import javax.annotation.Resource
 
 /**
@@ -18,14 +17,16 @@ import javax.annotation.Resource
 open class ChatMessageOfSingleServiceImpl : ChatMessageOfSingleService {
     @Resource
     private lateinit var mSingleRepository: TableChatSingleRepository
+
     @Resource
     private lateinit var mSingleInfoRepository: TableChatSingleInfoRepository
+
     @Resource
     private lateinit var mMessageOfSingleRepository: TableChatMessageOfSingleRepository
 
-    override fun save(sessionId: Long, message: Message): TableChatMessageOfSingle {
+    override fun save(sessionId: Long, message: IMMessage): IMMessage {
         val single = mSingleRepository.findBySessionId(sessionId)
-                ?: throw ImException("会话不存在")
+                ?: throw IMException("会话不存在")
         // 获取会话信息
         val info = mSingleInfoRepository.findById(single.singleId).get()
         // 获取当前会话最后一条消息的时序,增加1并置入新消息中
@@ -36,7 +37,7 @@ open class ChatMessageOfSingleServiceImpl : ChatMessageOfSingleService {
             try {
                 1L + line
             } catch (e: Exception) {
-                throw ImException("会话 $sessionId 消息数已达上限 ${Long.MAX_VALUE} 条")
+                throw IMException("会话 $sessionId 消息数已达上限 ${Long.MAX_VALUE} 条")
             }
         }
         // 保存新消息
@@ -44,12 +45,12 @@ open class ChatMessageOfSingleServiceImpl : ChatMessageOfSingleService {
         // 更新会话信息最后一条消息ID
         info.lastMessageId = msg.messageId
         mSingleInfoRepository.save(info)
-        return msg
+        return msg.getMessage()
     }
 
-    override fun find(messageId: Long): TableChatMessageOfSingle? {
+    override fun find(messageId: Long): IMMessage? {
         return try {
-            mMessageOfSingleRepository.findById(messageId).get()
+            mMessageOfSingleRepository.findById(messageId) .get()
         } catch (e: Exception) {
             null
         }

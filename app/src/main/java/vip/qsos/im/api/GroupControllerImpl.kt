@@ -2,7 +2,7 @@ package vip.qsos.im.api
 
 import org.springframework.web.bind.annotation.RestController
 import vip.qsos.im.model.BaseResult
-import vip.qsos.im.service.ChatGroupService
+import vip.qsos.im.data_jpa.server.ChatGroupService
 import javax.annotation.Resource
 
 @RestController

@@ -1,9 +1,10 @@
-package vip.qsos.im.model.db
+package vip.qsos.im.data_jpa.model.table
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import vip.qsos.im.lib.server.model.Message
+import vip.qsos.im.lib.server.model.IMMessage
+import vip.qsos.im.model.db.AbsTable
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
@@ -44,12 +45,12 @@ data class TableChatMessage constructor(
         var timestamp: LocalDateTime = LocalDateTime.now(),
         @Column(name = "format", nullable = false, length = 8)
         @ApiModelProperty(value = "消息数据格式")
-        var format: String = Message.Format.PROTOBUF.name
+        var format: String = IMMessage.Format.PROTOBUF.name
 ) : AbsTable() {
 
     @JsonIgnore
-    fun getMessage(): Message {
-        return Message(
+    fun getMessage(): IMMessage {
+        return IMMessage(
                 id = messageId,
                 action = action,
                 title = title,
@@ -65,7 +66,7 @@ data class TableChatMessage constructor(
     }
 
     companion object {
-        fun create(message: Message): TableChatMessage {
+        fun create(message: IMMessage): TableChatMessage {
             return TableChatMessage(
                     messageId = message.id,
                     action = message.action,

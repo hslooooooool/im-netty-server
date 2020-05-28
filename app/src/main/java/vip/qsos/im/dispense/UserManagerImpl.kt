@@ -5,7 +5,7 @@ import vip.qsos.im.model.AppUserBo
 import vip.qsos.im.model.LoginUser
 import vip.qsos.im.model.db.TableFriend
 import vip.qsos.im.model.db.TableUser
-import vip.qsos.im.service.ChatAccountService
+import vip.qsos.im.service.IMAccountService
 import vip.qsos.im.service.FriendService
 import vip.qsos.im.service.UserService
 import javax.annotation.Resource
@@ -21,10 +21,10 @@ class UserManagerImpl : UserManager {
     @Resource
     private lateinit var mFriendService: FriendService
     @Resource
-    private lateinit var mChatAccountService: ChatAccountService
+    private lateinit var mIMAccountService: IMAccountService
 
     override fun assignImAccount(user: TableUser): TableUser {
-        val account = mChatAccountService.assign()
+        val account = mIMAccountService.assign()
         assert(account.length == 9)
         user.imAccount = account
         return mUserService.updateUser(user)

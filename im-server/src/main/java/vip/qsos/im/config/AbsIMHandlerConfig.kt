@@ -9,9 +9,9 @@ import vip.qsos.im.lib.server.config.IMConstant
 import vip.qsos.im.lib.server.handler.IMRequestHandler
 import vip.qsos.im.lib.server.handler.IMServerInboundHandler
 import vip.qsos.im.lib.server.handler.WebsocketHandShakeHandler
-import vip.qsos.im.lib.server.model.ImException
+import vip.qsos.im.lib.server.model.IMException
 import vip.qsos.im.lib.server.model.SendBody
-import vip.qsos.im.lib.server.model.SessionClientBo
+import vip.qsos.im.lib.server.model.IMSession
 import java.util.*
 import javax.annotation.PostConstruct
 import javax.annotation.Resource
@@ -78,12 +78,12 @@ abstract class AbsIMHandlerConfig : IMRequestHandler, ApplicationListener<Applic
     }
 
     /**根据自行添加的处理器进行处理*/
-    override fun process(sessionClient: SessionClientBo, message: SendBody) {
+    override fun process(sessionClient: IMSession, message: SendBody) {
         mAppHandlerMap[message.key]?.let {
             mApplicationContext.getBean(it).process(sessionClient, message)
         } ?: mAppHandlerMap[IMConstant.CLIENT_NULL_HANDLER]?.let {
             mApplicationContext.getBean(it).process(sessionClient, message)
-        } ?: throw ImException("无法处理[${message.key}]消息类型")
+        } ?: throw IMException("无法处理[${message.key}]消息类型")
     }
 
 }

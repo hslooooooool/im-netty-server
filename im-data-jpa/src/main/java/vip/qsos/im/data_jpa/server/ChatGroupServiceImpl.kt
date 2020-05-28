@@ -5,14 +5,13 @@ import org.springframework.util.StringUtils
 import vip.qsos.im.data_jpa.repository.db.TableChatGroupInfoRepository
 import vip.qsos.im.data_jpa.repository.db.TableChatGroupRepository
 import vip.qsos.im.data_jpa.repository.db.TableChatSessionRepository
-import vip.qsos.im.lib.server.model.ImException
+import vip.qsos.im.lib.server.model.IMException
 import vip.qsos.im.model.ChatGroupBo
 import vip.qsos.im.model.db.TableChatSession
 import vip.qsos.im.model.db.TableChatSessionOfGroup
 import vip.qsos.im.model.db.TableChatSessionOfGroupInfo
 import vip.qsos.im.model.type.EnumSessionType
-import vip.qsos.im.service.ChatAccountService
-import vip.qsos.im.service.ChatGroupService
+import vip.qsos.im.service.IMAccountService
 import javax.annotation.Resource
 
 /**
@@ -28,7 +27,7 @@ class ChatGroupServiceImpl : ChatGroupService {
     private lateinit var mSessionRepository: TableChatSessionRepository
 
     @Resource
-    private lateinit var mChatAccountService: ChatAccountService
+    private lateinit var mIMAccountService: IMAccountService
 
     @Resource
     private lateinit var mGroupInfoRepository: TableChatGroupInfoRepository
@@ -50,9 +49,9 @@ class ChatGroupServiceImpl : ChatGroupService {
         val members = memberList.toSet().sorted()
         /**较验账号是否授权*/
         members.forEach {
-            val joined = mChatAccountService.findByAccount(it)
+            val joined = mIMAccountService.findByAccount(it)
             if (joined == null || !joined.used) {
-                throw ImException("账号 $it 未授权")
+                throw IMException("账号 $it 未授权")
             }
         }
         var sessionType: EnumSessionType = EnumSessionType.SINGLE
@@ -60,8 +59,8 @@ class ChatGroupServiceImpl : ChatGroupService {
             sessionType = EnumSessionType.GROUP
         }
         when {
-            StringUtils.isEmpty(name) -> throw ImException("群名称不能为空")
-            StringUtils.isEmpty(creatorImAccount) || creatorImAccount.length != 9 -> throw ImException("创建人不能为空")
+            StringUtils.isEmpty(name) -> throw IMException("群名称不能为空")
+            StringUtils.isEmpty(creatorImAccount) || creatorImAccount.length != 9 -> throw IMException("创建人不能为空")
         }
         val memberString = TableChatSession.addMember(members.toList())
 
@@ -78,7 +77,7 @@ class ChatGroupServiceImpl : ChatGroupService {
             group!!
         } else {
             group = mGroupRepository.findBySessionId(session.sessionId)
-                    ?: throw ImException("消息群数据错误")
+                    ?: throw IMException("消息群数据错误")
         }
 
         val info = mGroupInfoRepository.saveAndFlush(TableChatSessionOfGroupInfo(group.groupId))
@@ -90,7 +89,7 @@ class ChatGroupServiceImpl : ChatGroupService {
         try {
             session = mSessionRepository.findById(sessionId).get()
         } catch (e: Exception) {
-            throw ImException("消息群不存在")
+            throw IMException("消息群不存在")
         }
         return mSessionRepository.findById(sessionId).get().let {
             findByGroupId(sessionId).let {
@@ -105,7 +104,7 @@ class ChatGroupServiceImpl : ChatGroupService {
         try {
             group = mGroupRepository.findById(groupId).get()
         } catch (e: Exception) {
-            throw ImException("聊天群不存在")
+            throw IMException("聊天群不存在")
         }
         return group
     }
@@ -159,7 +158,7 @@ class ChatGroupServiceImpl : ChatGroupService {
             session.member = session.member.replaceRange(memberStart - 1, memberStart, "1")
             mSessionRepository.saveAndFlush(session)
         } else {
-            throw ImException("此账号 $member 不在群内，无需移除")
+            throw IMException("此账号 $member 不在群内，无需移除")
         }
     }
 
@@ -173,7 +172,7 @@ class ChatGroupServiceImpl : ChatGroupService {
         try {
             return mGroupInfoRepository.findById(groupId).get()
         } catch (e: Exception) {
-            throw ImException("群信息缺失")
+            throw IMException("群信息缺失")
         }
     }
 }

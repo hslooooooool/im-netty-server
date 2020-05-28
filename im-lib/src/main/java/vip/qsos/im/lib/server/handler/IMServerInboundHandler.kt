@@ -16,14 +16,13 @@ import vip.qsos.im.lib.server.config.IMConstant
 import vip.qsos.im.lib.server.filter.SendBodyDecoder
 import vip.qsos.im.lib.server.filter.SendBodyEncoder
 import vip.qsos.im.lib.server.model.HeartbeatRequest
-import vip.qsos.im.lib.server.model.ImException
+import vip.qsos.im.lib.server.model.IMException
 import vip.qsos.im.lib.server.model.SendBody
-import vip.qsos.im.lib.server.model.SessionClientBo
+import vip.qsos.im.lib.server.model.IMSession
 import java.util.concurrent.ConcurrentHashMap
 
 /**消息服务管理与消息接收处理器
  * @author : 华清松
- * @see SendBody
  */
 @Sharable
 class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
@@ -61,7 +60,7 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
         bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true)
         bootstrap.channel(NioServerSocketChannel::class.java)
         bootstrap.childHandler(object : ChannelInitializer<SocketChannel>() {
-            @Throws(ImException::class)
+            @Throws(IMException::class)
             override fun initChannel(ch: SocketChannel) {
                 ch.pipeline().addLast(LoggingHandler(LogLevel.TRACE))
                 ch.pipeline().addLast(IdleStateHandler(mReadIdleTime, mWriteIdleTime, 0))
@@ -97,20 +96,20 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
     }
 
     override fun channelRead0(ctx: ChannelHandlerContext, body: SendBody) {
-        this.mHandler?.process(SessionClientBo().create(ctx.channel()), body)
+        this.mHandler?.process(IMSession().create(ctx.channel()), body)
     }
 
     override fun channelActive(ctx: ChannelHandlerContext) {
         this.mChannelGroup[ctx.channel().id().asShortText()] = ctx.channel()
-        this.mHandler?.process(SessionClientBo().create(ctx.channel()), SendBody(IMConstant.CLIENT_ACTIVE))
+        this.mHandler?.process(IMSession().create(ctx.channel()), SendBody(IMConstant.CLIENT_ACTIVE))
     }
 
     override fun channelInactive(ctx: ChannelHandlerContext) {
         this.mChannelGroup.remove(ctx.channel().id().asShortText())
-        this.mHandler?.process(SessionClientBo().create(ctx.channel()), SendBody(IMConstant.CLIENT_CLOSED))
+        this.mHandler?.process(IMSession().create(ctx.channel()), SendBody(IMConstant.CLIENT_CLOSED))
     }
 
-    @Throws(ImException::class)
+    @Throws(IMException::class)
     override fun userEventTriggered(ctx: ChannelHandlerContext, evt: Any) {
         when {
             evt is IdleStateEvent && evt.state() == IdleState.WRITER_IDLE -> {

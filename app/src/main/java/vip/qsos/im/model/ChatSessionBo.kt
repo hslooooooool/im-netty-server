@@ -2,6 +2,8 @@ package vip.qsos.im.model
 
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
+import vip.qsos.im.data_jpa.model.table.TableChatMessageOfGroup
+import vip.qsos.im.data_jpa.model.table.TableChatMessageOfSingle
 import vip.qsos.im.model.db.*
 import vip.qsos.im.model.type.EnumSessionType
 
