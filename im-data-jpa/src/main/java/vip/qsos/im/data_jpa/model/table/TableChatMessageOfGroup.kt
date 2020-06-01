@@ -12,7 +12,7 @@ import javax.persistence.Table
 @Entity
 @Table(name = "table_chat_message_group")
 @ApiModel(value = "群聊消息表")
-class TableChatMessageOfGroup : IMMessage() {
+class TableChatMessageOfGroup : AbsTableMessage() {
 
     override val extra: MessageExtra
         get() = MessageExtra(EnumSessionType.GROUP, sessionId, timeline)

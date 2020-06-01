@@ -34,9 +34,9 @@ open class ChatMessageOfGroupServiceImpl : ChatMessageOfGroupService {
         return msg.getMessage()
     }
 
-    override fun find(messageId: Long): TableChatMessageOfGroup? {
+    override fun find(messageId: Long): IMMessage? {
         return try {
-            mMessageRepository.findById(messageId).get()
+            mMessageRepository.findById(messageId).get().getMessage()
         } catch (e: Exception) {
             null
         }
@@ -46,8 +46,10 @@ open class ChatMessageOfGroupServiceImpl : ChatMessageOfGroupService {
         mMessageRepository.deleteById(messageId)
     }
 
-    override fun list(sessionId: Long, timeline: Long, size: Int, previous: Boolean): List<TableChatMessageOfGroup> {
-        return mMessageRepository.findAll()
+    override fun list(sessionId: Long, timeline: Long, size: Int, previous: Boolean): List<IMMessage> {
+        return mMessageRepository.findAll().map {
+            it.getMessage()
+        }.sortedBy { it.timestamp }
     }
 
 }

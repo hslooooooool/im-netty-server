@@ -12,7 +12,7 @@ import javax.persistence.Table
 @Entity
 @Table(name = "table_chat_message_single")
 @ApiModel(value = "单聊消息表")
-class TableChatMessageOfSingle : IMMessage() {
+class TableChatMessageOfSingle : AbsTableMessage() {
 
     override val extra: MessageExtra
         get() = MessageExtra(EnumSessionType.SINGLE, sessionId, timeline)

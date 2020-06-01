@@ -1,6 +1,6 @@
 package vip.qsos.im.service
 
-import vip.qsos.im.data_jpa.model.table.IMMessage
+import vip.qsos.im.lib.server.model.IMMessage
 import vip.qsos.im.model.ChatMessageBo
 
 /**

@@ -66,14 +66,10 @@ class IMMessageManagerImpl : IMMessageManager {
         session.let {
             return when (it.sessionType) {
                 EnumSessionType.SINGLE -> {
-                    mChatMessageOfSingleService.list(sessionId, timeline, size, previous).map { single ->
-                        single.getMessage()
-                    }
+                    mChatMessageOfSingleService.list(sessionId, timeline, size, previous)
                 }
                 EnumSessionType.GROUP -> {
-                    mChatMessageOfGroupService.list(sessionId, timeline, size, previous).map { group ->
-                        group.getMessage()
-                    }
+                    mChatMessageOfGroupService.list(sessionId, timeline, size, previous)
                 }
                 else -> throw IMException("消息类型不支持")
             }

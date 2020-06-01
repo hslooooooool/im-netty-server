@@ -50,7 +50,7 @@ open class ChatMessageOfSingleServiceImpl : ChatMessageOfSingleService {
 
     override fun find(messageId: Long): IMMessage? {
         return try {
-            mMessageOfSingleRepository.findById(messageId) .get()
+            mMessageOfSingleRepository.findById(messageId).get().getMessage()
         } catch (e: Exception) {
             null
         }
@@ -60,7 +60,7 @@ open class ChatMessageOfSingleServiceImpl : ChatMessageOfSingleService {
         mMessageOfSingleRepository.deleteById(messageId)
     }
 
-    override fun list(sessionId: Long, timeline: Long, size: Int, previous: Boolean): List<TableChatMessageOfSingle> {
+    override fun list(sessionId: Long, timeline: Long, size: Int, previous: Boolean): List<IMMessage> {
         var startTimeline: Long
         val endTimeline: Long
         if (previous) {
@@ -77,7 +77,9 @@ open class ChatMessageOfSingleServiceImpl : ChatMessageOfSingleService {
                 Long.MAX_VALUE
             }
         }
-        return mMessageOfSingleRepository.findBySessionIdAndTimelineBetween(sessionId, startTimeline, endTimeline)
+        return mMessageOfSingleRepository.findBySessionIdAndTimelineBetween(sessionId, startTimeline, endTimeline).map {
+            it.getMessage()
+        }.sortedBy { it.timestamp }
     }
 
 }

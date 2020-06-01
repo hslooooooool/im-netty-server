@@ -12,7 +12,7 @@ import java.util.*
 import javax.persistence.*
 
 @MappedSuperclass
-abstract class IMMessage : AbsTable() {
+abstract class AbsTableMessage : AbsTable() {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,7 +45,7 @@ abstract class IMMessage : AbsTable() {
 
     @Column(name = "format", nullable = false, length = 8)
     @ApiModelProperty(value = "消息数据格式")
-    var format: IMMessage.Format.Format = IMMessage.Format.PROTOBUF
+    var format: IMMessage.Format = IMMessage.Format.PROTOBUF
 
     @Column(name = "timestamp")
     @ApiModelProperty(value = "消息发送时间")

@@ -1,10 +1,10 @@
 package vip.qsos.im.service
 
 import org.springframework.stereotype.Service
-import vip.qsos.im.data_jpa.model.table.IMMessage
 import vip.qsos.im.data_jpa.repository.db.TableChatSessionRepository
 import vip.qsos.im.data_jpa.server.IMMessagePusherImpl
 import vip.qsos.im.lib.server.model.IMException
+import vip.qsos.im.lib.server.model.IMMessage
 import vip.qsos.im.model.AppException
 import vip.qsos.im.model.AppUserBo
 import vip.qsos.im.model.ChatMessageBo
