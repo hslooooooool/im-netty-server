@@ -7,8 +7,8 @@ import vip.qsos.im.service.IMMessagePusher
 import vip.qsos.im.lib.server.handler.IMRequestHandler
 import vip.qsos.im.lib.server.model.IMException
 import vip.qsos.im.lib.server.model.IMSession
-import vip.qsos.im.lib.server.model.ReplyBody
-import vip.qsos.im.lib.server.model.SendBody
+import vip.qsos.im.lib.server.model.IMReplyBody
+import vip.qsos.im.lib.server.model.IMSendBody
 import vip.qsos.im.model.form.SendMessageOfOrderForm
 import vip.qsos.im.service.IMAccountService
 import vip.qsos.im.service.IMSessionService
@@ -32,8 +32,8 @@ class BindAccountRequestHandler : IMRequestHandler {
     @Resource
     private lateinit var mIMAccountService: IMAccountService
 
-    override fun process(sessionClient: IMSession, message: SendBody) {
-        val reply = ReplyBody()
+    override fun process(sessionClient: IMSession, message: IMSendBody) {
+        val reply = IMReplyBody()
         reply.key = message.key
         reply.code = "200"
         reply.timestamp = System.currentTimeMillis()

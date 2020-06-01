@@ -6,7 +6,7 @@ import io.netty.handler.codec.ByteToMessageDecoder
 import io.netty.util.AttributeKey
 import vip.qsos.im.lib.server.config.IMConstant
 import vip.qsos.im.lib.server.model.IMException
-import vip.qsos.im.lib.server.model.SendBody
+import vip.qsos.im.lib.server.model.IMSendBody
 import vip.qsos.im.lib.server.model.IMSession
 import java.util.regex.Pattern
 
@@ -58,7 +58,7 @@ class SendBodyDecoder : ByteToMessageDecoder() {
         if (handShake) {
             /**握手响应之后，标记当前 session 的协议为 websocket */
             arg0.channel().attr(AttributeKey.valueOf<String>(IMSession.CHANNEL_TYPE)).set(IMSession.WEBSOCKET)
-            val body = SendBody()
+            val body = IMSendBody()
             body.key = IMConstant.CLIENT_HANDSHAKE
             body.timestamp = System.currentTimeMillis()
             body.put("key", secKey)

@@ -7,7 +7,7 @@ import io.netty.util.AttributeKey
 import vip.qsos.im.lib.model.proto.SendBodyProto
 import vip.qsos.im.lib.server.config.IMConstant
 import vip.qsos.im.lib.server.model.IMException
-import vip.qsos.im.lib.server.model.SendBody
+import vip.qsos.im.lib.server.model.IMSendBody
 import vip.qsos.im.lib.server.model.IMSession
 
 /**
@@ -52,17 +52,17 @@ class AppMessageDecoder : ByteToMessageDecoder() {
 
     /**解析消息内容*/
     @Throws(IMException::class)
-    fun decodeBody(type: Byte, array: ByteArray): SendBody {
+    fun decodeBody(type: Byte, array: ByteArray): IMSendBody {
         return when (type) {
             IMConstant.ProtobufType.HEART_CR -> {
-                SendBody().also {
+                IMSendBody().also {
                     it.key = IMConstant.CLIENT_HEARTBEAT
                     it.timestamp = System.currentTimeMillis()
                 }
             }
             IMConstant.ProtobufType.SEND_BODY -> {
                 SendBodyProto.Model.parseFrom(array).let { model ->
-                    SendBody().also {
+                    IMSendBody().also {
                         it.key = model.key
                         it.timestamp = model.timestamp
                         it.putAll(model.dataMap)

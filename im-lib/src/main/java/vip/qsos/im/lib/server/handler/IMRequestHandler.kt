@@ -1,7 +1,7 @@
 package vip.qsos.im.lib.server.handler
 
 import vip.qsos.im.lib.server.model.IMException
-import vip.qsos.im.lib.server.model.SendBody
+import vip.qsos.im.lib.server.model.IMSendBody
 import vip.qsos.im.lib.server.model.IMSession
 
 /**
@@ -14,5 +14,5 @@ interface IMRequestHandler {
      * @param message 发送的消息
      * */
     @Throws(IMException::class)
-    fun process(sessionClient: IMSession, message: SendBody)
+    fun process(sessionClient: IMSession, message: IMSendBody)
 }

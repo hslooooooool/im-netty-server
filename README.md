@@ -10,3 +10,11 @@ Demo采用SpringBoot 2.1.x与Kotlin 1.3.x编写。工具为IntelliJ IDEA 2019.3�
 
 ## 文档
 - [SDK及DEMO详细](https://github.com/hslooooooool/im-proto)
+
+## 使用
+
+> IMSendBody用于客户端和服务器相互通信
+
+> IMReplyBody用于客户端发送后服务器的回执
+
+> IMMessage用于客户端与客户端消息收发

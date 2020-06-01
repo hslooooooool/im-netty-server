@@ -8,7 +8,7 @@ import java.util.*
 /**服务器应答对象，客户端主动请求服务器后收到的回执消息
  * @author : 华清松
  */
-class ReplyBody : IProtobufAble {
+class IMReplyBody : IProtobufAble {
 
     companion object {
         private const val serialVersionUID = 1L

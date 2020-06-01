@@ -2,8 +2,8 @@ package vip.qsos.im.handler
 
 import org.springframework.stereotype.Component
 import vip.qsos.im.lib.server.handler.IMRequestHandler
-import vip.qsos.im.lib.server.model.ReplyBody
-import vip.qsos.im.lib.server.model.SendBody
+import vip.qsos.im.lib.server.model.IMReplyBody
+import vip.qsos.im.lib.server.model.IMSendBody
 import vip.qsos.im.lib.server.model.IMSession
 
 /**
@@ -13,8 +13,8 @@ import vip.qsos.im.lib.server.model.IMSession
 @Component
 class NullHandler : IMRequestHandler {
 
-    override fun process(sessionClient: IMSession, message: SendBody) {
-        val reply = ReplyBody()
+    override fun process(sessionClient: IMSession, message: IMSendBody) {
+        val reply = IMReplyBody()
         reply.key = message.key
         reply.code = "500"
         reply.timestamp = System.currentTimeMillis()

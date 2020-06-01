@@ -8,7 +8,7 @@ import java.util.*
 /**客户端发送的消息
  * @author : 华清松
  */
-class SendBody : IProtobufAble {
+class IMSendBody : IProtobufAble {
 
     companion object {
         private const val serialVersionUID = 1L

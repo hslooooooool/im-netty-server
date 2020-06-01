@@ -17,7 +17,7 @@ import vip.qsos.im.lib.server.filter.SendBodyDecoder
 import vip.qsos.im.lib.server.filter.SendBodyEncoder
 import vip.qsos.im.lib.server.model.HeartbeatRequest
 import vip.qsos.im.lib.server.model.IMException
-import vip.qsos.im.lib.server.model.SendBody
+import vip.qsos.im.lib.server.model.IMSendBody
 import vip.qsos.im.lib.server.model.IMSession
 import java.util.concurrent.ConcurrentHashMap
 
@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap
  * @author : 华清松
  */
 @Sharable
-class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
+class IMServerInboundHandler : SimpleChannelInboundHandler<IMSendBody>() {
 
     private var mPort = 0
     private var mReadIdleTime = 150
@@ -95,18 +95,18 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<SendBody>() {
         }
     }
 
-    override fun channelRead0(ctx: ChannelHandlerContext, body: SendBody) {
+    override fun channelRead0(ctx: ChannelHandlerContext, body: IMSendBody) {
         this.mHandler?.process(IMSession().create(ctx.channel()), body)
     }
 
     override fun channelActive(ctx: ChannelHandlerContext) {
         this.mChannelGroup[ctx.channel().id().asShortText()] = ctx.channel()
-        this.mHandler?.process(IMSession().create(ctx.channel()), SendBody(IMConstant.CLIENT_ACTIVE))
+        this.mHandler?.process(IMSession().create(ctx.channel()), IMSendBody(IMConstant.CLIENT_ACTIVE))
     }
 
     override fun channelInactive(ctx: ChannelHandlerContext) {
         this.mChannelGroup.remove(ctx.channel().id().asShortText())
-        this.mHandler?.process(IMSession().create(ctx.channel()), SendBody(IMConstant.CLIENT_CLOSED))
+        this.mHandler?.process(IMSession().create(ctx.channel()), IMSendBody(IMConstant.CLIENT_CLOSED))
     }
 
     @Throws(IMException::class)

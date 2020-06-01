@@ -6,7 +6,7 @@ import io.netty.handler.codec.ByteToMessageDecoder
 import vip.qsos.im.lib.model.proto.SendBodyProto
 import vip.qsos.im.lib.server.config.IMConstant
 import vip.qsos.im.lib.server.model.IMException
-import vip.qsos.im.lib.server.model.SendBody
+import vip.qsos.im.lib.server.model.IMSendBody
 import vip.qsos.im.lib.server.utils.DataUtils
 import kotlin.experimental.xor
 
@@ -94,7 +94,7 @@ class WebMessageDecoder : ByteToMessageDecoder() {
     fun handleMessage(data: ByteArray, queue: MutableList<Any>) {
         when (data[0]) {
             IMConstant.ProtobufType.HEART_CR -> {
-                val body = SendBody()
+                val body = IMSendBody()
                 body.key = IMConstant.CLIENT_HEARTBEAT
                 body.timestamp = System.currentTimeMillis()
                 queue.add(body)
@@ -104,7 +104,7 @@ class WebMessageDecoder : ByteToMessageDecoder() {
                 val protobuf = ByteArray(length)
                 System.arraycopy(data, IMConstant.DATA_HEADER_LENGTH, protobuf, 0, length)
                 val bodyProto = SendBodyProto.Model.parseFrom(protobuf)
-                val body = SendBody()
+                val body = IMSendBody()
                 body.key = bodyProto.key
                 body.timestamp = bodyProto.timestamp
                 body.putAll(bodyProto.dataMap)
