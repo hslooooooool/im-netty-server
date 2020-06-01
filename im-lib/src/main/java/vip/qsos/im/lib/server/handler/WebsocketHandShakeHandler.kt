@@ -11,15 +11,15 @@ import java.util.*
  * @author : 华清松
  */
 @Component
-class WebsocketHandShakeHandler : IMRequestHandler {
+class WebsocketHandShakeHandler : IMSendBodyHandler {
 
     companion object {
         private const val GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
     }
 
-    override fun process(sessionClient: IMSession, message: IMSendBody) {
+    override fun process(sessionClient: IMSession, body: IMSendBody) {
         sessionClient.deviceType = IMSession.CHANNEL_BROWSER
-        var secKey = message.find("key") + GUID
+        var secKey = body.find("key") + GUID
         try {
             val md = MessageDigest.getInstance("SHA-1")
             md.update(secKey.toByteArray(charset("iso-8859-1")), 0, secKey.length)

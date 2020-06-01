@@ -12,9 +12,9 @@ import java.util.regex.Pattern
 
 /**
  * @author : 华清松
- * 服务端接收指令解码，通过消息类型分发到不同的解码器
+ * 服务端接收消息解码，通过消息类型分发到不同的解码器
  */
-class SendBodyDecoder : ByteToMessageDecoder() {
+class IMDecoder : ByteToMessageDecoder() {
 
     companion object {
         /**【正则】获取 websocket 握手消息中的 Sec-WebSocket-Key*/

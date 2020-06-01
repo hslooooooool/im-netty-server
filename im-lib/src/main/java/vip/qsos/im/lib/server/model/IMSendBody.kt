@@ -54,7 +54,7 @@ class IMSendBody : IProtobufAble {
         data.putAll(map)
     }
 
-    override val type: Byte = IMConstant.ProtobufType.MESSAGE
+    override val type: Byte = IMConstant.ProtobufType.SEND_BODY
 
     override val byteArray: ByteArray
         @Throws(InvalidProtocolBufferException::class)

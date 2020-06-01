@@ -1,16 +1,9 @@
 package vip.qsos.im.lib.server.model
 
-import vip.qsos.im.lib.server.config.IMConstant
-
 /**Websocket 响应结果实体
  * @author : 华清松
  */
-class WebSocketResponse(private val token: String) : IProtobufAble {
-
-    override val type: Byte = IMConstant.ProtobufType.WEBSOCKET
-
-    override val byteArray: ByteArray
-        get() = this.toString().toByteArray()
+class WebSocketResponse(private val token: String) {
 
     override fun toString(): String {
         val builder = StringBuilder()

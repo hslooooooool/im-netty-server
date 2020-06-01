@@ -14,7 +14,7 @@ import vip.qsos.im.lib.server.model.WebSocketResponse
  * @author : 华清松
  * 服务端发送指令编码
  */
-class SendBodyEncoder : MessageToByteEncoder<Any>() {
+class IMEncoder : MessageToByteEncoder<Any>() {
 
     @Throws(IMException::class)
     override fun encode(ctx: ChannelHandlerContext, any: Any, out: ByteBuf) {

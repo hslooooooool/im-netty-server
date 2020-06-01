@@ -13,27 +13,27 @@ import io.netty.handler.timeout.IdleStateEvent
 import io.netty.handler.timeout.IdleStateHandler
 import io.netty.util.AttributeKey
 import vip.qsos.im.lib.server.config.IMConstant
-import vip.qsos.im.lib.server.filter.SendBodyDecoder
-import vip.qsos.im.lib.server.filter.SendBodyEncoder
-import vip.qsos.im.lib.server.model.HeartbeatRequest
-import vip.qsos.im.lib.server.model.IMException
-import vip.qsos.im.lib.server.model.IMSendBody
-import vip.qsos.im.lib.server.model.IMSession
+import vip.qsos.im.lib.server.filter.IMDecoder
+import vip.qsos.im.lib.server.filter.IMEncoder
+import vip.qsos.im.lib.server.model.*
 import java.util.concurrent.ConcurrentHashMap
 
 /**消息服务管理与消息接收处理器
  * @author : 华清松
  */
 @Sharable
-class IMServerInboundHandler : SimpleChannelInboundHandler<IMSendBody>() {
+class IMServerInboundHandler : SimpleChannelInboundHandler<IProtobufAble>() {
 
     private var mPort = 0
     private var mReadIdleTime = 150
     private var mWriteIdleTime = 120
     private var mHeartbeatPingTime = 30
 
-    /**自定义消息处理接口*/
-    private var mHandler: IMRequestHandler? = null
+    /**自定义 IMSendBody 消息处理接口*/
+    private var mSendBodyHandler: IMSendBodyHandler? = null
+
+    /**自定义 IMMessage 消息处理接口*/
+    private var mMessageHandler: IMMessageHandler? = null
 
     /**已连接客户端 Channel 集合*/
     private val mChannelGroup = ConcurrentHashMap<String, Channel>()
@@ -46,7 +46,8 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<IMSendBody>() {
         this.mReadIdleTime = builder.mReadIdleTime
         this.mWriteIdleTime = builder.mWriteIdleTime
         this.mHeartbeatPingTime = builder.mHeartbeatPingTime
-        this.mHandler = builder.mHandler
+        this.mSendBodyHandler = builder.mSendBodyHandler
+        this.mMessageHandler = builder.mMessageHandler
         return this
     }
 
@@ -66,9 +67,9 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<IMSendBody>() {
                 ch.pipeline().addLast(IdleStateHandler(mReadIdleTime, mWriteIdleTime, 0))
 
                 /**消息处理切面-接收消息解码器*/
-                ch.pipeline().addLast("SendBodyDecoder", SendBodyDecoder())
+                ch.pipeline().addLast(IMDecoder())
                 /**消息处理切面-发送消息编码器*/
-                ch.pipeline().addLast("SendBodyEncoder", SendBodyEncoder())
+                ch.pipeline().addLast(IMEncoder())
                 /**消息处理切面-业务处理器，接收到的消息都将被解码为 SendBody */
                 ch.pipeline().addLast(this@IMServerInboundHandler)
             }
@@ -95,18 +96,29 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<IMSendBody>() {
         }
     }
 
-    override fun channelRead0(ctx: ChannelHandlerContext, body: IMSendBody) {
-        this.mHandler?.process(IMSession().create(ctx.channel()), body)
+    override fun channelRead0(ctx: ChannelHandlerContext, msg: IProtobufAble) {
+        when (msg.type) {
+            IMConstant.ProtobufType.SEND_BODY -> {
+                this.mSendBodyHandler?.process(IMSession().create(ctx.channel()), msg as IMSendBody)
+            }
+            IMConstant.ProtobufType.MESSAGE -> {
+                this.mMessageHandler?.process(IMSession().create(ctx.channel()), msg as IMMessage)
+            }
+            else -> {
+                throw IMException("未识别消息类型")
+            }
+        }
+
     }
 
     override fun channelActive(ctx: ChannelHandlerContext) {
         this.mChannelGroup[ctx.channel().id().asShortText()] = ctx.channel()
-        this.mHandler?.process(IMSession().create(ctx.channel()), IMSendBody(IMConstant.CLIENT_ACTIVE))
+        this.mSendBodyHandler?.process(IMSession().create(ctx.channel()), IMSendBody(IMConstant.CLIENT_ACTIVE))
     }
 
     override fun channelInactive(ctx: ChannelHandlerContext) {
         this.mChannelGroup.remove(ctx.channel().id().asShortText())
-        this.mHandler?.process(IMSession().create(ctx.channel()), IMSendBody(IMConstant.CLIENT_CLOSED))
+        this.mSendBodyHandler?.process(IMSession().create(ctx.channel()), IMSendBody(IMConstant.CLIENT_CLOSED))
     }
 
     @Throws(IMException::class)
@@ -138,8 +150,10 @@ class IMServerInboundHandler : SimpleChannelInboundHandler<IMSendBody>() {
 
     /**消息服务参数配置*/
     data class Builder(
-            /**消息处理器*/
-            var mHandler: IMRequestHandler,
+            /**自定义 IMSendBody 消息处理接口*/
+            var mSendBodyHandler: IMSendBodyHandler?,
+            /**自定义 IMMessage 消息处理接口*/
+            var mMessageHandler: IMMessageHandler?,
             /**消息服务端口号*/
             var mPort: Int = 0,
             /**心跳响应超时时间，秒*/

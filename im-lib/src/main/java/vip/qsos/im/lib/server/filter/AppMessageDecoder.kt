@@ -4,11 +4,10 @@ import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.ByteToMessageDecoder
 import io.netty.util.AttributeKey
+import vip.qsos.im.lib.model.proto.MessageProto
 import vip.qsos.im.lib.model.proto.SendBodyProto
 import vip.qsos.im.lib.server.config.IMConstant
-import vip.qsos.im.lib.server.model.IMException
-import vip.qsos.im.lib.server.model.IMSendBody
-import vip.qsos.im.lib.server.model.IMSession
+import vip.qsos.im.lib.server.model.*
 
 /**
  * @author : 华清松
@@ -52,12 +51,27 @@ class AppMessageDecoder : ByteToMessageDecoder() {
 
     /**解析消息内容*/
     @Throws(IMException::class)
-    fun decodeBody(type: Byte, array: ByteArray): IMSendBody {
+    fun decodeBody(type: Byte, array: ByteArray): IProtobufAble {
         return when (type) {
             IMConstant.ProtobufType.HEART_CR -> {
                 IMSendBody().also {
                     it.key = IMConstant.CLIENT_HEARTBEAT
                     it.timestamp = System.currentTimeMillis()
+                }
+            }
+            IMConstant.ProtobufType.MESSAGE -> {
+                MessageProto.Model.parseFrom(array).let { model ->
+                    IMMessage(
+                            id = model.id,
+                            action = model.action,
+                            title = model.title,
+                            content = model.content,
+                            sender = model.sender,
+                            receiver = model.receiver,
+                            format = model.format,
+                            extra = model.extra,
+                            timestamp = model.timestamp
+                    )
                 }
             }
             IMConstant.ProtobufType.SEND_BODY -> {

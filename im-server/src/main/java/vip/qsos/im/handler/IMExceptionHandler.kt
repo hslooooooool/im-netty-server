@@ -10,7 +10,7 @@ import vip.qsos.im.model.BaseResult
  * 消息服务异常处理
  */
 @RestControllerAdvice
-class ImExceptionHandler {
+class IMExceptionHandler {
 
     @ExceptionHandler(IMException::class)
     fun handleRRException(e: IMException): BaseResult {

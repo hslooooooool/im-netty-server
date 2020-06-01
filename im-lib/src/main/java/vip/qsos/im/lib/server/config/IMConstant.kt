@@ -23,12 +23,6 @@ interface IMConstant {
 
             /**【定义】服务端消息回执*/
             const val REPLY_BODY: Byte = 4
-
-            /**【定义】会话*/
-            const val SESSION: Byte = 5
-
-            /**【定义】Websocket*/
-            const val WEBSOCKET: Byte = 6
         }
     }
 

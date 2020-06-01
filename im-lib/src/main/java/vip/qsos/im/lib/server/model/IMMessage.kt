@@ -25,7 +25,7 @@ data class IMMessage constructor(
         @ApiModelProperty(value = "消息接收者账号,此系统设计中为会话ID,通过会话ID寻找成员账号后群发", required = true)
         var receiver: String,
         @ApiModelProperty(value = "消息数据格式", dataType = "Enum")
-        var format: String = Format.PROTOBUF.name,
+        var format: String = Format.JSON.name,
         @ApiModelProperty(value = "附加内容")
         var extra: String? = null,
         @ApiModelProperty(value = "消息发送时间")

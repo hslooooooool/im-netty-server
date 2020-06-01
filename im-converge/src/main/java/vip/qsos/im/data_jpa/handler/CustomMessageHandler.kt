@@ -5,11 +5,11 @@ import vip.qsos.im.lib.server.handler.IMSendBodyHandler
 import vip.qsos.im.lib.server.model.IMSendBody
 import vip.qsos.im.lib.server.model.IMSession
 
-/**心跳请求处理
+/**自定义消息请求处理
  * @author : 华清松
  */
 @Component
-class HeartbeatHandler : IMSendBodyHandler {
+class CustomMessageHandler : IMSendBodyHandler {
     override fun process(sessionClient: IMSession, body: IMSendBody) {
         println("❤️❤️❤️❤️$body\n❤️❤️❤️❤️")
     }

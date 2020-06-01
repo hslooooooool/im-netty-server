@@ -1,18 +1,14 @@
 package vip.qsos.im.lib.server.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.google.protobuf.InvalidProtocolBufferException
 import io.netty.channel.Channel
 import io.netty.handler.codec.EncoderException
 import io.netty.util.AttributeKey
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import vip.qsos.im.lib.model.proto.SessionProto
 import vip.qsos.im.lib.server.config.IMConstant
 import java.net.SocketAddress
 import java.time.LocalDateTime
-import java.time.ZoneId
-import java.util.*
 
 /**建立会话的终端信息实体
  * @author : 华清松
@@ -49,12 +45,12 @@ data class IMSession(
         var state: Int = 0,
         @ApiModelProperty(value = "channel 绑定的用户账号")
         private var account: String = ""
-) : IProtobufAble {
+) {
 
     companion object {
         private const val serialVersionUID = 1L
 
-        /**消息客户端类型*/
+        /**客户端类型*/
         const val CHANNEL_TYPE = "channel_type"
         const val WEBSOCKET = "websocket"
         const val NATIVE_APP = "native_app"
@@ -143,40 +139,10 @@ data class IMSession(
     val isApnsOpen: Boolean
         get() = apns == APNS_ON
 
-    override fun hashCode(): Int {
-        return javaClass.hashCode()
-    }
-
     override fun equals(other: Any?): Boolean {
         return if (other is IMSession) {
             (other.deviceId == deviceId && other.nid == nid && other.host == host)
         } else false
     }
 
-    override val type: Byte = IMConstant.ProtobufType.SESSION
-
-    override val byteArray: ByteArray
-        @Throws(InvalidProtocolBufferException::class)
-        get() {
-            val builder = SessionProto.Model.newBuilder()
-            builder.id = id
-            builder.account = account
-            builder.nid = nid
-            builder.deviceId = deviceId
-            builder.host = host
-            builder.channel = deviceType
-            builder.deviceModel = deviceModel
-            builder.clientVersion = clientVersion
-            builder.systemVersion = systemVersion
-            bindTime?.let {
-                builder.bindTime = Date.from(it.atZone(ZoneId.systemDefault())
-                        .toInstant()).time
-            }
-            longitude?.let { builder.longitude = it }
-            latitude?.let { builder.latitude = it }
-            location?.let { builder.location = it }
-            builder.state = state
-            builder.apns = apns
-            return builder.build().toByteArray()
-        }
 }

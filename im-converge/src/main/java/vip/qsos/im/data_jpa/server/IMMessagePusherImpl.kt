@@ -39,7 +39,7 @@ class IMMessagePusherImpl : IMMessagePusher {
                 }
                 session.isConnected && mProperties.hostIp == session.host -> {
                     /**通道正常，连接的是当前服务器，直接发送*/
-                    msg.format = IMMessage.Format.PROTOBUF.name
+                    msg.format = IMMessage.Format.JSON.name
                     session.write(msg)
                 }
                 else -> {

@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component
 import vip.qsos.im.config.IMConstant
 import vip.qsos.im.config.IMProperties
 import vip.qsos.im.service.IMMessagePusher
-import vip.qsos.im.lib.server.handler.IMRequestHandler
+import vip.qsos.im.lib.server.handler.IMSendBodyHandler
 import vip.qsos.im.lib.server.model.IMException
 import vip.qsos.im.lib.server.model.IMSession
 import vip.qsos.im.lib.server.model.IMReplyBody
@@ -19,7 +19,7 @@ import javax.annotation.Resource
  * @author : 华清松
  */
 @Component
-class BindAccountRequestHandler : IMRequestHandler {
+class BindAccountSendBodyHandler : IMSendBodyHandler {
     @Resource
     private lateinit var mProperties: IMProperties
 
@@ -32,26 +32,26 @@ class BindAccountRequestHandler : IMRequestHandler {
     @Resource
     private lateinit var mIMAccountService: IMAccountService
 
-    override fun process(sessionClient: IMSession, message: IMSendBody) {
+    override fun process(sessionClient: IMSession, body: IMSendBody) {
         val reply = IMReplyBody()
-        reply.key = message.key
+        reply.key = body.key
         reply.code = "200"
         reply.timestamp = System.currentTimeMillis()
         reply.message = "账号绑定成功"
         try {
-            val account = message.find("account") ?: throw IMException("账号不能为空")
+            val account = body.find("account") ?: throw IMException("账号不能为空")
             mIMAccountService.findByAccount(account) ?: throw IMException("账号未经授权")
 
             sessionClient.setAccount(account)
-            sessionClient.deviceId = message.find("deviceId")
+            sessionClient.deviceId = body.find("deviceId")
             if (sessionClient.deviceId == null || sessionClient.deviceId!!.isEmpty()) {
                 throw  NullPointerException("设备ID不能为空")
             }
             sessionClient.host = mProperties.hostIp
-            sessionClient.deviceType = message.find("channel")
-            sessionClient.deviceModel = message.find("device")
-            sessionClient.clientVersion = message.find("version")
-            sessionClient.systemVersion = message.find("osVersion")
+            sessionClient.deviceType = body.find("channel")
+            sessionClient.deviceModel = body.find("device")
+            sessionClient.clientVersion = body.find("version")
+            sessionClient.systemVersion = body.find("osVersion")
             sessionClient.bindTime = LocalDateTime.now()
             dellSession(sessionClient)
         } catch (exception: Exception) {
