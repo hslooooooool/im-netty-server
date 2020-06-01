@@ -3,7 +3,6 @@ package vip.qsos.im.config
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import vip.qsos.im.model.AppException
 import vip.qsos.im.model.BaseResult
 
 /**
