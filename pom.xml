@@ -19,7 +19,6 @@
 		<module>app</module>
 		<module>im-server</module>
 		<module>im-lib</module>
-		<module>file-server</module>
 		<module>im-data-jpa</module>
 	</modules>
 	

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>im-netty-server</artifactId>
+		<groupId>vip.qsos.im</groupId>
+		<version>1.0</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	
+	<artifactId>im-converge</artifactId>
+	<version>1.0.0</version>
+	<description>IM数据服务模块</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>vip.qsos.im</groupId>
+			<artifactId>im-server</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+	</dependencies>
+</project>
