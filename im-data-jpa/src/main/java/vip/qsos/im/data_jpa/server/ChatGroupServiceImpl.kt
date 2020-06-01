@@ -6,10 +6,11 @@ import vip.qsos.im.data_jpa.repository.db.TableChatGroupInfoRepository
 import vip.qsos.im.data_jpa.repository.db.TableChatGroupRepository
 import vip.qsos.im.data_jpa.repository.db.TableChatSessionRepository
 import vip.qsos.im.lib.server.model.IMException
-import vip.qsos.im.model.ChatGroupBo
-import vip.qsos.im.model.db.TableChatSession
-import vip.qsos.im.model.db.TableChatSessionOfGroup
-import vip.qsos.im.model.db.TableChatSessionOfGroupInfo
+import vip.qsos.im.data_jpa.model.ChatGroupBo
+import vip.qsos.im.data_jpa.model.table.TableChatSession
+import org.springframework.data.jpa.repository.JpaRepository
+import vip.qsos.im.data_jpa.model.table.TableChatSessionOfGroup
+import vip.qsos.im.data_jpa.model.table.TableChatSessionOfGroupInfo
 import vip.qsos.im.model.type.EnumSessionType
 import vip.qsos.im.service.IMAccountService
 import javax.annotation.Resource

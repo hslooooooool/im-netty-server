@@ -8,7 +8,7 @@ import vip.qsos.im.model.AppException
 import vip.qsos.im.model.BaseResult
 import vip.qsos.im.model.ChatSessionBo
 import vip.qsos.im.data_jpa.model.table.TableChatMessageOfSingle
-import vip.qsos.im.model.db.TableChatSession
+import vip.qsos.im.data_jpa.model.table.TableChatSession
 import vip.qsos.im.model.type.EnumSessionType
 import vip.qsos.im.data_jpa.server.ChatSingleService
 import vip.qsos.im.service.FriendService

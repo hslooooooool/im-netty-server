@@ -1,4 +1,4 @@
-package vip.qsos.im.model
+package vip.qsos.im.data_jpa.model
 
 import com.google.gson.Gson
 import vip.qsos.im.model.type.EnumSessionType

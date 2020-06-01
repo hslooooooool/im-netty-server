@@ -10,8 +10,8 @@ import vip.qsos.im.lib.server.handler.IMRequestHandler
 import vip.qsos.im.lib.server.handler.IMServerInboundHandler
 import vip.qsos.im.lib.server.handler.WebsocketHandShakeHandler
 import vip.qsos.im.lib.server.model.IMException
-import vip.qsos.im.lib.server.model.SendBody
 import vip.qsos.im.lib.server.model.IMSession
+import vip.qsos.im.lib.server.model.SendBody
 import java.util.*
 import javax.annotation.PostConstruct
 import javax.annotation.Resource
@@ -28,16 +28,20 @@ abstract class AbsIMHandlerConfig : IMRequestHandler, ApplicationListener<Applic
     /**添加自定义消息处理器*/
     abstract fun addHandler(handlerMap: HashMap<String, Class<out IMRequestHandler>>)
 
-    /**配置连接断开处理器*/
+    /**配置连接断开处理器，可用于客户端下线提示、连接客户端下线后续处理
+     * @see IMConstant.CLIENT_CLOSED*/
     abstract fun getClientClosedHandler(): Class<out IMRequestHandler>?
 
-    /**配置账号绑定处理器*/
+    /**配置账号绑定处理器，可用于账号连接提示、连接信息记录和业务账号绑定
+     * @see IMConstant.CLIENT_BIND*/
     abstract fun getAccountBindHandler(): Class<out IMRequestHandler>?
 
-    /**配置心跳消息处理器*/
+    /**配置心跳消息处理器，可用于记录心跳日志
+     * @see IMConstant.CLIENT_HEARTBEAT*/
     abstract fun getHeartbeatHandler(): Class<out IMRequestHandler>?
 
-    /**配置连接在线处理器*/
+    /**配置连接在线处理器，可用于客户端上线提示、连接客户端上线后续处理
+     * @see IMConstant.CLIENT_ACTIVE*/
     abstract fun getClientActiveHandler(): Class<out IMRequestHandler>?
 
     @PostConstruct

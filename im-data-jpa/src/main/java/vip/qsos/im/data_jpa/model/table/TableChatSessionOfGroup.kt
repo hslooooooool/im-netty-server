@@ -1,7 +1,8 @@
-package vip.qsos.im.model.db
+package vip.qsos.im.data_jpa.model.table
 
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
+import vip.qsos.im.model.db.AbsTable
 import javax.persistence.*
 
 @Entity

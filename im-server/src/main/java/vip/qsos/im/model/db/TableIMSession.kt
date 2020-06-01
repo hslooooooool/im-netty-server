@@ -14,7 +14,7 @@ data class TableIMSession constructor(
         @Id
         @Column(name = "id")
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @ApiModelProperty(value = "连接ID")
+        @ApiModelProperty(value = "主键ID")
         var id: Long = -1L,
 
         @Column(name = "nid", unique = true, nullable = false, length = 16)

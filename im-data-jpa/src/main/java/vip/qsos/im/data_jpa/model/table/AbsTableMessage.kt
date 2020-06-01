@@ -3,7 +3,7 @@ package vip.qsos.im.data_jpa.model.table
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.swagger.annotations.ApiModelProperty
 import vip.qsos.im.lib.server.model.IMMessage
-import vip.qsos.im.model.MessageExtra
+import vip.qsos.im.data_jpa.model.MessageExtra
 import vip.qsos.im.model.db.AbsTable
 import vip.qsos.im.model.type.EnumSessionType
 import java.time.LocalDateTime

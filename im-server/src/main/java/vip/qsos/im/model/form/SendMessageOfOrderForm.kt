@@ -9,12 +9,11 @@ import vip.qsos.im.model.type.EnumSessionType
 import java.io.Serializable
 import javax.validation.constraints.NotNull
 
-/**
+/**发送指令消息实体
  * @author : 华清松
- * 发送基本消息实体
  */
 @ApiModel(description = "发送指令消息")
-data class SendMessageInActionForm constructor(
+data class SendMessageOfOrderForm constructor(
         @ApiModelProperty(value = "消息指令", required = true)
         @NotNull(message = "消息指令不能为空")
         var action: String,
@@ -58,7 +57,7 @@ data class SendMessageInActionForm constructor(
     }
 
     @JsonIgnore
-    override var sessionType: EnumSessionType = EnumSessionType.GROUP
+    override var sessionType: EnumSessionType = EnumSessionType.ORDER
 
     @JsonIgnore
     fun getMessage(receiver: String? = null): IMMessage {

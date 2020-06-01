@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiModelProperty
  * @sample EnumSessionType.GROUP 群聊
  * @sample EnumSessionType.NOTICE 公告
  * @sample EnumSessionType.SUBSCRIPTION 订阅
- * @sample EnumSessionType.SYSTEM 系统指令
+ * @sample EnumSessionType.ORDER 指令
  */
 @ApiModel(value = "会话类型")
 enum class EnumSessionType {
@@ -26,5 +26,5 @@ enum class EnumSessionType {
     SUBSCRIPTION,
 
     @ApiModelProperty(value = "指令")
-    SYSTEM;
+    ORDER;
 }

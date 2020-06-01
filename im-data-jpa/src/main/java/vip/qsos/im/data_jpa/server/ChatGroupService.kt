@@ -1,8 +1,8 @@
 package vip.qsos.im.data_jpa.server
 
-import vip.qsos.im.model.ChatGroupBo
-import vip.qsos.im.model.db.TableChatSessionOfGroup
-import vip.qsos.im.model.db.TableChatSessionOfGroupInfo
+import vip.qsos.im.data_jpa.model.ChatGroupBo
+import vip.qsos.im.data_jpa.model.table.TableChatSessionOfGroup
+import vip.qsos.im.data_jpa.model.table.TableChatSessionOfGroupInfo
 import javax.transaction.Transactional
 
 /**

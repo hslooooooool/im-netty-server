@@ -1,10 +1,11 @@
-package vip.qsos.im.model.db
+package vip.qsos.im.data_jpa.model.table
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import org.springframework.util.StringUtils
 import vip.qsos.im.lib.server.model.IMException
+import vip.qsos.im.model.db.AbsTable
 import vip.qsos.im.model.type.EnumSessionType
 import javax.persistence.*
 

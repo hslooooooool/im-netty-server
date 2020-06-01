@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component
 import vip.qsos.im.data_jpa.repository.db.TableChatSessionRepository
 import vip.qsos.im.lib.server.model.IMException
 import vip.qsos.im.lib.server.model.IMMessage
-import vip.qsos.im.model.db.TableChatSession
+import vip.qsos.im.data_jpa.model.table.TableChatSession
 import vip.qsos.im.model.type.EnumSessionType
 import vip.qsos.im.service.IMMessageManager
 import javax.annotation.Resource

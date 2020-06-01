@@ -6,10 +6,10 @@ import vip.qsos.im.data_jpa.repository.db.TableChatSessionRepository
 import vip.qsos.im.data_jpa.repository.db.TableChatSingleInfoRepository
 import vip.qsos.im.data_jpa.repository.db.TableChatSingleRepository
 import vip.qsos.im.lib.server.model.IMException
-import vip.qsos.im.model.ChatSingleBo
-import vip.qsos.im.model.db.TableChatSession
-import vip.qsos.im.model.db.TableChatSessionOfSingle
-import vip.qsos.im.model.db.TableChatSessionOfSingleInfo
+import vip.qsos.im.data_jpa.model.ChatSingleBo
+import vip.qsos.im.data_jpa.model.table.TableChatSession
+import vip.qsos.im.data_jpa.model.table.TableChatSessionOfSingle
+import vip.qsos.im.data_jpa.model.table.TableChatSessionOfSingleInfo
 import vip.qsos.im.model.type.EnumSessionType
 import vip.qsos.im.service.IMAccountService
 import javax.annotation.Resource

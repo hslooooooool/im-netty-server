@@ -9,7 +9,7 @@ import vip.qsos.im.lib.server.model.IMException
 import vip.qsos.im.lib.server.model.IMSession
 import vip.qsos.im.lib.server.model.ReplyBody
 import vip.qsos.im.lib.server.model.SendBody
-import vip.qsos.im.model.form.SendMessageInActionForm
+import vip.qsos.im.model.form.SendMessageOfOrderForm
 import vip.qsos.im.service.IMAccountService
 import vip.qsos.im.service.IMSessionService
 import java.time.LocalDateTime
@@ -72,7 +72,7 @@ class BindAccountRequestHandler : IMRequestHandler {
             } else {
                 /**不同设备连接，则关闭另一个终端连接，添加新连接*/
                 if (oldSession.nid != sessionClient.nid && oldSession.isConnected) {
-                    val msg = SendMessageInActionForm(
+                    val msg = SendMessageOfOrderForm(
                             action = IMConstant.IMMessageAction.ACTION_999,
                             receiver = sessionClient.getAccount(),
                             sender = mProperties.hostName,

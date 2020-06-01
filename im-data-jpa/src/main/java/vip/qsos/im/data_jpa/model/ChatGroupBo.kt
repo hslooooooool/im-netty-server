@@ -1,14 +1,14 @@
-package vip.qsos.im.model
+package vip.qsos.im.data_jpa.model
 
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import vip.qsos.im.model.db.TableChatSession
-import vip.qsos.im.model.db.TableChatSessionOfSingle
-import vip.qsos.im.model.db.TableChatSessionOfSingleInfo
+import vip.qsos.im.data_jpa.model.table.TableChatSession
+import vip.qsos.im.data_jpa.model.table.TableChatSessionOfGroup
+import vip.qsos.im.data_jpa.model.table.TableChatSessionOfGroupInfo
 import vip.qsos.im.model.type.EnumSessionType
 
-@ApiModel(value = "单聊实体")
-data class ChatSingleBo constructor(
+@ApiModel(value = "群聊实体")
+data class ChatGroupBo constructor(
         @ApiModelProperty(value = "群号")
         var id: Long,
         @ApiModelProperty(value = "群名称")
@@ -23,11 +23,10 @@ data class ChatSingleBo constructor(
         var lastMessageId: Long? = null
 ) {
     companion object {
-
-        fun getBo(session: TableChatSession, group: TableChatSessionOfSingle): ChatSingleBo {
-            return ChatSingleBo(
-                    id = group.singleId,
-                    name = "单聊${group.singleId}",
+        fun getBo(session: TableChatSession, group: TableChatSessionOfGroup): ChatGroupBo {
+            return ChatGroupBo(
+                    id = group.groupId,
+                    name = group.name,
                     creator = session.creator,
                     member = session.getAccountList().map { it.account },
                     sessionType = session.sessionType
@@ -35,7 +34,7 @@ data class ChatSingleBo constructor(
         }
     }
 
-    fun setInfo(info: TableChatSessionOfSingleInfo): ChatSingleBo {
+    fun setInfo(info: TableChatSessionOfGroupInfo): ChatGroupBo {
         this.lastMessageId = info.lastMessageId
         return this
     }

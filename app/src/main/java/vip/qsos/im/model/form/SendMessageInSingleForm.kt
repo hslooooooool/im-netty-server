@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import vip.qsos.im.lib.server.model.IMMessage
 import vip.qsos.im.model.AppUserBo
-import vip.qsos.im.model.MessageExtra
+import vip.qsos.im.data_jpa.model.MessageExtra
 import vip.qsos.im.model.db.TableUser
 import vip.qsos.im.model.type.EnumSessionType
 import java.io.Serializable
@@ -69,7 +69,7 @@ data class SendMessageInSingleForm constructor(
                 extra = MessageExtra(this.sessionType, this.sessionId)
                         .add("sender", AppUserBo.getBo(senderUser))
                         .toString(),
-                format = IMMessage.Format.JSON.name
+                format = IMMessage.Format.PROTOBUF.name
         )
     }
 
