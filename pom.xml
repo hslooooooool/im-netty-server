@@ -19,7 +19,7 @@
 		<module>app</module>
 		<module>im-server</module>
 		<module>im-lib</module>
-		<module>im-data-jpa</module>
+		<module>im-converge</module>
 	</modules>
 	
 	<properties>
